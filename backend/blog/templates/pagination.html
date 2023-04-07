@@ -1,0 +1,82 @@
+{% load blog_tags %}
+
+<div class="pagination section">
+    <span class="step-links">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">&lt&lt</a>
+        {% endif %}
+        <span class="current">
+            Page {{ page.number }} of {{ page.paginator.num_pages }}
+        </span>
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">&gt&gt</a>
+        {% endif %}
+    </span>    
+</div>
+
+{% comment %} htmx pagination {% endcomment %}
+
+<div class="pagination section">
+  <span class="step-links">
+      {% if page.has_previous %}
+          <a href="?page={{ page.previous_page_number }}{% if tag %}&tag={{ tag.slug }}{% endif %}"
+          hx-target="#list-items"
+          hx-get="{% paginated_htmx_link page.previous_page_number category tag %}"
+          >&lt&lt</a>
+      {% endif %}
+      <span class="current">
+          Page {{ page.number }} of {{ page.paginator.num_pages }}
+      </span>
+      {% if page.has_next %}
+          <a href="?page={{ page.next_page_number }}{% if tag %}&tag={{ tag.slug }}{% endif %}"
+          hx-target="#list-items"
+          hx-get="{% paginated_htmx_link page.next_page_number category tag %}"
+          >&gt&gt</a>
+      {% endif %}
+  </span>    
+</div>
+
+
+{% comment %} <nav id="pagination" class="pagination">
+    <ul class="pagination__list">
+      {% if page.has_previous %}
+        <li class="pagination__item">
+            <a class="pagination__link" 
+                hx-get="?page={{ page.previous_page_number }}" 
+                href="?page={{ page.previous_page_number }}"
+                hx-target="#list-items"
+                hx-swap="outerHTML">
+                    previous
+            </a>
+        </li>
+      {% endif %}
+      {% for num in page.paginator.page_range %}
+        {% if page.number == num %}
+          <li class="pagination__item pagination__item--active">
+            <span class="pagination__link pagination__link--active">{{ num }}</span>
+        </li>
+        {% elif num > page.number|add:'-5' and num < page.number|add:'5' %}
+          <li class="pagination__item">
+            <a class="pagination__link" 
+                hx-get="?page={{ num }}" 
+                href="?page={{ num }}"
+                hx-target="#list-items"
+                hx-swap="outerHTML">
+                    {{ num }}
+            </a>
+        </li>
+        {% endif %}
+      {% endfor %}
+      {% if page.has_next %}
+        <li class="pagination__item">
+            <a class="pagination__link" 
+                hx-get="?page={{ page.next_page_number }}" 
+                href="?page={{ page.next_page_number }}"
+                hx-target="#list-items"
+                hx-swap="outerHTML">
+                    next
+            </a>
+        </li>
+      {% endif %}
+    </ul>
+</nav> {% endcomment %}

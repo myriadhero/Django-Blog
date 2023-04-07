@@ -1,0 +1,48 @@
+{% load blog_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}"> 
+    <!-- Include Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="{% static 'js/header.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+</head>
+<body>
+    {% include "blog/base_includes/header.html" %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+
+        {% comment %} <div id="sidebar">
+            <h2><a href="{% url 'blog:post_list' %}">Doggo Bloggo</a></h2>
+            <p>This is my bloggo. {% total_posts %} posts so far. </p>
+            <p><a href="{% url 'blog:post_feed' %}">Subscribe to the RSS feed ✨</a></p>
+            <h3>Latest posts</h3>
+            {% show_latest_posts 3 %}
+            <h3>Most commented posts</h3>
+            {% get_most_commented_posts 3 as most_commented_posts %}
+            <ul>
+                {% for post in most_commented_posts %}
+                <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+                {% endfor %}    
+            </ul>
+            <p><a href="{% url 'blog:post_search' %}">🔎 Search for posts</a></p>
+        </div> {% endcomment %}
+    </div>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+              <strong>© Tiffilosophy 2023.</strong>
+            </p>
+          </div>
+    </footer>
+</body>
+{% block scripts %}
+{% endblock %}
+</html>

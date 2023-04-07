@@ -1,0 +1,60 @@
+#desktop-title {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel {
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+
+.carousel .card-content p {
+    /* width: 20vw; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 75vw;
+}
+
+/* .carousel .level-item {
+    width: 22%;
+} */
+
+/* .responsive-card {
+    width: 100%;
+} */
+
+/* touch devices */
+@media (min-width: 769px) {
+    .carousel .card-content p {
+        width: 11.8vw;
+    }
+}
+
+/* desktop */
+@media (min-width: 1024px) {
+    .carousel .card-content p {
+        width: calc((864px - 48px*5 - 4*1.5rem)/5);
+    }
+}
+
+/* widescreen */
+@media (min-width: 1216px) {
+    .carousel .card-content p {
+        width: calc((1056px - 48px*5 - 4*1.5rem)/5);
+    }
+}
+
+/* full hd */
+@media (min-width: 1408px) {
+    .carousel .card-content p {
+        width: calc((1248px - 4*1.5rem - 48px*5)/5);
+    }
+}

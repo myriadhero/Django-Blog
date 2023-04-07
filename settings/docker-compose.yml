@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD="should be same as in blogsite/settings.py"
+      - POSTGRES_DB=mydb
+    volumes:
+      - db-data:/var/lib/dockertest/postgresql/data/
+    ports:
+      - 8001:5432
+    # web:
+    #   build: .
+    #   # command: python inf_loop.py
+    #   command: pipenv run ./manage.py runserver 0.0.0.0:8000
+    #   # volumes:
+    #   #   - .:/dockertest
+    #   ports:
+    #     - "8000:8000"
+    #   # depends_on:
+    #   #   - db
+    #   environment:
+    #     - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydb
+volumes:
+  db-data:

@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+{% block title %}Doggo Bloggo - Celebs{% endblock %}
+{% block content %}
+    <div class="section">
+        <h3 class="title is-3">{{ category.name }}</h3>
+        {% for tag in tags %}
+        <a href="{{ tag.get_absolute_url }}">
+            <h5 class="title is-5">{{ tag.name }}</h5>
+        </a>
+        {% endfor %}
+        {% include "blog/post/includes/post_list.html" %}
+    </div>
+{% endblock %}

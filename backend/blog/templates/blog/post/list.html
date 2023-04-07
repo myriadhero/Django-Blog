@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+{% block title %}Doggo Bloggo{% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="block">
+            {% if tag %}Posts tagged with <span class="tag is-info is-light">{{ tag }}</span>{% endif %}
+            {% if category %}Posts for category: <span class="tag is-primary is-light">{{ category }}</span>{% endif %}
+        </div>
+        {% include "blog/post/includes/post_list.html" %}
+    </div>
+{% endblock %}

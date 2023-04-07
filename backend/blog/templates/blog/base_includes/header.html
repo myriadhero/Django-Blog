@@ -1,0 +1,40 @@
+{% load blog_tags %}
+<header class="section container">
+    <div id="desktop-title" class="is-hidden-touch">
+        <a href="{% url 'blog:front_page' %}">
+            <h1 class="title">Tiffilosophy</h1>
+        </a>
+    </div>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
+                <h1 class="title">Tiffilosophy</h1>
+            </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarMainMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarMainMenu" class="navbar-menu">
+
+            <div class="navbar-start">
+                {% get_menu_categories as categories %}
+                {% for cat in categories %}
+                <a class="navbar-item" href="{{ cat.get_absolute_url }}">
+                    {{ cat.name }}
+                </a>
+                {% endfor %}
+                <hr class="is-hidden-desktop" style="display:block;margin:0.2rem 0.5rem;">
+            </div>
+            
+            <div class="navbar-end">
+                <a class="navbar-item" href="#" data-filter="news-letter">Newsletter</a>
+                <a class="navbar-item" href="#" data-filter="about">About/Shout</a>
+            </div>
+
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,19 @@
+<div id="list-items">
+    {% for post in posts %}
+        <div class="block">
+            <a href="{{ post.get_absolute_url }}">
+                <h2 class="title is-3">{{ post.title }}</h2>
+            </a>
+            {% include 'blog/post/includes/post_tags.html' %}
+            <p class="date">
+                Published {{ post.publish }} by {{ post.author }}
+            </p>
+
+        </div>
+        <div class="content">
+            {{ post.body|safe|truncatewords_html:30 }}
+        </div>
+        {% if not forloop.last %} <hr> {% endif %}
+    {% endfor %}
+    {% include "pagination.html" with page=page_obj %}
+</div>

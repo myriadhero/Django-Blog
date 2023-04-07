@@ -1,0 +1,11 @@
+.vscode/
+*.pyc
+.DS_Store
+Pipfile.lock
+dockertest/*
+tutorial1poll/*
+*.sqlite3
+backend/media/*
+backend/blogsite/settings.py
+/Dockerfile
+/docker-compose.yml
