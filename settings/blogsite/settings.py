@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 SITE_ID = 1
 
-# Application definition
+# Application definitions
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "blog.apps.BlogConfig",
-    "taggit",
+    # "taggit",
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.postgres",
@@ -140,29 +140,75 @@ TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_TAGS_FROM_STRING = "blog.utils.utils.comma_splitter"
 TAGGIT_STRING_FROM_TAGS = "blog.utils.utils.comma_joiner"
 
-# CKEDITOR_CONFIGS = {
-#     "default": {
-#         "toolbar": "full",
-#         "height": 300,
-#         "width": 800,
-#         "extraPlugins": ",".join(
-#             [
-#                 "image",
-#                 "filebrowser",
-#                 "embed",
-#                 "embedbase",
-#             ]
-#         ),
-#         "filebrowserUploadUrl": "/ckeditor/upload/",
-#         "embed_provider": "//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}",
-#     },
-# }
 
 CKEDITOR_CONFIGS = {
     "default": {
-        "skin": "moono",
-        # 'skin': 'office2013',
-        "toolbar": "full",
+        "toolbar_Custom": [
+            {
+                "name": "document",
+                "items": [
+                    "Source",
+                ],
+            },
+            {"name": "editing", "items": ["Find", "Replace", "-", "SelectAll"]},
+            {
+                "name": "tools",
+                "items": [
+                    "Maximize",
+                    "ShowBlocks",
+                    "Preview",
+                ],
+            },
+            "/",  # put this to force next toolbar on new line
+            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
+            {
+                "name": "basicstyles",
+                "items": [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "RemoveFormat",
+                ],
+            },
+            "/",  # put this to force next toolbar on new line
+            {
+                "name": "paragraph",
+                "items": [
+                    "NumberedList",
+                    "BulletedList",
+                    "-",
+                    "Outdent",
+                    "Indent",
+                    "-",
+                    "Blockquote",
+                    "CreateDiv",
+                    "-",
+                    "JustifyLeft",
+                    "JustifyCenter",
+                    "JustifyRight",
+                    "JustifyBlock",
+                ],
+            },
+            {"name": "colors", "items": ["TextColor", "BGColor"]},
+            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
+            "/",  # put this to force next toolbar on new line
+            {
+                "name": "insert",
+                "items": [
+                    "Image",
+                    "Flash",
+                    "Table",
+                    "HorizontalRule",
+                    "Smiley",
+                    "SpecialChar",
+                ],
+            },
+        ],
+        "toolbar": "Custom",
         "tabSpaces": 4,
         "extraPlugins": ",".join(
             [
@@ -170,19 +216,15 @@ CKEDITOR_CONFIGS = {
                 "image",
                 "filebrowser",
                 "autolink",
-                "autoembed",
-                "embed",
-                "embedbase",
-                "embedsemantic",
                 "autogrow",
             ]
         ),
         "filebrowserUploadUrl": "/ckeditor/upload/",
-        "embed_provider": "//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}",
         "extraAllowedContent": "blockquote(twitter-tweet); p[lang,dir]",
     },
 }
-# "embed_provider": "//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}",
+
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

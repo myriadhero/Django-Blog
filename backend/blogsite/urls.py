@@ -28,15 +28,15 @@ sitemaps = {
 urlpatterns = [
     # path("/", include()),
     path("admin/", admin.site.urls),
-    path("blog/", include("blog.urls", namespace="blog")),
+    path("", include("blog.urls", namespace="blog")),
     path(
         "sitemap.xml",
         sitemap,
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-    re_path(r'^ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    re_path(r"^ckeditor/upload/", ckeditor_views.upload, name="ckeditor_upload"),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
 ]
 
 if settings.DEBUG:
