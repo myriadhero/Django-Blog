@@ -1,3 +1,4 @@
+{% load blog_tags %}
 <div id="list-items">
     {% for post in posts %}
         <div class="block">
@@ -6,14 +7,14 @@
             </a>
             {% include 'blog/post/includes/post_tags.html' %}
             <p class="date">
-                Published {{ post.publish }} by {{ post.author }}
+                Published {{ post.publish }} by {{ post.author.first_name }}
             </p>
 
         </div>
         <div class="content">
-            {{ post.body|safe|truncatewords_html:30 }}
+            {{ post.body|truncatewords_html:50|html_preview|safe }}
         </div>
         {% if not forloop.last %} <hr> {% endif %}
     {% endfor %}
-    {% include "pagination.html" with page=page_obj %}
+    {% include "pagination.html" %}
 </div>

@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 django-ckeditor = "*"
 django-imagekit = "*"
 pillow = "*"
+lxml = "*"
 
 [dev-packages]
 black = "*"
@@ -20,5 +21,5 @@ python_version = "3.11"
 
 [scripts]
 db = "docker-compose up"
-django = "backend/manage.py runserver"
-migrate = "backend/manage.py migrate"
+django = "python backend/manage.py runserver 0.0.0.0:80"
+migrate = "python backend/manage.py migrate"

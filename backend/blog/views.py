@@ -8,7 +8,7 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .models import Post, Category, CategoryTag
 from .forms import EmailPostForm, CommentForm, SearchForm
 
-POSTS_PER_PAGE = 5
+POSTS_PER_PAGE = 3
 RECOMMENDED_POSTS_NUM = 5
 
 
@@ -62,7 +62,7 @@ class PostListHTMXView(PostListView):
             context["category"] = get_object_or_404(Category, slug=category_slug)
 
         if tag_slug:
-            context["tag"] = get_object_or_404(CategoryTag, slug=tag_slug)
+            context["selected_tag"] = get_object_or_404(CategoryTag, slug=tag_slug)
 
         return context
 
@@ -75,7 +75,7 @@ class CategoryDetailView(ListView):
         category = self.get_category()
         if category.is_tag_list:
             return Post.objects.none()
-        
+
         queryset = Post.published.filter(categories=category)
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:

@@ -61,4 +61,5 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(CategoryTag)
 class CategoryTagAdmin(admin.ModelAdmin):
     list_display = ["name", "slug"]
+    prepopulated_fields = {"slug": ("name",)}
     search_fields = ("name",)
