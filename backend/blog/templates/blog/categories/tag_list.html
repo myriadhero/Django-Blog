@@ -4,10 +4,25 @@
     <div class="section">
         <h3 class="title is-3">{{ category.name }}</h3>
         <div id="list-items">
-            {% for tag in tags %}
-                <a href="{{ tag.get_absolute_url }}">
-                    <h5 class="title is-5">{{ tag.name }}</h5>
-                </a>
+            {% regroup tags by name.0 as alpha_tags %}
+            {% for letter, letter_tags in alpha_tags %}
+                <p class="title is-3">{{ letter }}</p>
+                {% for tag in letter_tags %}
+                    <div class="level is-mobile">
+                        <div class="level-left">
+                            <div class="level-item image is-96x96">
+                                <img src="{% if tag.thumbnail %}{{ tag.thumbnail }}{% else %}https://bulma.io/images/placeholders/96x96.png{% endif %}"
+                                alt="{{ tag.name }}" class="is-rounded">
+                            </div>
+                            <a href="{{ tag.get_absolute_url }}" class="level-item content">
+                                <div>
+                                    <p class="title is-4">{{ tag.name }}</p>
+                                    <p class="subtitle is-6">Hello this person isn't described yet</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             {% endfor %}
         </div>
     </div>

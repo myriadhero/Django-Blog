@@ -28,14 +28,25 @@ class Category(models.Model):
         unique=True,
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique.",
     )
+    description = models.CharField(
+        max_length=250, blank=True, help_text="250 characters long"
+    )
     order = models.IntegerField(
         default=0, help_text="Enter an integer value to define the display order."
     )
+    preview_image = models.ImageField(upload_to="category_previews/", blank=True)
     show_on_front_page = models.BooleanField(default=False)
     show_in_menu = models.BooleanField(default=False)
     is_tag_list = models.BooleanField(
         default=False,
         help_text="If enabled, this category will show a list of tags first instead of posts+tag filters.",
+    )
+
+    thumbnail = ImageSpecField(
+        source="preview_image",
+        processors=[ResizeToFill(200, 200)],
+        format="jpeg",
+        options={"quality": 60},
     )
 
     objects = models.Manager()
@@ -61,6 +72,16 @@ class Category(models.Model):
 
 class CategoryTag(TagBase):
     categories = models.ManyToManyField(Category, blank=True)
+    preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
+    description = models.CharField(
+        max_length=250, blank=True, help_text="250 characters long"
+    )
+    thumbnail = ImageSpecField(
+        source="preview_image",
+        processors=[ResizeToFill(200, 200)],
+        format="jpeg",
+        options={"quality": 60},
+    )
 
     class Meta:
         verbose_name = gettext_lazy("Category tag")
@@ -77,27 +98,6 @@ class TaggedWithCategoryTags(GenericTaggedItemBase):
         on_delete=models.CASCADE,
         related_name="%(app_label)s_%(class)s_tags",
     )
-
-
-# class CelebrityTag(TagBase):
-#     class Meta:
-#         verbose_name = gettext_lazy("Celebrity tag")
-#         verbose_name_plural = gettext_lazy("Celebrity tags")
-#         ordering = ["name"]
-
-#     def posts(self):
-#         Post.published.filter(celebrities=self)
-
-#     def get_absolute_url(self):
-#         return reverse("blog:celebrity_posts", args=[self.slug])
-
-
-# class TaggedWithCelebrities(GenericTaggedItemBase):
-#     tag = models.ForeignKey(
-#         CelebrityTag,
-#         on_delete=models.CASCADE,
-#         related_name="%(app_label)s_%(class)s_tags",
-#     )
 
 
 class PublishedManager(models.Manager):
@@ -126,7 +126,7 @@ class Post(models.Model):
         db_index=True,
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique, auto-insrements if duplicates are found.",
     )
-    preview_image = models.ImageField(upload_to="blog_previews/", blank=True, null=True)
+    preview_image = models.ImageField(upload_to="blog_previews/", blank=True)
     body = RichTextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
@@ -164,7 +164,7 @@ class Post(models.Model):
     )
     front_page_image = ImageSpecField(
         source="preview_image",
-        processors=[ResizeToFill(800, 600)],
+        processors=[ResizeToFill(600, 800)],
         format="jpeg",
         options={"quality": 60},
     )

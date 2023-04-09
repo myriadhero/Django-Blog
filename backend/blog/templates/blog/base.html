@@ -8,10 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/blog.css' %}"> 
-    <!-- Include Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="{% static 'js/header.js' %}"></script>
     <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+    {% block head_links %}
+    {% endblock %}
 </head>
 <body>
     {% include "blog/base_includes/header.html" %}

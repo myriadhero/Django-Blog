@@ -2,6 +2,7 @@
 *.pyc
 .DS_Store
 Pipfile.lock
+package-lock.json
 dockertest/*
 tutorial1poll/*
 *.sqlite3
@@ -9,3 +10,4 @@ backend/media/*
 backend/blogsite/settings.py
 /Dockerfile
 /docker-compose.yml
+/frontend/node_modules
