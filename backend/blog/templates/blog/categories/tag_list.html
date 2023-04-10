@@ -5,8 +5,20 @@
         <h3 class="title is-3">{{ category.name }}</h3>
         <div id="list-items">
             {% regroup tags by name.0 as alpha_tags %}
+            <div id="alpha-links" class="level">
+                <div class="level-item">
+                    <a href="#" 
+                    class="letter-link subtitle is-5 has-text-info has-background-white">
+                    🏡</a>
+                    {% for letter, letter_tags in alpha_tags %}
+                        <a href="#starts-with-{{ letter }}" 
+                        class="letter-link subtitle is-5 has-text-info has-background-white">
+                        {{ letter }}</a>
+                    {% endfor %}
+                </div>
+            </div>
             {% for letter, letter_tags in alpha_tags %}
-                <p class="title is-3">{{ letter }}</p>
+                <p class="title is-3 pl-5" id="starts-with-{{ letter }}">{{ letter }}</p>
                 {% for tag in letter_tags %}
                     <div class="level is-mobile">
                         <div class="level-left">

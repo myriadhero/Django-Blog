@@ -29,3 +29,19 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
+
+#alpha-links {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.letter-link {
+    padding: 1.2px;
+}
+
+.letter-link:hover {
+    font-weight: bold;
+    padding-left: 3px;
+    padding-right: 3px;
+}
