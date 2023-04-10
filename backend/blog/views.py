@@ -94,7 +94,7 @@ class CategoryDetailView(ListView):
         context = super().get_context_data(**kwargs)
         category = self.get_category()
         context["category"] = category
-        context["tags"] = category.categorytag_set.all()
+        context["tags"] = category.get_tags_that_have_at_least_one_post()
 
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Exists, OuterRef
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy, pgettext_lazy
@@ -65,6 +66,10 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("blog:category", args=[self.slug])
+
+    def get_tags_that_have_at_least_one_post(self):
+        tag_relations = TaggedWithCategoryTags.objects.filter(tag=OuterRef("pk"))
+        return self.categorytag_set.filter(Exists(tag_relations))
 
     def __str__(self) -> str:
         return self.name

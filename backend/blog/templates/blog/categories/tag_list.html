@@ -23,13 +23,20 @@
                     <div class="level is-mobile">
                         <div class="level-left">
                             <div class="level-item image is-96x96">
-                                <img src="{% if tag.thumbnail %}{{ tag.thumbnail }}{% else %}https://bulma.io/images/placeholders/96x96.png{% endif %}"
+                                <img src="{% if tag.thumbnail %}{{ tag.thumbnail.url }}
+                                {% else %}https://bulma.io/images/placeholders/96x96.png{% endif %}"
                                 alt="{{ tag.name }}" class="is-rounded">
                             </div>
                             <a href="{{ tag.get_absolute_url }}" class="level-item content">
                                 <div>
-                                    <p class="title is-4">{{ tag.name }}</p>
-                                    <p class="subtitle is-6">Hello this person isn't described yet</p>
+                                    <p class="title is-4 has-text-info">{{ tag.name }}</p>
+                                    <p class="subtitle is-6">
+                                        {% if tag.description %}
+                                            {{tag.description}}
+                                        {% else %}
+                                            Hello this person isn't described yet
+                                        {% endif %}
+                                    </p>
                                 </div>
                             </a>
                         </div>
