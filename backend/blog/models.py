@@ -157,7 +157,7 @@ class Post(models.Model):
 
     thumbnail = ImageSpecField(
         source="preview_image",
-        processors=[ResizeToFill(200, 200)],
+        processors=[ResizeToFill(210, 210)],
         format="jpeg",
         options={"quality": 60},
     )

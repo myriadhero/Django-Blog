@@ -45,3 +45,8 @@
     padding-left: 3px;
     padding-right: 3px;
 }
+
+.post-preview-image {
+    border-radius: 3%;
+    overflow: hidden;
+}
