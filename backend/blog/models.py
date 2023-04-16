@@ -163,7 +163,7 @@ class Post(models.Model):
     )
     header_image = ImageSpecField(
         source="preview_image",
-        processors=[ResizeToFill(1200, 400)],
+        processors=[ResizeToFill(800, 600, upscale=False)],
         format="jpeg",
         options={"quality": 60},
     )

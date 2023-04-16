@@ -50,3 +50,8 @@
     border-radius: 3%;
     overflow: hidden;
 }
+
+.post-detail-header-image {
+    border-radius: 10px;
+    overflow: hidden;
+}
