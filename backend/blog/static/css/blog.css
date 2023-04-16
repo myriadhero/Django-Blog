@@ -1,8 +1,3 @@
-#desktop-title {
-    display: flex;
-    justify-content: center;
-}
-
 .card-with-annotation {
     position: relative;
 }
@@ -30,7 +25,8 @@
     -webkit-box-orient: vertical;
 }
 
-#alpha-links {
+#alpha-links,
+.sticky {
     position: sticky;
     top: 0;
     z-index: 5;

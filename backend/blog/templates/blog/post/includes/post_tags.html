@@ -1,4 +1,4 @@
-<p>
+<div class="pb-4">
     {% for cat in post.categories.all %}
         <a href="{{ cat.get_absolute_url }}" class="tag is-primary is-light">
             {{ cat }}
@@ -9,4 +9,4 @@
             {{ tag }}
         </a>
     {% endfor %}
-</p>
+</div>
