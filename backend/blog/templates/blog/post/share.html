@@ -1,5 +1,5 @@
-{% extends 'blog/base.html' %}
-{% block title %}Share a post{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}{{ site_identity.title }} - Share a post{% endblock %}
 {% block content %}
     {% if sent %}
         <h1>mailo sent ✅</h1>

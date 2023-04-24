@@ -1,0 +1,25 @@
+{% load blog_tags %}
+
+{% comment %} htmx post pagination - fetches post/includes/post_list using htmx {% endcomment %}
+
+<div class="pagination section">
+  <span class="step-links">
+      {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}"
+          hx-target="#list-items"
+          hx-get="{% paginated_htmx_link page_obj.previous_page_number category selected_tag %}"
+          hx-push-url="?page={{ page_obj.previous_page_number }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}"
+          >&lt&lt</a>
+      {% endif %}
+      <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}"
+          hx-target="#list-items"
+          hx-get="{% paginated_htmx_link page_obj.next_page_number category selected_tag %}"
+          hx-push-url="?page={{ page_obj.next_page_number }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}"
+          >&gt&gt</a>
+      {% endif %}
+  </span>
+</div>

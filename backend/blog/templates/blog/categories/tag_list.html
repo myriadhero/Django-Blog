@@ -1,5 +1,5 @@
-{% extends 'blog/base.html' %}
-{% block title %}Doggo Bloggo - Celebs{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}{{ site_identity.title }} - {{ category.name }}{% endblock %}
 {% block content %}
     <div class="section">
         <h3 class="title is-3">{{ category.name }}</h3>

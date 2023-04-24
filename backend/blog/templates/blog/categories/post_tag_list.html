@@ -1,6 +1,6 @@
-{% extends 'blog/base.html' %}
+{% extends 'core/base.html' %}
 {% load blog_tags %}
-{% block title %}Doggo Bloggo - {{ category.name }}{% endblock %}
+{% block title %}{{ site_identity.title }} - {{ category.name }}{% endblock %}
 {% block content %}
     <div class="section">
         <h3 class="title is-3">{{ category.name }}</h3>

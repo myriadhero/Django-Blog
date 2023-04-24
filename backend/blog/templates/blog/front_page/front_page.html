@@ -1,7 +1,6 @@
-{% extends 'blog/base.html' %}
-{% block title %}Doggo Bloggo - Front page{% endblock %}
+{% extends 'core/base.html' %}
+{% block title %}{{ site_identity.title }}{% endblock %}
 {% block head_links %}
-{% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/css/bulma-carousel.min.css"> {% endcomment %}
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
@@ -84,101 +83,12 @@
         <div class="swiper-scrollbar"></div>
     </div>
 
-    {% comment %} bulma-carousel {% endcomment %}
-    {% comment %} <div id="carousel-demo" class="carousel">
-        {% for featured_post in category.get_featured_posts %}
-            <div class="item-{{ forloop.counter }}">
-                <a href="{{ featured_post.get_absolute_url }}">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                {% if featured_post.front_page_image %}
-                                    <img src="{{ featured_post.front_page_image.url }}"
-                                                alt="{{ featured_post.title }}">
-                                {% else %}
-                                    <img src="https://bulma.io/images/placeholders/1280x960.png"
-                                                alt="Placeholder image">
-                                {% endif %}
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            
-                                <p class="subtitle is-6">
-                                    {{ featured_post.title }}
-                                </p>
-                            
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {% if forloop.last %}
-            <div class="item-{{ forloop.counter|add:1 }}">
-                <a href="{{ category.get_absolute_url }}">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                                {% comment %} TODO: change this to category preview pic {% endcomment %}{% comment %}
-                                {% if featured_post.front_page_image %}
-                                    <img src="{{ featured_post.front_page_image.url }}"
-                                                alt="{{ featured_post.title }}">
-                                {% else %}
-                                    <img src="https://bulma.io/images/placeholders/1280x960.png"
-                                                alt="Placeholder image">
-                                {% endif %}
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            
-                                <p class="subtitle is-6">
-                                    More of {{ category.name }}
-                                </p>
-                            
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {% endif %}
-        {% endfor %}
-    </div> {% endcomment %}
-
-    {% comment %} <div class="level is-mobile carousel pb-5">
-        {% for featured_post in category.get_featured_posts %}
-            <div class="level-item responsive-card">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            {% if featured_post.front_page_image %}
-                                <img src="{{ featured_post.front_page_image.url }}"
-                                            alt="{{ featured_post.title }}">
-                            {% else %}
-                                <img src="https://bulma.io/images/placeholders/1280x960.png"
-                                            alt="Placeholder image">
-                            {% endif %}
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <a href="{{ featured_post.get_absolute_url }}">
-                            <p class="subtitle is-6">
-                                {{ featured_post.title }}
-                            </p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div> {% endcomment %}
+    
 </div>
 {% endfor %}
 {% endblock %}
 
 {% block scripts %}
-{% comment %} <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
-<script>
-bulmaCarousel.attach('#carousel-demo', {
-    slidesToScroll: 1,
-    slidesToShow: 4
-});
-</script> {% endcomment %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
     const swiper = new Swiper('.swiper', {

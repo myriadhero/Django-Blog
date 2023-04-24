@@ -1,6 +1,6 @@
-{% extends 'blog/base.html' %}
+{% extends 'core/base.html' %}
 {% load blog_tags %}
-{% block title %}Doggo Bloggo - {{ post.title }}{% endblock %}
+{% block title %}{{ site_identity.title }} - {{ post.title }}{% endblock %}
 {% block content %}
 
     <div class="columns">

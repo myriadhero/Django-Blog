@@ -1,5 +1,7 @@
 {% load blog_tags %}
+{% load core_tags %}
 {% load static %}
+{% get_site_identity as site_identity %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +17,7 @@
     {% endblock %}
 </head>
 <body>
-    {% include "blog/base_includes/header.html" %}
+    {% include "core/base_includes/header.html" %}
     <div class="container">
         {% block content %}
         {% endblock %}
@@ -38,8 +40,13 @@
     </div>
     <footer class="footer">
         <div class="content has-text-centered">
+            {% if site_identity.footer %}
+            site_identity.footer
+            {% endif %}
             <p>
-              <strong>© Tiffilosophy 2023.</strong>
+              <strong>
+                © {{ site_identity.title }} {% now "Y" %}.
+              </strong>
             </p>
           </div>
     </footer>

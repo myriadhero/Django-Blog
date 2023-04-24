@@ -1,6 +1,6 @@
-{% extends 'blog/base.html' %}
+{% extends 'core/base.html' %}
 {% load blog_tags %}
-{% block title %}Search{% endblock %}
+{% block title %}{{ site_identity.title }} - Search{% endblock %}
 {% block content %}
     {% if query %}
         <h1>Posts containing "{{ query }}"</h1>
