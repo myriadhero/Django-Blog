@@ -7,7 +7,12 @@ dockertest/*
 tutorial1poll/*
 *.sqlite3
 backend/media/*
-backend/blogsite/settings.py
 /Dockerfile
 /docker-compose.yml
 /frontend/node_modules
+raw-data*.json
+.env
+.env.*
+
+# sample env file
+!settings/.env

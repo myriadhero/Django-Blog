@@ -20,16 +20,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "insert your own key here, can be anything, just needs to be a secret"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG").lower() in ("true", "1", "t")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
+    "localhost",
+    "127.0.0.1",
+]
 
 SITE_ID = 1
 
-# Application definitions
+# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "blog.apps.BlogConfig",
-    # "taggit",
+    "core.apps.CoreConfig",
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.postgres",
@@ -84,11 +87,11 @@ WSGI_APPLICATION = "blogsite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydb",
-        "USER": "postgres",
-        "PASSWORD": "insert your own password here",
-        "PORT": 8001,
-        "HOST": "localhost",
+        "NAME": os.environ.get("DJANGO_DB_NAME"),
+        "USER": os.environ.get("DJANGO_DB_USER"),
+        "PASSWORD": os.environ.get("DJANGO_DB_PASSWORD"),
+        "PORT": os.environ.get("DJANGO_DB_PORT"),
+        "HOST": os.environ.get("DJANGO_DB_HOST"),
     }
 }
 
