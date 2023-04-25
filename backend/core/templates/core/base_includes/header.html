@@ -28,12 +28,12 @@
                     {{ cat.name }}
                 </a>
                 {% endfor %}
-                <hr class="is-hidden-desktop" style="display:block;margin:0.2rem 0.5rem;">
             </div>
+            <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
             <div class="navbar-end">
                 {% get_subscription_options as sub_options %}
-                {% if sub_options.kofi_url %}<a class="navbar-item" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"> Ko-fi</a>{% endif %}
+                {% if sub_options.kofi_url %}<a class="navbar-item is-flex is-align-items-center" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"><span>Ko-fi</span></a>{% endif %}
                 <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
             </div>
 
