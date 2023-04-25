@@ -2,6 +2,7 @@ from django.db import models
 
 from ckeditor.fields import RichTextField
 
+
 # Create your models here.
 class SingletonManager(models.Manager):
     def get_instance(self):
@@ -34,7 +35,7 @@ class SiteIdentity(models.Model):
 class AboutPage(models.Model):
     title = models.CharField(max_length=100)
     content = RichTextField()
-    
+
     objects = SingletonManager()
 
     class Meta:
@@ -49,3 +50,22 @@ class AboutPage(models.Model):
 
     def __str__(self):
         return f"About Page - {self.title}"
+
+
+class SubscriptionOptions(models.Model):
+    kofi_url = models.URLField(blank=True)
+
+    objects = SingletonManager()
+
+    class Meta:
+        verbose_name_plural = "Subscription Options"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(SubscriptionOptions, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def __str__(self):
+        return "Subscription Options"

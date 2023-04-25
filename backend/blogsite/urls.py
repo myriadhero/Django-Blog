@@ -20,6 +20,7 @@ from django.urls import path, include, re_path
 from django.contrib.sitemaps.views import sitemap
 from blog.sitemaps import PostSitemap
 from ckeditor_uploader import views as ckeditor_views
+from core.views import AboutPageView
 
 sitemaps = {
     "posts": PostSitemap,
@@ -36,6 +37,7 @@ urlpatterns = [
     ),
     re_path(r"^ckeditor/upload/", ckeditor_views.upload, name="ckeditor_upload"),
     path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("about/", AboutPageView.as_view(), name="about"),
 ]
 
 if settings.DEBUG:

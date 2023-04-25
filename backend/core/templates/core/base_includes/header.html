@@ -1,14 +1,15 @@
 {% load blog_tags %}
+{% load core_tags %}
 <header class="section container">
     <div id="desktop-title" class="is-hidden-touch has-text-centered pb-1">
         <a href="{% url 'blog:front_page' %}">
-            <h1 class="title">Tiffilosophy</h1>
+            <h1 class="title">{{ site_identity.title }}</h1>
         </a>
     </div>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
-                <h1 class="title">Tiffilosophy</h1>
+                <h1 class="title">{{ site_identity.title }}</h1>
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
                 data-target="navbarMainMenu">
@@ -31,8 +32,9 @@
             </div>
             
             <div class="navbar-end">
-                <a class="navbar-item" href="#" data-filter="news-letter">Newsletter</a>
-                <a class="navbar-item" href="#" data-filter="about">About/Shout</a>
+                {% get_subscription_options as sub_options %}
+                {% if sub_options.kofi_url %}<a class="navbar-item" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"> Ko-fi</a>{% endif %}
+                <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
             </div>
 
         </div>

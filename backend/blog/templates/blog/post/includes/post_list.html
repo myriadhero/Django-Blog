@@ -14,7 +14,7 @@
                     <a href="{{ post.get_absolute_url }}">
                         <h2 class="title is-3">{{ post.title }}</h2>
                     </a>
-                    {% include 'blog/post/includes/post_tags.html' %}
+                    {% include 'blog/post/includes/post_tags.html' with tpost=post %}
                     <p class="date">
                         Published {{ post.publish }} by {{ post.author.first_name }}
                     </p>

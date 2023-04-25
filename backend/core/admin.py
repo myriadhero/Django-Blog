@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AboutPage, SiteIdentity
+from .models import AboutPage, SiteIdentity, SubscriptionOptions
 
 
 # Register your models here.
@@ -21,5 +21,10 @@ class AboutPageAdmin(SingletonModelAdmin):
     pass
 
 
+class SubscriptionOptionsAdmin(SingletonModelAdmin):
+    pass
+
+
 admin.site.register(SiteIdentity, SiteIdentityAdmin)
 admin.site.register(AboutPage, AboutPageAdmin)
+admin.site.register(SubscriptionOptions, SubscriptionOptionsAdmin)
