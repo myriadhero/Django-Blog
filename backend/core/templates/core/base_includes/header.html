@@ -1,15 +1,15 @@
 {% load blog_tags %}
 {% load core_tags %}
 <header class="section container">
-    <div id="desktop-title" class="is-hidden-touch has-text-centered pb-1">
+    <div id="desktop-title" class="is-hidden-touch has-text-centered pb-2">
         <a href="{% url 'blog:front_page' %}">
-            <h1 class="title">{{ site_identity.title }}</h1>
+            <h1 class="title is-1">{{ site_identity.title }}</h1>
         </a>
     </div>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
-                <h1 class="title">{{ site_identity.title }}</h1>
+                <h1 class="title" id="mobile-title">{{ site_identity.title }}</h1>
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
                 data-target="navbarMainMenu">
@@ -19,23 +19,21 @@
             </a>
         </div>
 
-        <div id="navbarMainMenu" class="navbar-menu">
+        <div id="navbarMainMenu" class="navbar-menu is-justify-content-center">
 
-            <div class="navbar-start">
-                {% get_menu_categories as categories %}
-                {% for cat in categories %}
-                <a class="navbar-item" href="{{ cat.get_absolute_url }}">
-                    {{ cat.name }}
-                </a>
-                {% endfor %}
-            </div>
+            {% get_menu_categories as categories %}
+            {% for cat in categories %}
+            <a class="navbar-item is-size-5-desktop" href="{{ cat.get_absolute_url }}">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+
+            <span class="navbar-item m-2 is-hidden-touch is-size-5-desktop" style="cursor:default;">|</span>
             <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
-            <div class="navbar-end">
-                {% get_subscription_options as sub_options %}
-                {% if sub_options.kofi_url %}<a class="navbar-item is-flex is-align-items-center" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"><span>Ko-fi</span></a>{% endif %}
-                <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
-            </div>
+            <a class="navbar-item is-size-5-desktop" href="{% url 'about' %}" data-filter="about">About</a>
+            {% get_subscription_options as sub_options %}
+            {% if sub_options.kofi_url %}<a class="navbar-item is-flex is-align-items-center is-size-5-desktop" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"><span>Ko-fi</span></a>{% endif %}
 
         </div>
     </nav>

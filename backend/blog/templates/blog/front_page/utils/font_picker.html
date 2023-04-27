@@ -1,0 +1,66 @@
+<div class="p-5 is-flex is-flex-direction-column is-align-items-center" style="position:fixed;bottom:0px;background:#00000091;left:50%;translate:-50%;z-index:5;border-radius:25px;">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ms+Madi|Kaushan+Script|Ephesis|Qwigley|Allison">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Be+Vietnam+Pro|Urbanist|Sofia+Sans|Alumni+Sans">
+    
+    <label class="label has-text-info-light">Font for Title</label>
+    <div class="select level-item">
+        <select 
+            name="title-style" 
+            id="title-style_select"
+        >
+            <option value="">Select a font</option>
+            <option value="Ms Madi">Ms Madi</option>
+            <option value="Kaushan Script">Kaushan Script</option>
+            <option value="Ephesis">Ephesis</option>
+            <option value="Qwigley">Qwigley</option>
+            <option value="Allison">Allison</option>
+            <option value="">______</option>
+            <option value="Be Vietnam Pro">Be Vietnam Pro</option>
+            <option value="Urbanist">Urbanist</option>
+            <option value="Sofia Sans">Sofia Sans</option>
+            <option value="Alumni Sans">Alumni Sans</option>
+            
+        </select>
+    </div>
+    <label class="label has-text-info-light">Font for Category menu items</label>
+    <div class="select level-item">
+        <select 
+            name="cat-style" 
+            id="cat-style_select"
+        >
+            <option value="">Select a font</option>
+            <option value="Be Vietnam Pro">Be Vietnam Pro</option>
+            <option value="Urbanist">Urbanist</option>
+            <option value="Sofia Sans">Sofia Sans</option>
+            <option value="Alumni Sans">Alumni Sans</option>
+            <option value="">______</option>
+            <option value="Ms Madi">Ms Madi</option>
+            <option value="Kaushan Script">Kaushan Script</option>
+            <option value="Ephesis">Ephesis</option>
+            <option value="Qwigley">Qwigley</option>
+            <option value="Allison">Allison</option>
+            
+        </select>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded',function () {
+            // onchange="this.setAttribute('hx-push-url', '{{ category.get_absolute_url }}' + (this.value !== '' ? ('?tag=' + this.value) : ''));"
+            let selectElement = document.getElementById('title-style_select');
+            if (selectElement) {
+              selectElement.addEventListener('change', function () {
+                let newfont = this.value;
+                document.getElementById("desktop-title").style.fontFamily=newfont;
+                document.getElementById("mobile-title").style.fontFamily=newfont;
+              });
+            }
+            selectElement = document.getElementById('cat-style_select');
+            if (selectElement) {
+              selectElement.addEventListener('change', function () {
+                let newfont = this.value;
+                document.querySelectorAll('.navbar-item').forEach(item => item.style.fontFamily=newfont);
+                document.querySelectorAll('.category-name').forEach(item => item.style.fontFamily=newfont);
+              });
+            }
+          });
+    </script>
+</div>

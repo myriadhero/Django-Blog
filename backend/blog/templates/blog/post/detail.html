@@ -11,7 +11,7 @@
                     <p class="date subtitle is-6">
                         Published {{ post.publish|date:"DATE_FORMAT" }} by {{ post.author.first_name }}
                     </p>
-                    {% include "blog/post/includes/post_tags.html" %}
+                    {% include "blog/post/includes/post_tags.html" with tpost=post %}
         
                 </div>
                 {% if post.header_image %}
