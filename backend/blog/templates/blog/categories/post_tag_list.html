@@ -21,6 +21,7 @@
                         {% for tag in tags %}
                             <option value="{{ tag.slug }}"
                             hx-push-url=""
+                            {% if selected_tag and tag == selected_tag %}selected{% endif %}
                             >{{ tag.name }}</option>
                         {% endfor %}
                     </select>
