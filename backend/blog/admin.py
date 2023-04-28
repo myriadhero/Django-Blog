@@ -1,9 +1,19 @@
 from django.contrib import admin
 from django.db import models
 from ckeditor.widgets import CKEditorWidget
-from .models import Category, Post, Comment, CategoryTag
+from .models import Category, Post, Comment, CategoryTag, FeaturedPost
+
 
 # Register your models here.
+class FeaturedPostInline(admin.TabularInline):
+    model = FeaturedPost
+    extra = 1
+    readonly_fields = ("post_status",)
+
+    def post_status(self, instance):
+        return instance.post.status
+
+    post_status.short_description = "Post Status"
 
 
 @admin.register(Category)
@@ -17,6 +27,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "is_tag_list",
     ]
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [FeaturedPostInline]
 
 
 @admin.register(Post)
@@ -35,20 +46,6 @@ class PostAdmin(admin.ModelAdmin):
     # raw_id_fields = ['author']
     ordering = ["status", "publish"]
     formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
-
-
-class FeaturedPost(Post):
-    class Meta:
-        proxy = True
-
-
-@admin.register(FeaturedPost)
-class FeaturedPostAdmin(PostAdmin):
-    # list_display = ["title", "categories", "status", "publish", "status"]
-    ordering = ["categories", "status", "featured_order", "publish"]
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(is_featured=True)
 
 
 @admin.register(Comment)
