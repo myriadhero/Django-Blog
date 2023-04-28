@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import Exists, OuterRef
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import gettext_lazy, pgettext_lazy
+from django.utils.translation import gettext_lazy
 from django.urls import reverse
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -110,15 +110,6 @@ class PublishedManager(models.Manager):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
-class FeaturedManager(models.Manager):
-    def get_queryset(self):
-        return (
-            super()
-            .published.filter(is_featured=True)
-            .order_by("categories", "featured_order")
-        )
-
-
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
@@ -148,12 +139,9 @@ class Post(models.Model):
         verbose_name="Category tags",
         help_text="Category tags, comma separated",
     )
-    is_featured = models.BooleanField(default=False)
-    featured_order = models.IntegerField(default=0)
 
     objects = models.Manager()
     published = PublishedManager()
-    featured = FeaturedManager()
 
     thumbnail = ImageSpecField(
         source="preview_image",
@@ -213,6 +201,29 @@ class Post(models.Model):
         return self.title
 
 
+class FeaturedPostPublishedManager(models.Manager):
+    def get_queryset(self):
+        return self.filter(post__status=Post.Status.PUBLISHED)
+
+
+class FeaturedPost(models.Model):
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="featured_posts"
+    )
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0, help_text="Enter an integer value to define the display order.")
+
+    objects = models.Manager()
+    published = FeaturedPostPublishedManager()
+
+    class Meta:
+        unique_together = ("category", "post")
+        ordering = ["order", "-post__publish"]
+
+    def __str__(self):
+        return f"{self.category} - {self.post} (Order: {self.order})"
+
+
 class Comment(models.Model):
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -235,14 +246,3 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return f"Comment by {self.name} on {self.post}"
 
-
-# class FeaturedPost(models.Model):
-#     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-#     order = models.IntegerField(
-#         default=0, help_text="Enter an integer value to define the display order."
-#     )
-
-#     class Meta:
-#         unique_together = ("post", "category")
-#         ordering = ["order"]
