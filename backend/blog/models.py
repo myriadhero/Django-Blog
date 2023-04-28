@@ -59,11 +59,6 @@ class Category(models.Model):
         verbose_name = gettext_lazy("Category")
         verbose_name_plural = gettext_lazy("Categories")
 
-    def get_featured_posts(self):
-        return self.post_set.filter(
-            is_featured=True, status=Post.Status.PUBLISHED
-        ).order_by("featured_order", "publish")[:5]
-
     def get_absolute_url(self):
         return reverse("blog:category", args=[self.slug])
 
@@ -203,7 +198,7 @@ class Post(models.Model):
 
 class FeaturedPostPublishedManager(models.Manager):
     def get_queryset(self):
-        return self.filter(post__status=Post.Status.PUBLISHED)
+        return super().get_queryset().filter(post__status=Post.Status.PUBLISHED)
 
 
 class FeaturedPost(models.Model):
@@ -211,7 +206,9 @@ class FeaturedPost(models.Model):
         Category, on_delete=models.CASCADE, related_name="featured_posts"
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    order = models.IntegerField(default=0, help_text="Enter an integer value to define the display order.")
+    order = models.IntegerField(
+        default=0, help_text="Enter an integer value to define the display order."
+    )
 
     objects = models.Manager()
     published = FeaturedPostPublishedManager()
@@ -245,4 +242,3 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f"Comment by {self.name} on {self.post}"
-

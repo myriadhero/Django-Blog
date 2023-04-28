@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
-from django.db.models import Count
-from django.views.generic import ListView, DetailView, TemplateView
+from django.db.models import Count, Prefetch
+from django.views.generic import ListView, DetailView
 from django.views.decorators.http import require_POST
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from .models import Post, Category, CategoryTag
+from .models import Post, Category, CategoryTag, FeaturedPost
 from .forms import EmailPostForm, CommentForm, SearchForm
 
 POSTS_PER_PAGE = 3
@@ -138,9 +138,20 @@ class PostDetailView(DetailView):
 
 
 class FrontPageView(ListView):
-    queryset = Category.on_front_page.all()
     context_object_name = "categories"
     template_name = "blog/front_page/front_page.html"
+
+    def get_queryset(self):
+        featured_posts_with_posts = FeaturedPost.published.select_related("post").all()
+        prefetch_featured_posts = Prefetch(
+            "featured_posts",
+            queryset=featured_posts_with_posts,
+            to_attr="published_featured_posts",
+        )
+        categories = Category.on_front_page.prefetch_related(
+            prefetch_featured_posts
+        ).all()
+        return categories
 
 
 def post_search(request):

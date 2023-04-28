@@ -8,6 +8,12 @@ from .models import Category, Post, Comment, CategoryTag, FeaturedPost
 class FeaturedPostInline(admin.TabularInline):
     model = FeaturedPost
     extra = 1
+    readonly_fields = ("post_status",)
+
+    def post_status(self, instance):
+        return instance.post.status
+
+    post_status.short_description = "Post Status"
 
 
 @admin.register(Category)
