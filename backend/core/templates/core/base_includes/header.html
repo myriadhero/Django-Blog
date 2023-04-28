@@ -33,7 +33,14 @@
             
             <a class="navbar-item is-size-5-desktop" href="{% url 'about' %}" data-filter="about">About</a>
             {% get_subscription_options as sub_options %}
-            {% if sub_options.kofi_url %}<a class="navbar-item is-flex is-align-items-center is-size-5-desktop" href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank"><img src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"><span>Ko-fi</span></a>{% endif %}
+            {% if sub_options.kofi_url %}
+            <a class="navbar-item is-flex is-align-items-center is-size-5-desktop" 
+            href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank">
+                {% load static %}
+                <img src="{% static 'kofi/kofi_logo_smol.png' %}">
+                <span>Ko-fi</span>
+            </a>
+            {% endif %}
 
         </div>
     </nav>
