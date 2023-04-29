@@ -16,6 +16,7 @@ lxml = "*"
 [dev-packages]
 black = "*"
 django-debug-toolbar = "*"
+isort = "*"
 
 [requires]
 python_version = "3.11"

@@ -1,7 +1,8 @@
+from ckeditor.widgets import CKEditorWidget
 from django.contrib import admin
 from django.db import models
-from ckeditor.widgets import CKEditorWidget
-from .models import Category, Post, Comment, CategoryTag, FeaturedPost
+
+from .models import Category, CategoryTag, Comment, FeaturedPost, Post
 
 
 # Register your models here.

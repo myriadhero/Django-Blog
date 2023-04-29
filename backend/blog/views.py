@@ -1,12 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.mail import send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch
-from django.views.generic import ListView, DetailView
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from .models import Post, Category, CategoryTag, FeaturedPost
-from .forms import EmailPostForm, CommentForm, SearchForm
+from django.views.generic import DetailView, ListView
+
+from .forms import CommentForm, EmailPostForm, SearchForm
+from .models import Category, CategoryTag, FeaturedPost, Post
 
 POSTS_PER_PAGE = 3
 RECOMMENDED_POSTS_NUM = 5
