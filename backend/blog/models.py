@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Exists, OuterRef
 from django.utils import timezone
@@ -63,7 +64,17 @@ class Category(models.Model):
         return reverse("blog:category", args=[self.slug])
 
     def get_tags_that_have_at_least_one_post(self):
-        tag_relations = TaggedWithCategoryTags.objects.filter(tag=OuterRef("pk"))
+        if self.is_tag_list:
+            tag_relations = TaggedWithCategoryTags.objects.filter(
+                tag=OuterRef("pk"),
+            )
+        else:
+            post_content_type = ContentType.objects.get_for_model(Post)
+            tag_relations = TaggedWithCategoryTags.objects.filter(
+                tag=OuterRef("pk"),
+                content_type=post_content_type,
+                object_id__in=self.post_set.all(),
+            )
         return self.categorytag_set.filter(Exists(tag_relations))
 
     def __str__(self) -> str:
