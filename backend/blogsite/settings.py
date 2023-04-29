@@ -29,6 +29,11 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
     "localhost",
     "127.0.0.1",
 ]
+if DEBUG:
+    INTERNAL_IPS = [
+        "localhost",
+        "127.0.0.1",
+    ]
 
 SITE_ID = 1
 
@@ -49,6 +54,12 @@ INSTALLED_APPS = [
     "ckeditor",
     "ckeditor_uploader",
 ]
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+
+    import mimetypes
+
+    mimetypes.add_type("application/javascript", ".js", True)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -59,6 +70,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+if DEBUG:
+    MIDDLEWARE.insert(3, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "blogsite.urls"
 

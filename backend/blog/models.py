@@ -218,7 +218,7 @@ class FeaturedPost(models.Model):
         ordering = ["order", "-post__publish"]
 
     def __str__(self):
-        return f"{self.category} - {self.post} (Order: {self.order})"
+        return f"{self.category} - {self.post} (Order: {self.order}, Published: {self.post.publish.strftime('%a %d %b %Y, %I:%M%p')})"
 
 
 class Comment(models.Model):
