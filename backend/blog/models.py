@@ -95,12 +95,15 @@ class CategoryTag(TagBase):
     )
 
     class Meta:
-        verbose_name = gettext_lazy("Category tag")
-        verbose_name_plural = gettext_lazy("Category tags")
+        verbose_name = gettext_lazy("Tag with categories")
+        verbose_name_plural = gettext_lazy("Tags with categories")
         ordering = ["name"]
 
     def get_absolute_url(self):
         return reverse("blog:posts_by_tag", args=[self.slug])
+
+    def get_tagged_posts(self):
+        return Post.objects.filter(tags=self).all()
 
 
 class TaggedWithCategoryTags(GenericTaggedItemBase):
@@ -142,8 +145,8 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category)
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
-        verbose_name="Category tags",
-        help_text="Category tags, comma separated",
+        verbose_name="Tags with categories",
+        help_text="Tags, comma separated",
     )
 
     objects = models.Manager()
