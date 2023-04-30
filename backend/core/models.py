@@ -1,6 +1,5 @@
-from django.db import models
-
 from ckeditor.fields import RichTextField
+from django.db import models
 
 
 # Create your models here.
@@ -63,6 +62,33 @@ class SubscriptionOptions(models.Model):
     def save(self, *args, **kwargs):
         self.pk = 1
         super(SubscriptionOptions, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def __str__(self):
+        return "Subscription Options"
+
+
+class SocialMedia(models.Model):
+    youtube_url = models.URLField(blank=True)
+    youtube_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Shown in the mobile menu",
+    )
+    twitter_url = models.URLField(blank=True)
+    twitter_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Shown in the mobile menu",
+    )
+
+    objects = SingletonManager()
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(SocialMedia, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         pass

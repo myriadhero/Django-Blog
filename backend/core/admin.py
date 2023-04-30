@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import AboutPage, SiteIdentity, SubscriptionOptions
+
+from .models import AboutPage, SiteIdentity, SocialMedia, SubscriptionOptions
 
 
 # Register your models here.
@@ -13,18 +14,21 @@ class SingletonModelAdmin(admin.ModelAdmin):
         return super().change_view(request, object_id, form_url, extra_context)
 
 
+@admin.register(SiteIdentity)
 class SiteIdentityAdmin(SingletonModelAdmin):
     pass
 
 
+@admin.register(AboutPage)
 class AboutPageAdmin(SingletonModelAdmin):
     pass
 
 
+@admin.register(SubscriptionOptions)
 class SubscriptionOptionsAdmin(SingletonModelAdmin):
     pass
 
 
-admin.site.register(SiteIdentity, SiteIdentityAdmin)
-admin.site.register(AboutPage, AboutPageAdmin)
-admin.site.register(SubscriptionOptions, SubscriptionOptionsAdmin)
+@admin.register(SocialMedia)
+class SocialMediaLinksAdmin(SingletonModelAdmin):
+    pass

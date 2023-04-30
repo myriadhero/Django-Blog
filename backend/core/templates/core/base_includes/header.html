@@ -6,7 +6,7 @@
             <h1 class="title is-1">{{ site_identity.title }}</h1>
         </a>
     </div>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-justify-content-center" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
                 <h1 class="title" id="mobile-title">{{ site_identity.title }}</h1>
@@ -19,29 +19,61 @@
             </a>
         </div>
 
-        <div id="navbarMainMenu" class="navbar-menu is-justify-content-center">
+        <div id="navbarMainMenu" class="navbar-menu is-size-5-widescreen is-justify-content-center">
 
             {% get_menu_categories as categories %}
             {% for cat in categories %}
-            <a class="navbar-item is-size-5-desktop" href="{{ cat.get_absolute_url }}">
+            <a class="navbar-item " href="{{ cat.get_absolute_url }}">
                 {{ cat.name }}
             </a>
             {% endfor %}
 
-            <span class="navbar-item m-2 is-hidden-touch is-size-5-desktop" style="cursor:default;">|</span>
+            {% get_social_media_links as sm_links %}
+            <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span>
             <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
-            <a class="navbar-item is-size-5-desktop" href="{% url 'about' %}" data-filter="about">About</a>
+            {% if sm_links.twitter_url %}
+            <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
+            <a class="icon-text navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+                <span class="icon"><i class="fa-brands fa-twitter has-text-info"></i></span>
+                <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+            </a>
+            {% endif %}
+            {% if sm_links.youtube_url %}
+            <a class="icon-text navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+                <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+                <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+            </a>
+            {% endif %}
+            
             {% get_subscription_options as sub_options %}
             {% if sub_options.kofi_url %}
-            <a class="navbar-item is-flex is-align-items-center is-size-5-desktop" 
-            href="{{ sub_options.kofi_url }}" data-filter="ko-fi" target="_blank">
-                {% load static %}
-                <img src="{% static 'kofi/kofi_logo_smol.png' %}">
-                <span>Ko-fi</span>
+            <a class="navbar-item" href="{{ sub_options.kofi_url }}" 
+            data-filter="ko-fi" target="_blank">
+                <span class="icon-text">
+                    {% load static %}
+                    <img src="{% static 'kofi/kofi_logo_smol.png' %}" class="icon">
+                    <span>Ko-fi</span>
+                </span>
             </a>
             {% endif %}
 
+            <span class="navbar-item m-2 is-hidden-touch " style="cursor:default;">|</span>
+
+            <span class="icon-text navbar-item" id="title-search">
+                <span class="icon-text" id="title-search-icon">
+                    <span class="icon">🔎</span>
+                    <span class="is-hidden-desktop">Search posts</span>
+                </span>
+                <form action="{% url 'blog:post_search' %}" method="get"
+                class="control has-icons-left is-hidden" id="title-search-form">
+                    <input type="text" class="input" id="title-search-input" placeholder="Search..." name="query">
+                    <span class="icon is-left">
+                        🔎
+                    </span>
+                </form>
+
+            </span>
         </div>
     </nav>
 </header>

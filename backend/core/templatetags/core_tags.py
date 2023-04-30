@@ -1,5 +1,5 @@
+from core.models import SiteIdentity, SocialMedia, SubscriptionOptions
 from django import template
-from core.models import SiteIdentity, SubscriptionOptions
 
 register = template.Library()
 
@@ -12,3 +12,8 @@ def get_site_identity():
 @register.simple_tag
 def get_subscription_options():
     return SubscriptionOptions.objects.get_instance()
+
+
+@register.simple_tag
+def get_social_media_links():
+    return SocialMedia.objects.get_instance()

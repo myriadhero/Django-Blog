@@ -28,6 +28,10 @@
         --swiper-pagination-top-fraction: 1;
         --swiper-pagination-top: calc(var(--swiper-pagination-top-fraction) * (4 * (var(--carousel-container-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1)))) / (3 * var(--number-of-cards)));
     }
+
+    .navbar-item {
+        padding: 0.5rem 0.5rem;
+    }
 }
 
 /* widescreen */
@@ -75,4 +79,8 @@
 .swiper-slide .card-image {
     border-radius: 25px;
     overflow: hidden;
+}
+
+#title-search-icon {
+    cursor: pointer;
 }

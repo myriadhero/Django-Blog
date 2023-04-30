@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "ckeditor",
     "ckeditor_uploader",
+    "fontawesomefree",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")

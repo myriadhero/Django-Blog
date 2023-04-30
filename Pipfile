@@ -12,6 +12,7 @@ django-ckeditor = "*"
 django-imagekit = "*"
 pillow = "*"
 lxml = "*"
+fontawesomefree = "*"
 
 [dev-packages]
 black = "*"
