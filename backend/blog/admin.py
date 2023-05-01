@@ -104,10 +104,15 @@ class TagsWithNoPostsFilter(admin.SimpleListFilter):
 
 @admin.register(CategoryTag)
 class CategoryTagAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug", "get_categories"]
+    list_display = ["name", "slug", "description", "get_categories"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
-    list_filter = ["categories", TagsWithNoPostsFilter]
+    list_filter = [
+        "categories",
+        TagsWithNoPostsFilter,
+        ("description", admin.EmptyFieldListFilter),
+        ("preview_image", admin.EmptyFieldListFilter),
+    ]
     readonly_fields = ["get_tagged_posts"]
 
     def get_categories(self, obj: CategoryTag):
