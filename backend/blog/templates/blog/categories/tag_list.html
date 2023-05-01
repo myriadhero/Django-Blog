@@ -20,25 +20,29 @@
             {% for letter, letter_tags in alpha_tags %}
                 <p class="title is-3 pl-5" id="starts-with-{{ letter }}">{{ letter }}</p>
                 {% for tag in letter_tags %}
-                    <div class="level is-mobile">
-                        <div class="level-left">
-                            <div class="level-item image is-96x96">
-                                <img src="{% if tag.thumbnail %}{{ tag.thumbnail.url }}
-                                {% else %}https://bulma.io/images/placeholders/96x96.png{% endif %}"
+                    <div class="columns is-mobile">
+                        <div class="column is-narrow">
+                            <div class="image is-96x96">
+                                <img src="
+                                {% if tag.thumbnail %}
+                                    {{ tag.thumbnail.url }}
+                                {% else %}
+                                    https://bulma.io/images/placeholders/96x96.png
+                                {% endif %}"
                                 alt="{{ tag.name }}" class="is-rounded">
                             </div>
-                            <a href="{{ tag.get_absolute_url }}" class="level-item content">
-                                <div>
-                                    <p class="title is-4 has-text-info">{{ tag.name }}</p>
-                                    <p class="subtitle is-6">
-                                        {% if tag.description %}
-                                            {{tag.description}}
-                                        {% else %}
-                                            Hello this person isn't described yet
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </a>
+                        </div>
+                        <div class="column is-flex is-flex-direction-column is-justify-content-center">
+                            <p class="title is-4">
+                                <a href="{{ tag.get_absolute_url }}" class="has-text-info ">{{ tag.name }}</a>
+                            </p>
+                            <p class="subtitle is-6">
+                                {% if tag.description %}
+                                    {{tag.description}}
+                                {% else %}
+                                    🐱‍👤🤷‍♀️
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 {% endfor %}
