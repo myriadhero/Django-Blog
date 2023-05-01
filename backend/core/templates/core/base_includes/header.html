@@ -32,20 +32,25 @@
             <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span>
             <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
-            {% if sm_links.twitter_url %}
             <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
-            <a class="icon-text navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
-                <span class="icon"><i class="fa-brands fa-twitter has-text-info"></i></span>
-                <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+            
+            {% if sm_links.twitter_url %}
+            <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+                <span class="icon-text">
+                    <span class="icon"><i class="fa-brands fa-twitter has-text-info"></i></span>
+                    <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+                </span>
             </a>
             {% endif %}
             {% if sm_links.youtube_url %}
-            <a class="icon-text navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
-                <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
-                <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+            <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+                <span class="icon-text">
+                    <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+                    <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+                </span>
             </a>
             {% endif %}
-            
+
             {% get_subscription_options as sub_options %}
             {% if sub_options.kofi_url %}
             <a class="navbar-item" href="{{ sub_options.kofi_url }}" 
@@ -60,11 +65,13 @@
 
             <span class="navbar-item m-2 is-hidden-touch " style="cursor:default;">|</span>
 
-            <span class="icon-text navbar-item" id="title-search">
+            <span class="icon-text navbar-item is-clickable" id="title-search">
+
                 <span class="icon-text" id="title-search-icon">
                     <span class="icon">🔎</span>
-                    <span class="is-hidden-desktop">Search posts</span>
+                    <span class="">Search</span>
                 </span>
+
                 <form action="{% url 'blog:post_search' %}" method="get"
                 class="control has-icons-left is-hidden" id="title-search-form">
                     <input type="text" class="input" id="title-search-input" placeholder="Search..." name="query">

@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById("title-search-input");
     const searchForm = document.getElementById("title-search-form");
     const searchIcon = document.getElementById("title-search-icon");
+    const searchNav = document.getElementById("title-search");
+
+    const FOCUSOUTDELAY = 5000;
+    let focusOutTimeout = null;
 
     function isActive(elem) {
         return (document.activeElement == elem);
@@ -33,22 +37,30 @@ document.addEventListener('DOMContentLoaded', () => {
         searchForm.classList.toggle("is-hidden");
     }
 
-    searchIcon.addEventListener("click", () => {
+    function revealFormOnClick() {
         toggleSearchElemVisibility();
         searchInput.focus();
-    });
+        searchNav.removeEventListener("click", revealFormOnClick);
+    }
 
-    let focusOutTimeout = null;
-
-    searchInput.addEventListener("focusout", () => {
-        focusOutTimeout = setTimeout(() => {
-            if (!isActive(searchInput)) toggleSearchElemVisibility();
+    function hideFormOnFocusOut() {
+        if (!isActive(searchInput)) {
+            toggleSearchElemVisibility();
             focusOutTimeout = null;
-        }, 5000);
+            searchNav.addEventListener("click", revealFormOnClick);
+        }
+    }
 
-    });
+    function resetFocusOutTimeoutOnFocus() {
+        if (focusOutTimeout != null) {
+            clearTimeout(focusOutTimeout);
+            focusOutTimeout = null;
+        }
+    }
 
-    searchInput.addEventListener("focus", () => {
-        if (focusOutTimeout != null) clearTimeout(focusOutTimeout);
+    searchNav.addEventListener("click", revealFormOnClick);
+    searchInput.addEventListener("focusout", () => {
+        focusOutTimeout = setTimeout(hideFormOnFocusOut, FOCUSOUTDELAY);
     });
+    searchInput.addEventListener("focus", resetFocusOutTimeoutOnFocus);
 });
