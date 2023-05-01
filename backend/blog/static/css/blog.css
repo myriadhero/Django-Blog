@@ -2,7 +2,6 @@
     --swiper-scrollbar-bottom: auto;
     --swiper-scrollbar-top: 0%;
     --swiper-pagination-bottom: auto;
-    --swiper-navigation-top-offset: 40%;
     --swiper-pagination-bullet-horizontal-gap: 15px;
 
     --scrollbar-width: 0px;
@@ -10,7 +9,11 @@
     --number-of-cards: 2;
     --carousel-container-padding: 3rem;
     --swiper-pagination-top-fraction: 1;
-    --swiper-pagination-top: calc(var(--swiper-pagination-top-fraction) * (4 * (100vw - var(--scrollbar-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1) + var(--carousel-container-padding)))) / (3 * var(--number-of-cards)));
+    --carousel-card-height: calc(4 * (100vw - var(--scrollbar-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1) + var(--carousel-container-padding)))) / (3 * var(--number-of-cards));
+    --swiper-pagination-top: calc(var(--swiper-pagination-top-fraction) * var(--carousel-card-height));
+
+    --swiper-navigation-arrows-top-fraction: 0.5;
+    --swiper-navigation-top-offset: calc(var(--swiper-navigation-arrows-top-fraction) * var(--carousel-card-height));
 }
 
 /* touch devices */
@@ -26,7 +29,7 @@
         --number-of-cards: 4;
         --carousel-container-width: 864px;
         --swiper-pagination-top-fraction: 1;
-        --swiper-pagination-top: calc(var(--swiper-pagination-top-fraction) * (4 * (var(--carousel-container-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1)))) / (3 * var(--number-of-cards)));
+        --carousel-card-height: calc(4 * (var(--carousel-container-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1)))) / (3 * var(--number-of-cards));
     }
 
     .navbar-item {
