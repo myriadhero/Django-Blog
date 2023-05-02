@@ -20,6 +20,14 @@ class FeaturedPostInline(admin.TabularInline):
 
     post_status.short_description = "Post Status"
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "post":
+            category_id = request.resolver_match.kwargs.get("object_id")
+            if category_id:
+                category = Category.objects.get(pk=category_id)
+                kwargs["queryset"] = Post.objects.filter(categories=category)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
