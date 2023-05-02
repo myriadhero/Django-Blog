@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from lxml import html
 from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 
@@ -81,6 +82,14 @@ class Category(models.Model):
         return self.name
 
 
+class NonEmptyTagsManager(models.Manager):
+    def get_queryset(self):
+        tag_relations = TaggedWithCategoryTags.objects.filter(
+            tag=OuterRef("pk"),
+        )
+        return super().get_queryset().filter(Exists(tag_relations))
+
+
 class CategoryTag(TagBase):
     categories = models.ManyToManyField(Category, blank=True)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
@@ -93,6 +102,9 @@ class CategoryTag(TagBase):
         format="jpeg",
         options={"quality": 60},
     )
+
+    objects = models.Manager()
+    non_empty = NonEmptyTagsManager()
 
     class Meta:
         verbose_name = gettext_lazy("Tag with categories")
@@ -178,7 +190,8 @@ class Post(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        self.slug = self.generate_unique_slug()
+        self.generate_unique_slug()
+        self.remove_scripts_from_body()
         super().save(*args, **kwargs)
 
     def generate_unique_slug(self):
@@ -201,7 +214,17 @@ class Post(models.Model):
             counter += 1
             slug = f"{base_slug}-{counter}"
 
-        return slug
+        self.slug = slug
+
+    def remove_scripts_from_body(self):
+        # TODO: replace with django-bleach, delete script tags from other posts
+        root = html.fromstring(self.body)
+        root.clean(scripts=True)
+
+        for tag in root.xpath("//script"):
+            tag.drop_tag()
+
+        self.body = html.tostring(root, encoding="unicode")
 
     def get_absolute_url(self):
         return reverse("blog:post_detail", args=[self.slug])

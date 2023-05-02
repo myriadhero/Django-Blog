@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     "ckeditor",
     "ckeditor_uploader",
     "fontawesomefree",
+    "crispy_forms",
+    "crispy_bulma",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
@@ -245,3 +247,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
+CRISPY_TEMPLATE_PACK = "bulma"
