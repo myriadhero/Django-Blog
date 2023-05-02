@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView
 
-from .forms import CommentForm, EmailPostForm, SearchForm
+from .forms import AdvancedSearchForm, CommentForm, EmailPostForm
 from .models import Category, CategoryTag, FeaturedPost, Post
 
 POSTS_PER_PAGE = 3
@@ -34,38 +34,8 @@ class TagPostListView(PostListView):
         return context
 
 
-class PostListHTMXView(PostListView):
+class HTMXPostListView(PostListView):
     template_name = "blog/post/includes/post_list.html"
-
-    def get_queryset(self):
-        queryset = Post.published
-
-        category_slug = self.request.GET.get("category", None)
-        tag_slug = self.request.GET.get("tag", None)
-
-        if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            queryset = queryset.filter(categories=category)
-
-        if tag_slug:
-            tag = get_object_or_404(CategoryTag, slug=tag_slug)
-            queryset = queryset.filter(tags=tag)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        category_slug = self.request.GET.get("category", None)
-        tag_slug = self.request.GET.get("tag", None)
-
-        if category_slug:
-            context["category"] = get_object_or_404(Category, slug=category_slug)
-
-        if tag_slug:
-            context["selected_tag"] = get_object_or_404(CategoryTag, slug=tag_slug)
-
-        return context
 
 
 class CategoryDetailView(ListView):
@@ -107,6 +77,13 @@ class CategoryDetailView(ListView):
 
     def get_category(self) -> Category:
         return get_object_or_404(Category, slug=self.kwargs["category_slug"])
+
+
+class HTMXCategoryDetailView(CategoryDetailView):
+    template_name = "blog/post/includes/post_list.html"
+
+    def get_template_names(self):
+        return ["blog/post/includes/post_list.html"]
 
 
 class PostDetailView(DetailView):
@@ -155,56 +132,60 @@ class FrontPageView(ListView):
         return categories
 
 
-def post_search(request):
-    # TODO: convert to class based view and implement pagination
-    form = SearchForm()
-    query = None
-    results = []
+class PostSearchListView(PostListView):
+    template_name = "blog/post/search.html"
+    form_class = AdvancedSearchForm
 
-    if "query" in request.GET:
-        form = SearchForm(request.GET)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = self.form_class(self.request.GET)
+
         if form.is_valid():
             query = form.cleaned_data["query"]
-            search_vector = SearchVector("title", "body")
-            search_query = SearchQuery(query)
+            categories = form.cleaned_data["categories"]
+            tags = form.cleaned_data["tags"]
+            before = form.cleaned_data["before"]
+            after = form.cleaned_data["after"]
 
-            results = (
-                Post.published.annotate(
-                    search=search_vector, rank=SearchRank(search_vector, search_query)
+            if not any((query, categories, tags, before, after)):
+                return queryset.none()
+
+            if query:
+                search_vector = SearchVector("title", "body")
+                search_query = SearchQuery(query)
+                queryset = (
+                    queryset.annotate(
+                        search=search_vector,
+                        rank=SearchRank(search_vector, search_query),
+                    )
+                    .filter(search=search_query)
+                    .order_by("-rank")
                 )
-                .filter(search=search_query)
-                .order_by("-rank")
-            )
-    return render(
-        request,
-        "blog/post/search.html",
-        {"form": form, "query": query, "results": results},
-    )
+
+            if categories:
+                for cat in categories:
+                    queryset = queryset.filter(categories=cat)
+
+            if tags:
+                for tag in tags:
+                    queryset = queryset.filter(tags=tag)
+
+            if before:
+                queryset = queryset.filter(publish__lt=before)
+
+            if after:
+                queryset = queryset.filter(publish__gt=after)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.form_class(self.request.GET)
+        return context
 
 
-def post_list(request):
-    post_list = Post.published.all()
-    paginator = Paginator(post_list, POSTS_PER_PAGE)
-    page_number = request.GET.get("page", 1)
-    try:
-        posts = paginator.page(page_number)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-
-    return render(request, "blog/post/list.html", {"posts": posts})
-
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post.published, slug=slug)
-    comments = post.comments.filter(active=True)
-    form = CommentForm()
-    return render(
-        request,
-        "blog/post/detail.html",
-        {"post": post, "comments": comments, "form": form},
-    )
+class HTMXPostSearchListView(PostSearchListView):
+    template_name = "blog/post/includes/post_list.html"
 
 
 def post_share(request, post_slug):

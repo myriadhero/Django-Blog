@@ -13,9 +13,10 @@
                     <select 
                         name="tag" 
                         id="cat_tag_select" 
-                        hx-get="{% paginated_htmx_link category=category %}"
+                        hx-get="{% url 'blog:htmx_category_list' category.slug %}"
                         hx-target="#list-items"
                         data-url="{{ category.get_absolute_url }}"
+                        hx-swap="outerHTML"
                     >
                         <option value="">All</option>
                         {% for tag in tags %}

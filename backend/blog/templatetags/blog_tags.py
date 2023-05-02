@@ -1,10 +1,11 @@
 from django import template
 from django.db.models import Count
-from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from lxml import html
 from markdown import markdown
-from ..models import Post, Category
+
+from ..models import Category, Post
 
 register = template.Library()
 
@@ -35,16 +36,11 @@ def get_menu_categories():
     return Category.in_menu.all()
 
 
-@register.simple_tag
-def paginated_htmx_link(page=None, category=None, tag=None):
-    url = f'{reverse("blog:htmx_post_list")}?'
-    if page:
-        url += f"&page={page}"
-    if category:
-        url += f"&category={category.slug}"
-    if tag:
-        url += f"&tag={tag.slug}"
-    return url
+@register.simple_tag(takes_context=True)
+def get_page_url(context, page):
+    query = context["request"].GET.copy()
+    query["page"] = page
+    return query.urlencode()
 
 
 @register.filter(name="html_preview")

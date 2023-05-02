@@ -13,6 +13,8 @@ django-imagekit = "*"
 pillow = "*"
 lxml = "*"
 fontawesomefree = "*"
+django-crispy-forms = "*"
+crispy-bulma = "*"
 
 [dev-packages]
 black = "*"
