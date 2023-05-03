@@ -87,3 +87,7 @@
     border-radius: 25px;
     overflow: hidden;
 }
+
+a.tag-expander {
+    white-space: nowrap;
+}
