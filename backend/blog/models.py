@@ -219,7 +219,6 @@ class Post(models.Model):
     def remove_scripts_from_body(self):
         # TODO: replace with django-bleach, delete script tags from other posts
         root = html.fromstring(self.body)
-        root.clean(scripts=True)
 
         for tag in root.xpath("//script"):
             tag.drop_tag()
