@@ -20,7 +20,10 @@
                     </p>
                 </div>
                 <div class="content">
-                    {{ post.body|truncatewords_html:50|html_preview|safe }}
+                    {{ post.body|tweet_or_truncate:30|html_preview|safe }}
+                </div>
+                <div class="block">
+                    <a href="{{ post.get_absolute_url }}" class="button is-warning is-light">See the rest...</a>
                 </div>
             </div>
         </div>
@@ -28,3 +31,7 @@
     {% endfor %}
     {% include "pagination.html" %}
 </div>
+
+{% block scripts %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{% endblock %}

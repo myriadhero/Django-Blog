@@ -1,7 +1,7 @@
 from django import template
 from django.db.models import Count
-from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.text import Truncator
 from lxml import html
 from markdown import markdown
 
@@ -53,3 +53,13 @@ def html_preview(value):
         tag.drop_tag()
 
     return html.tostring(root, encoding="unicode")
+
+
+@register.filter(name="tweet_or_truncate")
+def tweet_or_truncate(body, word_num=50):
+    root = html.fromstring(body)
+
+    for tag in root.xpath("//blockquote"):
+        return html.tostring(tag, encoding="unicode")
+
+    return Truncator(body).words(word_num, html=True)

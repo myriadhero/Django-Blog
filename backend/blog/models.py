@@ -221,7 +221,7 @@ class Post(models.Model):
         root = html.fromstring(self.body)
 
         for tag in root.xpath("//script"):
-            tag.drop_tag()
+            tag.drop_tree()
 
         self.body = html.tostring(root, encoding="unicode")
 
