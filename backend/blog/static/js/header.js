@@ -82,4 +82,4 @@
 
 
     document.addEventListener("DOMContentLoaded", addListenersOnPageLoadAndAttachToHtmx);
-});
+})();
