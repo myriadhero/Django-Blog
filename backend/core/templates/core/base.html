@@ -13,8 +13,7 @@
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/blog.css' %}"> 
-    <script src="{% static 'js/header.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
     <script src="https://unpkg.com/htmx.org@1.8.6"></script>
     {% block head_links %}
     {% endblock %}
@@ -56,5 +55,6 @@
 </body>
 {% block scripts %}
 {% endblock %}
+<script src="{% static 'js/header.js' %}"></script>
 <script src="{% static 'js/post_helpers.js' %}"></script>
 </html>
