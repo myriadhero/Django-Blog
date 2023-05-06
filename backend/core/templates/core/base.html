@@ -43,7 +43,7 @@
     <footer class="footer">
         <div class="content has-text-centered">
             {% if site_identity.footer %}
-            {{ site_identity.footer }}
+            {{ site_identity.footer|safe }}
             {% endif %}
             <p>
               <strong>
@@ -57,4 +57,16 @@
 {% endblock %}
 <script src="{% static 'js/header.js' %}"></script>
 <script src="{% static 'js/post_helpers.js' %}"></script>
+{% get_subscription_options as sub_options %}
+{% if sub_options.kofi_account_name %}
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('{{ sub_options.kofi_account_name }}', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Support me',
+    'floating-chat.donateButton.background-color': '#00b9fe',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
+{% endif %}
 </html>

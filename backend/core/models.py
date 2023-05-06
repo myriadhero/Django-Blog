@@ -52,7 +52,14 @@ class AboutPage(models.Model):
 
 
 class SubscriptionOptions(models.Model):
-    kofi_url = models.URLField(blank=True)
+    kofi_account_name = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Is the name at the end of the URL without the URL stuff",
+    )
+    kofi_url = models.URLField(
+        blank=True, help_text="Should have same account name at the end"
+    )
 
     objects = SingletonManager()
 
