@@ -2,7 +2,7 @@ from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Exists, OuterRef
+from django.db.models import Count, Exists, OuterRef
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -193,6 +193,18 @@ class Post(models.Model):
         self.generate_unique_slug()
         self.remove_scripts_from_body()
         super().save(*args, **kwargs)
+
+    def get_similar_posts(self, post_num=5):
+        post_tags_ids = self.tags.values_list("id", flat=True)
+        similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(
+            id=self.id
+        )
+
+        similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by(
+            "-same_tags"
+        )[:post_num]
+
+        return similar_posts
 
     def generate_unique_slug(self):
         base_slug = self.slug or slugify(self.title)

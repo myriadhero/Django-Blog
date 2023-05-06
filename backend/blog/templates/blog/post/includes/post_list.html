@@ -1,7 +1,7 @@
 {% load blog_tags %}
 <div id="list-items">
     {% for post in posts %}
-        <div class="columns is-vcentered">
+        <div class="columns is-vcentered box">
             {% if post.thumbnail %}
             <div class="column is-narrow is-hidden-mobile is-flex">
                 <figure class="image post-preview-image">
@@ -14,7 +14,9 @@
                     <a href="{{ post.get_absolute_url }}">
                         <h2 class="title is-3">{{ post.title }}</h2>
                     </a>
-                    {% include 'blog/post/includes/post_tags.html' with tpost=post %}
+                    <div class="pb-2">
+                        {% include 'blog/post/includes/post_tags.html' with tpost=post %}
+                    </div>
                     <p class="date">
                         Published {{ post.publish }} by {{ post.author.first_name }}
                     </p>

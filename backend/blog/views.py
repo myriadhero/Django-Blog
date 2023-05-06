@@ -1,5 +1,5 @@
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.db.models import Count, Prefetch
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
@@ -90,25 +90,13 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context["form"] = CommentForm()
-        # context["comments"] = post.comments.filter(active=True)
-        context["similar_posts"] = self.get_similar_posts()
+        context["similar_posts"] = self.get_object().get_similar_posts(
+            RECOMMENDED_POSTS_NUM
+        )
         return context
 
     def get_queryset(self):
         return Post.published.filter(slug=self.kwargs["slug"])
-
-    def get_similar_posts(self):
-        post = self.get_object()
-        post_tags_ids = post.tags.values_list("id", flat=True)
-        similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(
-            id=post.id
-        )
-        similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by(
-            "-same_tags"
-        )[:RECOMMENDED_POSTS_NUM]
-
-        return similar_posts
 
 
 class FrontPageView(ListView):

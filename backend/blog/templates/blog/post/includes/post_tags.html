@@ -1,15 +1,13 @@
-<div class="pb-4">
-    {% for cat in tpost.categories.all %}
-        <a href="{{ cat.get_absolute_url }}" class="tag is-primary is-light">
-            {{ cat }}
-        </a>
-    {% endfor %}
-    {% for tag in tpost.tags.all %}
-    <a href="{{ tag.get_absolute_url }}" class="tag is-info is-light {% if forloop.counter > 10 %}is-hidden{% endif %}">
-        {{ tag }}
+{% for cat in tpost.categories.all %}
+    <a href="{{ cat.get_absolute_url }}" class="tag is-primary is-light">
+        {{ cat }}
     </a>
-    {% if forloop.counter == 10 and not forloop.last %}
-        <a class="has-text-info tag-expander is-size-7 pl-2">Show all tags...</a>
-    {% endif %}
-    {% endfor %}
-</div>
+{% endfor %}
+{% for tag in tpost.tags.all %}
+<a href="{{ tag.get_absolute_url }}" class="tag is-info is-light {% if forloop.counter > 10 %}is-hidden{% endif %}">
+    {{ tag }}
+</a>
+{% if forloop.counter == 10 and not forloop.last %}
+    <a class="has-text-info tag-expander is-size-7 pl-2">Show all tags...</a>
+{% endif %}
+{% endfor %}
