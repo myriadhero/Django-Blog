@@ -1,10 +1,17 @@
+import re
+
 from django import template
+from django.template.defaultfilters import truncatewords_html
 from django.utils.safestring import mark_safe
-from django.utils.text import Truncator
 from lxml import html
 from markdown import markdown
 
 from ..models import Category, Post
+
+TWEET_RE = re.compile(
+    r'<blockquote class=["\']twitter-tweet["\'].*?</blockquote>', re.DOTALL
+)
+
 
 register = template.Library()
 
@@ -61,9 +68,8 @@ def html_preview(value):
 
 @register.filter(name="tweet_or_truncate")
 def tweet_or_truncate(body, word_num=50):
-    root = html.fromstring(body)
+    match = TWEET_RE.search(body)
+    if match:
+        return match.group(0)
 
-    for tag in root.xpath("//blockquote"):
-        return html.tostring(tag, encoding="unicode")
-
-    return Truncator(body).words(word_num, html=True)
+    return truncatewords_html(body, word_num)
