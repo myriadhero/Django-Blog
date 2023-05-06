@@ -25,27 +25,6 @@
                     {{ post.body|safe }}
                 </div>
             </div>
-        
-            <div class="section">
-                {% comment %} TODO: format with Bulma forms {% endcomment %}
-                {% with comments.count as total_comments %}
-                {% if total_comments %}
-                <h2>{{ total_comments }} comment{{ total_comments|pluralize }} </h2>
-                {% endif %}
-                {% endwith %}
-                {% for comment in comments %}
-                    <div class="comment">
-                        <p class="info">
-                            Comment #{{ forloop.counter }} by <em>{{ comment.name }}</em>
-                            {{ comment.created }}{% if comment.is_updated %}; Updated: {{ comment.updated }}{% endif %}
-                        </p>
-                        {{ comment.text|linebreaks }}
-                    </div>
-                {% empty %}
-                    <p>There are no comments</p>
-                {% endfor %}
-                {% include "blog/post/includes/comment_form.html" %}
-            </div>
         </div>
         <div class="column is-4">
             {% include "blog/post/includes/sidebar.html" %}

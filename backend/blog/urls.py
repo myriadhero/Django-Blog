@@ -15,8 +15,6 @@ urlpatterns = [
         views.CategoryDetailView.as_view(),
         name="category",
     ),
-    path("post/<slug:post_slug>/share/", views.post_share, name="post_share"),
-    path("post/<slug:post_slug>/comment/", views.post_comment, name="post_comment"),
     path("feed/", LatestPostsFeed(), name="post_feed"),
     path("search/", views.PostSearchListView.as_view(), name="post_search"),
     path("htmx/post_list/", views.HTMXPostListView.as_view(), name="htmx_post_list"),
@@ -26,4 +24,6 @@ urlpatterns = [
         views.HTMXCategoryDetailView.as_view(),
         name="htmx_category_list",
     ),
+    # path("post/<slug:post_slug>/share/", views.post_share, name="post_share"),
+    # path("post/<slug:post_slug>/comment/", views.post_comment, name="post_comment"),
 ]

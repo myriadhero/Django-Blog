@@ -1,12 +1,9 @@
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
-from django.core.mail import send_mail
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Prefetch
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
-from .forms import AdvancedSearchForm, CommentForm, EmailPostForm
+from .forms import AdvancedSearchForm
 from .models import Category, CategoryTag, FeaturedPost, Post
 
 POSTS_PER_PAGE = 3
@@ -93,9 +90,8 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = self.get_object()
-        context["form"] = CommentForm()
-        context["comments"] = post.comments.filter(active=True)
+        # context["form"] = CommentForm()
+        # context["comments"] = post.comments.filter(active=True)
         context["similar_posts"] = self.get_similar_posts()
         return context
 
@@ -188,49 +184,49 @@ class HTMXPostSearchListView(PostSearchListView):
     template_name = "blog/post/includes/post_list.html"
 
 
-def post_share(request, post_slug):
-    post: Post = get_object_or_404(Post.published, slug=post_slug)
-    sent = False
-    if request.method == "POST":
-        form = EmailPostForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f'My doggo {cd["name"]} recommends you {post.title}'
-            message = (
-                f"Hello dis doggo here\n\n{cd['comments']}\n\nread more at {post_url}"
-            )
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=cd["email"],
-                recipient_list=[cd["to"]],
-            )
-            sent = True
-    else:
-        form = EmailPostForm()
-    return render(
-        request, "blog/post/share.html", {"form": form, "sent": sent, "post": post}
-    )
+# def post_share(request, post_slug):
+#     post: Post = get_object_or_404(Post.published, slug=post_slug)
+#     sent = False
+#     if request.method == "POST":
+#         form = EmailPostForm(request.POST)
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             post_url = request.build_absolute_uri(post.get_absolute_url())
+#             subject = f'My doggo {cd["name"]} recommends you {post.title}'
+#             message = (
+#                 f"Hello dis doggo here\n\n{cd['comments']}\n\nread more at {post_url}"
+#             )
+#             send_mail(
+#                 subject=subject,
+#                 message=message,
+#                 from_email=cd["email"],
+#                 recipient_list=[cd["to"]],
+#             )
+#             sent = True
+#     else:
+#         form = EmailPostForm()
+#     return render(
+#         request, "blog/post/share.html", {"form": form, "sent": sent, "post": post}
+#     )
 
 
-@require_POST
-def post_comment(request, post_slug):
-    post = get_object_or_404(Post.published, slug=post_slug)
-    comment = None
+# @require_POST
+# def post_comment(request, post_slug):
+#     post = get_object_or_404(Post.published, slug=post_slug)
+#     comment = None
 
-    form = CommentForm(data=request.POST)
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.post = post
-        comment.save()
+#     form = CommentForm(data=request.POST)
+#     if form.is_valid():
+#         comment = form.save(commit=False)
+#         comment.post = post
+#         comment.save()
 
-    return render(
-        request,
-        "blog/post/comment.html",
-        {
-            "post": post,
-            "form": form,
-            "comment": comment,
-        },
-    )
+#     return render(
+#         request,
+#         "blog/post/comment.html",
+#         {
+#             "post": post,
+#             "form": form,
+#             "comment": comment,
+#         },
+#     )

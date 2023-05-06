@@ -257,24 +257,24 @@ class FeaturedPost(models.Model):
         return f"{self.category} - {self.post} (Order: {self.order}, Published: {self.post.publish.strftime('%a %d %b %Y, %I:%M%p')})"
 
 
-class Comment(models.Model):
-    text = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=80)
-    email = models.EmailField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    # parent_comment = models.ForeignKey("self", null=True)
-    active = models.BooleanField(default=True)
+# class Comment(models.Model):
+#     text = models.TextField()
+#     created = models.DateTimeField(auto_now_add=True)
+#     updated = models.DateTimeField(auto_now=True)
+#     name = models.CharField(max_length=80)
+#     email = models.EmailField()
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+#     # parent_comment = models.ForeignKey("self", null=True)
+#     active = models.BooleanField(default=True)
 
-    class Meta:
-        ordering = ["created"]
-        indexes = [
-            models.Index(fields=["created"]),
-        ]
+#     class Meta:
+#         ordering = ["created"]
+#         indexes = [
+#             models.Index(fields=["created"]),
+#         ]
 
-    def is_updated(self):
-        return self.updated - self.created > timezone.timedelta(minutes=1)
+#     def is_updated(self):
+#         return self.updated - self.created > timezone.timedelta(minutes=1)
 
-    def __str__(self) -> str:
-        return f"Comment by {self.name} on {self.post}"
+#     def __str__(self) -> str:
+#         return f"Comment by {self.name} on {self.post}"

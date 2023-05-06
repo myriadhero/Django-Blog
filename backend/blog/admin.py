@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 
-from .models import Category, CategoryTag, Comment, FeaturedPost, Post
+from .models import Category, CategoryTag, FeaturedPost, Post
 
 
 # Register your models here.
@@ -88,13 +88,6 @@ class PostAdmin(admin.ModelAdmin):
             return obj.get_absolute_url()
 
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ["name", "email", "post", "created", "updated", "active"]
-    list_filter = ["active", "created", "updated"]
-    search_fields = ["name", "email", "body"]
-
-
 class TagsWithNoPostsFilter(admin.SimpleListFilter):
     title = _("other filters")
 
@@ -145,3 +138,10 @@ class CategoryTagAdmin(admin.ModelAdmin):
         return format_html("{}<br>{}", html_links, html_see_all)
 
     get_tagged_posts.short_description = "Tagged posts"
+
+
+# @admin.register(Comment)
+# class CommentAdmin(admin.ModelAdmin):
+#     list_display = ["name", "email", "post", "created", "updated", "active"]
+#     list_filter = ["active", "created", "updated"]
+#     search_fields = ["name", "email", "body"]
