@@ -51,13 +51,20 @@
             </a>
             {% endif %}
 
+            <a class="navbar-item" href="/feed" target="_blank">
+                <span class="icon-text">
+                    <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
+                    <span class="is-hidden-desktop">Subscribe to RSS feed</span>
+                </span>
+            </a>
+
             {% get_subscription_options as sub_options %}
             {% if sub_options.kofi_url %}
             <a class="navbar-item" href="{{ sub_options.kofi_url }}" 
             data-filter="ko-fi" target="_blank">
                 <span class="icon-text">
                     {% load static %}
-                    <img src="{% static 'kofi/kofi_logo_smol.png' %}" class="icon">
+                    <img src="{% static 'kofi\kofi_logo_s.png' %}" class="icon">
                     <span>Ko-fi</span>
                 </span>
             </a>
