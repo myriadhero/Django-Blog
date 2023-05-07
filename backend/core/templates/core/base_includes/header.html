@@ -60,7 +60,7 @@
 
             {% get_subscription_options as sub_options %}
             {% if sub_options.show_kofi_link_in_head_menu %}
-            <a class="navbar-item" href="{{ sub_options.kofi_url }}" 
+            <a class="navbar-item" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
             data-filter="ko-fi" target="_blank">
                 <span class="icon-text">
                     {% load static %}

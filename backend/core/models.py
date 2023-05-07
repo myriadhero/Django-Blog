@@ -1,6 +1,7 @@
 from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext_lazy
 
 
 # Create your models here.
@@ -19,7 +20,7 @@ class SiteIdentity(models.Model):
     objects = SingletonManager()
 
     class Meta:
-        verbose_name_plural = "Site Identity"
+        verbose_name_plural = gettext_lazy("Site Identity")
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -39,7 +40,7 @@ class AboutPage(models.Model):
     objects = SingletonManager()
 
     class Meta:
-        verbose_name_plural = "About Page"
+        verbose_name_plural = gettext_lazy("About Page")
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -58,26 +59,23 @@ class SubscriptionOptions(models.Model):
         blank=True,
         help_text="Is the name at the end of the URL without the URL stuff",
     )
-    kofi_url = models.URLField(
-        blank=True, help_text="Should have same account name at the end"
-    )
     show_kofi_link_in_head_menu = models.BooleanField(
         default=False,
-        help_text="Shows kofi icon and link in the top site menu, kofi_url is used for this link",
+        help_text="Shows kofi icon and link in the top site menu",
     )
     show_kofi_form_in_footer = models.BooleanField(
         default=False,
-        help_text="Shows kofi form in footer, kofi_account_name is used for this widget",
+        help_text="Shows kofi form in footer",
     )
     show_kofi_overlay_button = models.BooleanField(
         default=False,
-        help_text="Shows kofi overlap button, kofi_account_name is used for this button",
+        help_text="Shows kofi overlap button",
     )
 
     objects = SingletonManager()
 
     class Meta:
-        verbose_name_plural = "Subscription Options"
+        verbose_name_plural = gettext_lazy("Subscription Options")
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -88,14 +86,12 @@ class SubscriptionOptions(models.Model):
 
     def clean(self):
         if (
-            self.show_kofi_form_in_footer or self.show_kofi_overlay_button
+            self.show_kofi_form_in_footer
+            or self.show_kofi_overlay_button
+            or self.show_kofi_link_in_head_menu
         ) and not self.kofi_account_name:
             raise ValidationError(
-                "Kofi account name is required to turn on overlay and footer widgets."
-            )
-        if self.show_kofi_link_in_head_menu and not self.kofi_url:
-            raise ValidationError(
-                "Kofi url is required to turn on the link in the head menu."
+                "Kofi account name is required to turn on kofi widgets"
             )
         return super().clean()
 
@@ -104,6 +100,9 @@ class SubscriptionOptions(models.Model):
 
 
 class SocialMedia(models.Model):
+    class Meta:
+        verbose_name_plural = gettext_lazy("Social Media")
+
     youtube_url = models.URLField(blank=True)
     youtube_name = models.CharField(
         max_length=100,
@@ -127,4 +126,4 @@ class SocialMedia(models.Model):
         pass
 
     def __str__(self):
-        return "Subscription Options"
+        return "Social Media"
