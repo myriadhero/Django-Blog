@@ -59,7 +59,7 @@
             </a>
 
             {% get_subscription_options as sub_options %}
-            {% if sub_options.kofi_url %}
+            {% if sub_options.show_kofi_link_in_head_menu %}
             <a class="navbar-item" href="{{ sub_options.kofi_url }}" 
             data-filter="ko-fi" target="_blank">
                 <span class="icon-text">

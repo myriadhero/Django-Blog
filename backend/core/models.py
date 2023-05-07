@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextField
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -60,6 +61,18 @@ class SubscriptionOptions(models.Model):
     kofi_url = models.URLField(
         blank=True, help_text="Should have same account name at the end"
     )
+    show_kofi_link_in_head_menu = models.BooleanField(
+        default=False,
+        help_text="Shows kofi icon and link in the top site menu, kofi_url is used for this link",
+    )
+    show_kofi_form_in_footer = models.BooleanField(
+        default=False,
+        help_text="Shows kofi form in footer, kofi_account_name is used for this widget",
+    )
+    show_kofi_overlay_button = models.BooleanField(
+        default=False,
+        help_text="Shows kofi overlap button, kofi_account_name is used for this button",
+    )
 
     objects = SingletonManager()
 
@@ -72,6 +85,19 @@ class SubscriptionOptions(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
+
+    def clean(self):
+        if (
+            self.show_kofi_form_in_footer or self.show_kofi_overlay_button
+        ) and not self.kofi_account_name:
+            raise ValidationError(
+                "Kofi account name is required to turn on overlay and footer widgets."
+            )
+        if self.show_kofi_link_in_head_menu and not self.kofi_url:
+            raise ValidationError(
+                "Kofi url is required to turn on the link in the head menu."
+            )
+        return super().clean()
 
     def __str__(self):
         return "Subscription Options"

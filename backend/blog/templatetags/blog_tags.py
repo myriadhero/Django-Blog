@@ -7,6 +7,7 @@ from lxml import html
 from markdown import markdown
 
 from ..models import Category, Post
+from ..views import RECOMMENDED_POSTS_NUM
 
 TWEET_RE = re.compile(
     r'<blockquote class=["\']twitter-tweet["\'].*?</blockquote>', re.DOTALL
@@ -22,18 +23,18 @@ def total_posts():
 
 
 @register.inclusion_tag("blog/post/latest_posts.html")
-def show_latest_posts(count=5):
+def show_latest_posts(count=RECOMMENDED_POSTS_NUM):
     latest_posts = Post.published.all()[:count]
     return {"latest_posts": latest_posts}
 
 
 @register.simple_tag
-def get_latest_posts(count=5):
+def get_latest_posts(count=RECOMMENDED_POSTS_NUM):
     return Post.published.all()[:count]
 
 
 # @register.simple_tag
-# def get_most_commented_posts(count=5):
+# def get_most_commented_posts(count=RECOMMENDED_POSTS_NUM):
 #     return Post.published.annotate(total_comments=Count("comments"))[:count]
 
 
