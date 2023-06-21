@@ -8,11 +8,11 @@
             <div id="alpha-links" class="level">
                 <div class="level-item">
                     <a href="#" 
-                    class="letter-link subtitle is-5 has-text-info has-background-white">
+                    class="letter-link subtitle is-5 has-text-primary has-background-white">
                     🏡</a>
                     {% for letter, letter_tags in alpha_tags %}
                         <a href="#starts-with-{{ letter }}" 
-                        class="letter-link subtitle is-5 has-text-info has-background-white">
+                        class="letter-link subtitle is-5 has-text-primary has-background-white">
                         {{ letter }}</a>
                     {% endfor %}
                 </div>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="column is-flex is-flex-direction-column is-justify-content-center">
                             <p class="title is-4">
-                                <a href="{{ tag.get_absolute_url }}" class="has-text-info ">{{ tag.name }}</a>
+                                <a href="{{ tag.get_absolute_url }}" class="has-text-primary">{{ tag.name }}</a>
                             </p>
                             <p class="subtitle is-6">
                                 {% if tag.description %}

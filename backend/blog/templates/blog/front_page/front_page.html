@@ -11,10 +11,12 @@
 <div class="section">
     
     <div class="is-flex is-flex-direction-row is-justify-content-space-between is-align-items-baseline">
-        <h3 class="title is-3 m-2 category-name">
-            {{ category.name }}
-        </h3>
-        <a href="{{ category.get_absolute_url }}" class="subtitle is-5 has-text-info m-2">
+        <a href="{{ category.get_absolute_url }}">
+            <h3 class="title is-3 m-2 category-name">
+                {{ category.name }}
+            </h3>
+        </a>
+        <a href="{{ category.get_absolute_url }}" class="subtitle is-5 has-text-primary m-2">
             View all    
         </a>
     </div>

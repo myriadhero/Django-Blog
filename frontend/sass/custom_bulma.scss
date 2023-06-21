@@ -1,0 +1,84 @@
+@charset "utf-8";
+
+
+// $cream: #F6F6F6;
+// $pinklite: #FFE2E2;
+// $pink: #FFC7C7;
+// $grey: #AAAAAA;
+
+$bgcolour: #ffffff;
+$textcolour: #000000;
+$accentcolour: #D6A496;
+$highlightcolour: #FEDD90;
+
+// pinks 
+// #D6A496
+// #FFC7C7
+// #FFD1D1
+// #FCD8D4;
+
+// background colours
+// #F7F7F5;
+// #FDF6F0;
+// #FFF5E4;
+// #FFFFFF;
+
+// yellow accents
+// #ECD9CC
+// #FFE6C6
+// #F8E2CF
+
+$black: #000000;
+$black-bis: #151d28;
+$black-ter: #202e37;
+$grey-darker: #394a50;
+$grey-dark: $textcolour;
+$grey: #819796;
+$grey-light: #a8b5b2;
+$grey-lighter: #c7cfcc;
+$grey-lightest: #ebede9;
+$white-ter: $bgcolour;
+$white-bis: #e0dfdc;
+$white: $bgcolour;
+$orange: #be772b;
+$yellow: $highlightcolour;
+$green: #9eda91;
+$turquoise: #a4dddb;
+$cyan: #81cfe4;
+$blue: #4f8cb5;
+$purple: #6a536e;
+$red: #c6596b;
+
+
+$primary: $accentcolour;
+
+$info: $cyan;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+
+$light: $white-ter;
+$dark: $grey-darker;
+
+$scheme-main: $white;
+$background: $white-ter;
+
+$text: $grey-dark;
+
+$link: $blue;
+$link-hover: $grey-darker;
+$link-focus: $grey-darker;
+$link-active: $grey-darker;
+
+// $navbar-item-hover-background-color:
+$navbar-item-hover-color: $accentcolour;
+$navbar-dropdown-item-hover-color: $accentcolour;
+$navbar-dropdown-item-hover-background-color: $white-bis;
+$navbar-dropdown-item-active-background-color: $white-bis;
+$navbar-divider-background-color: $accentcolour;
+
+@import "../node_modules/bulma/bulma.sass";
+
+:root {
+    --swiper-theme-color: #{$accentcolour} !important;
+}

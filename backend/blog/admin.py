@@ -1,12 +1,16 @@
+from itertools import chain
+
 from ckeditor.widgets import CKEditorWidget
+from django import forms
 from django.contrib import admin
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
+from django_select2 import forms as s2forms
 
-from .models import Category, CategoryTag, FeaturedPost, Post
+from .models import Category, CategoryTag, DropdownNavItem, FeaturedPost, NavItem, Post
 
 
 # Register your models here.
@@ -29,9 +33,15 @@ class FeaturedPostInline(admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class DropdownNavItemInline(admin.TabularInline):
+    model = DropdownNavItem
+    extra = 1
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
+        "group",
         "order",
         "slug",
         "name",
@@ -62,8 +72,85 @@ class CategoryAdmin(admin.ModelAdmin):
     get_posts_in_category.short_description = "Posts in category"
 
 
+@admin.register(NavItem)
+class NavItemAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "order", "is_dropdown"]
+    inlines = [DropdownNavItemInline]
+
+
+class SubCategoryTagsFilter(admin.SimpleListFilter):
+    title = _("Filter by sub category")
+
+    parameter_name = "subcat"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("yes", "With sub category"),
+            *(
+                (subcat.slug, subcat.name)
+                for subcat in CategoryTag.sub_categories.all()
+            ),
+            ("no", "Without sub category"),
+        ]
+
+    def queryset(self, request, queryset):
+        if not (lookup := self.value()):
+            return queryset
+        if lookup == "yes":
+            return queryset.filter(tags__is_sub_category=True)
+        if lookup == "no":
+            return queryset.filter(tags__is_sub_category=False)
+        return queryset.filter(tags__slug=lookup)
+
+
+class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
+    search_fields = [
+        "name__icontains",
+    ]
+
+
+class PostAdminForm(forms.ModelForm):
+    subcategory_tags = forms.ModelMultipleChoiceField(
+        queryset=CategoryTag.sub_categories, required=False
+    )
+    tags = forms.ModelMultipleChoiceField(
+        queryset=CategoryTag.objects.filter(is_sub_category=False),
+        required=False,
+        widget=TagsAutoMultiSelectWidget(
+            attrs={"data-token-separators": [","], "data-tags": "true"}
+        ),
+    )
+
+    class Meta:
+        model = Post
+        exclude = ["tags"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["subcategory_tags"].initial = self.instance.tags.filter(
+                is_sub_category=True
+            )
+            self.fields["tags"].initial = self.instance.tags.filter(
+                is_sub_category=False
+            )
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if not instance.pk:
+            instance.save()
+
+        instance.tags.clear()
+        new_tags = self.cleaned_data["tags"]
+        new_sub_cat_tags = self.cleaned_data["subcategory_tags"]
+        instance.tags.add(*new_tags, *new_sub_cat_tags)
+
+        return instance
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = ["title", "slug", "author", "publish", "status", "get_categories"]
     list_filter = [
         "status",
@@ -71,15 +158,22 @@ class PostAdmin(admin.ModelAdmin):
         "publish",
         "author",
         "categories",
+        SubCategoryTagsFilter,
         "tags",
     ]
     search_fields = ["title", "body"]
     prepopulated_fields = {"slug": ("title",)}
     ordering = ["status", "publish"]
     formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
+    autocomplete_fields = ["tags"]
 
     def get_categories(self, obj: CategoryTag):
-        return ", ".join(cat.name for cat in obj.categories.all())
+        return ", ".join(
+            cat.name
+            for cat in chain(
+                obj.categories.all(), obj.tags.filter(is_sub_category=True)
+            )
+        )
 
     get_categories.short_description = "Categories"
 
@@ -105,10 +199,11 @@ class TagsWithNoPostsFilter(admin.SimpleListFilter):
 
 @admin.register(CategoryTag)
 class CategoryTagAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug", "description", "get_categories"]
+    list_display = ["name", "slug", "description", "get_categories", "is_sub_category"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
     list_filter = [
+        "is_sub_category",
         "categories",
         TagsWithNoPostsFilter,
         ("description", admin.EmptyFieldListFilter),

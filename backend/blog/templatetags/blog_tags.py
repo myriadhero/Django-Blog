@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 from lxml import html
 from markdown import markdown
 
-from ..models import Category, Post
+from ..models import Category, NavItem, Post
 from ..views import RECOMMENDED_POSTS_NUM
 
 TWEET_RE = re.compile(
@@ -44,8 +44,12 @@ def markdown_format(text):
 
 
 @register.simple_tag
-def get_menu_categories():
-    return Category.in_menu.all()
+def get_nav_items():
+    return (
+        NavItem.objects.select_related("primary_category")
+        .prefetch_related("sub_items__category_tag")
+        .all()
+    )
 
 
 @register.simple_tag(takes_context=True)

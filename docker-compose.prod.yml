@@ -1,0 +1,71 @@
+version: '3'
+services:
+  db-dev:
+    restart: always
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=${POSTGRES_DB_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+    profiles:
+      - dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  db:
+    restart: always
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=${POSTGRES_DB_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+    profiles:
+      - prod
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  web:
+    restart: always
+    build:
+      args:
+        - CODE_DIR=${DOCKER_CODE_DIR}
+    volumes:
+      - static_volume:${DOCKER_CODE_DIR}/staticfiles
+      - media_volume:${DOCKER_CODE_DIR}/mediafiles
+    depends_on:
+      - db
+    command: gunicorn blogsite.wsgi:application --bind 0.0.0.0:8000
+    # command: tail -f /dev/null
+    env_file:
+      - .env.django.prod
+    profiles:
+      - prod
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "-q",
+          "http://localhost:8000/healthcheck/"
+        ]
+      interval: 5m
+      start_period: 2m
+  nginx:
+    # restart: always
+    build: ./nginx
+    ports:
+      - 443:8080
+      - 80:8090
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/home/django/staticfiles
+      - media_volume:/home/django/mediafiles
+    profiles:
+      - prod
+
+volumes:
+  static_volume:
+  media_volume:
+  db-data:

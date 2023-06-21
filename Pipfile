@@ -15,6 +15,8 @@ lxml = "*"
 fontawesomefree = "*"
 django-crispy-forms = "*"
 crispy-bulma = "*"
+gunicorn = "*"
+django-select2 = "*"
 
 [dev-packages]
 black = "*"
@@ -25,7 +27,7 @@ isort = "*"
 python_version = "3.11"
 
 [scripts]
-db = "docker-compose up"
+devdb = "docker compose -f docker-compose.prod.yml --profile dev up"
 django = "python backend/manage.py runserver 0.0.0.0:80"
 migrate = "python backend/manage.py migrate"
 dumpdata = "python -Xutf8 backend/utils/dump_data.py"

@@ -1,0 +1,55 @@
+<a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
+    
+{% if sm_links.twitter_url %}
+<a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+    <span class="icon-text">
+        <span class="icon"><i class="fa-brands fa-twitter has-text-info"></i></span>
+        <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+    </span>
+</a>
+{% endif %}
+{% if sm_links.youtube_url %}
+<a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+    <span class="icon-text">
+        <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+        <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+    </span>
+</a>
+{% endif %}
+
+<a class="navbar-item" href="/feed" target="_blank">
+    <span class="icon-text">
+        <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
+        <span class="is-hidden-desktop">Subscribe to RSS feed</span>
+    </span>
+</a>
+
+{% get_subscription_options as sub_options %}
+{% if sub_options.show_kofi_link_in_head_menu %}
+<a class="navbar-item" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
+data-filter="ko-fi" target="_blank">
+    <span class="icon-text">
+        <img src="" class="icon">
+        <span>Ko-fi</span>
+    </span>
+</a>
+{% endif %}
+
+<span class="navbar-item m-2 is-hidden-touch " style="cursor:default;">|</span>
+
+<span class="icon-text navbar-item is-clickable" id="title-search">
+
+    <span class="icon-text" id="title-search-icon">
+        <span class="icon">🔎</span>
+        <span class="">Search</span>
+    </span>
+
+    <form action="{% url 'blog:post_search' %}" method="get"
+    class="control has-icons-left is-hidden" id="title-search-form">
+        <input type="text" class="input" id="title-search-input" placeholder="Search..." name="query">
+        <span class="icon is-left">
+            🔎
+        </span>
+    </form>
+
+</span>
