@@ -1,10 +1,13 @@
 from itertools import chain
+from typing import Any, Sequence
 
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib import admin
 from django.db import models
 from django.db.models import Count
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
@@ -176,6 +179,18 @@ class PostAdmin(admin.ModelAdmin):
     formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
     autocomplete_fields = ["tags"]
 
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        qs = (
+            super()
+            .get_queryset(request)
+            .select_related("author")
+            .prefetch_related(
+                "tags",
+                "categories",
+            )
+        )
+        return qs
+
     def get_categories(self, obj: CategoryTag):
         return ", ".join(
             cat.name
@@ -224,6 +239,10 @@ class CategoryTagAdmin(admin.ModelAdmin):
         ("preview_image", admin.EmptyFieldListFilter),
     ]
     readonly_fields = ["get_tagged_posts"]
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        qs = super().get_queryset(request).prefetch_related("categories")
+        return qs
 
     def get_categories(self, obj: CategoryTag):
         return ", ".join(cat.name for cat in obj.categories.all())
