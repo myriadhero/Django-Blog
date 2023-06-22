@@ -108,6 +108,27 @@ class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
         "name__icontains",
     ]
 
+    queryset = CategoryTag.objects.filter(is_sub_category=False)
+
+    def value_from_datadict(self, data, files, name):
+        """Create objects for given non-pimary-key values. Return list of all primary keys."""
+        values = set(super().value_from_datadict(data, files, name))
+        # This may only work for MyModel, if MyModel has title field.
+        # You need to implement this method yourself, to ensure proper object creation.
+        pks = self.queryset.filter(
+            **{"pk__in": list(filter(lambda x: x.isdigit(), values))}
+        ).values_list("pk", flat=True)
+        pks = set(map(str, pks))
+
+        cleaned_values = list(pks)
+        for val in values - pks:
+            if not (new_tag := CategoryTag.objects.filter(name=val).first()):
+                new_tag = CategoryTag(name=val)
+                new_tag.save()
+            cleaned_values.append(str(new_tag.pk))
+
+        return cleaned_values
+
 
 class PostAdminForm(forms.ModelForm):
     subcategory_tags = forms.ModelMultipleChoiceField(
@@ -134,18 +155,6 @@ class PostAdminForm(forms.ModelForm):
             self.fields["tags"].initial = self.instance.tags.filter(
                 is_sub_category=False
             )
-
-    def save(self, commit=True):
-        instance = super().save(commit=commit)
-        if not instance.pk:
-            instance.save()
-
-        instance.tags.clear()
-        new_tags = self.cleaned_data["tags"]
-        new_sub_cat_tags = self.cleaned_data["subcategory_tags"]
-        instance.tags.add(*new_tags, *new_sub_cat_tags)
-
-        return instance
 
 
 @admin.register(Post)
@@ -180,6 +189,11 @@ class PostAdmin(admin.ModelAdmin):
     def view_on_site(self, obj: Post):
         if obj.status == Post.Status.PUBLISHED:
             return obj.get_absolute_url()
+
+    def save_model(self, request, obj, form, change):
+        obj.tags.clear()
+        obj.tags.add(*form.cleaned_data["subcategory_tags"], *form.cleaned_data["tags"])
+        super().save_model(request, obj, form, change)
 
 
 class TagsWithNoPostsFilter(admin.SimpleListFilter):
