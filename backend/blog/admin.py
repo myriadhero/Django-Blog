@@ -206,9 +206,9 @@ class PostAdmin(admin.ModelAdmin):
             return obj.get_absolute_url()
 
     def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
         obj.tags.clear()
         obj.tags.add(*form.cleaned_data["subcategory_tags"], *form.cleaned_data["tags"])
-        super().save_model(request, obj, form, change)
 
 
 class TagsWithNoPostsFilter(admin.SimpleListFilter):
