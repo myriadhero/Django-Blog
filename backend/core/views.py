@@ -1,4 +1,7 @@
+from django.http import HttpResponse
+from django.utils import timezone
 from django.views.generic import TemplateView
+
 from .models import AboutPage
 
 
@@ -10,3 +13,8 @@ class AboutPageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["about"] = AboutPage.objects.get_instance()
         return context
+
+
+def healthcheck_view(request):
+    now = timezone.now()
+    return HttpResponse(f"OK as of {now.isoformat()}")

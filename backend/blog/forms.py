@@ -13,24 +13,23 @@ class AdvancedSearchForm(forms.Form):
     )
     before = forms.DateField(
         required=False,
-        widget=forms.DateInput(
-            attrs={
-                "type": "date",
-                "min": Post.published.order_by("publish").first().publish.date(),
-                "max": Post.published.first().publish.date(),
-            }
-        ),
+        widget=forms.DateInput(attrs={"type": "date"}),
     )
     after = forms.DateField(
         required=False,
-        widget=forms.DateInput(
-            attrs={
-                "type": "date",
-                "min": Post.published.order_by("publish").first().publish.date(),
-                "max": Post.published.first().publish.date(),
-            }
-        ),
+        widget=forms.DateInput(attrs={"type": "date"}),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if Post.published.exists():
+            min_date = Post.published.order_by("publish").first().publish.date()
+            max_date = Post.published.first().publish.date()
+            self.fields["before"].widget.attrs["min"] = min_date
+            self.fields["before"].widget.attrs["max"] = max_date
+            self.fields["after"].widget.attrs["min"] = min_date
+            self.fields["after"].widget.attrs["max"] = max_date
 
 
 # class CommentForm(forms.ModelForm):

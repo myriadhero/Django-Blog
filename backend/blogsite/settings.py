@@ -25,6 +25,10 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG").lower() in ("true", "1", "t")
 
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
     "localhost",
     "127.0.0.1",
@@ -46,16 +50,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "blog.apps.BlogConfig",
-    "core.apps.CoreConfig",
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.postgres",
     "ckeditor",
     "ckeditor_uploader",
     "fontawesomefree",
+    "django_select2",
     "crispy_forms",
     "crispy_bulma",
+    "core.apps.CoreConfig",
+    "blog.apps.BlogConfig",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
@@ -103,11 +108,11 @@ WSGI_APPLICATION = "blogsite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DJANGO_DB_NAME"),
-        "USER": os.environ.get("DJANGO_DB_USER"),
-        "PASSWORD": os.environ.get("DJANGO_DB_PASSWORD"),
-        "PORT": os.environ.get("DJANGO_DB_PORT") or 5432,
-        "HOST": os.environ.get("DJANGO_DB_HOST"),
+        "NAME": os.environ.get("POSTGRES_DB_NAME"),
+        "USER": os.environ.get("POSTGRES_DB_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_DB_PASSWORD"),
+        "PORT": os.environ.get("POSTGRES_DB_PORT", 5432),
+        "HOST": os.environ.get("POSTGRES_DB_HOST"),
     }
 }
 
@@ -135,18 +140,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "Australia/Melbourne"
-
-USE_I18N = True
-
+TIME_ZONE = os.environ.get("DJANGO_TIME_ZONE")
+USE_I18N = False
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 STATIC_URL = "static/"
+STATIC_ROOT = os.environ.get("STATICFILES_DIR") or BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -251,3 +255,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"
+
+# it is recommended to change django admin url path from the default admin/
+ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH") or "admin/"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}

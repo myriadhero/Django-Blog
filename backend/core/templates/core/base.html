@@ -9,10 +9,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'css/custom_bulma.css' %}">
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ephesis|Urbanist|Poppins|Jost">
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
     <script src="https://unpkg.com/htmx.org@1.8.6"></script>
     {% block head_links %}
@@ -52,6 +53,8 @@
           </strong>
       </div>
     </footer>
+
+    {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
 </body>
 {% block scripts %}
 {% endblock %}

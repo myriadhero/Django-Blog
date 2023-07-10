@@ -13,9 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from blog.sitemaps import PostSitemap, CategorySitemap
+from blog.sitemaps import CategorySitemap, PostSitemap
 from ckeditor_uploader import views as ckeditor_views
-from core.views import AboutPageView
+from core.views import AboutPageView, healthcheck_view
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -28,8 +28,10 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_PATH, admin.site.urls),
     path("", include("blog.urls", namespace="blog")),
+    path("about/", AboutPageView.as_view(), name="about"),
+    path("healthcheck/", healthcheck_view, name="healthcheck"),
     path(
         "sitemap.xml",
         sitemap,
@@ -38,7 +40,7 @@ urlpatterns = [
     ),
     re_path(r"^ckeditor/upload/", ckeditor_views.upload, name="ckeditor_upload"),
     path("ckeditor/", include("ckeditor_uploader.urls")),
-    path("about/", AboutPageView.as_view(), name="about"),
+    path("select2/", include("django_select2.urls")),
 ]
 
 if settings.DEBUG:

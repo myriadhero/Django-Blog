@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -34,8 +35,13 @@ class Category(models.Model):
     description = models.CharField(
         max_length=250, blank=True, help_text="250 characters long"
     )
+    group = models.IntegerField(
+        default=0,
+        help_text="Enter an integer value to define the display group order. Categories are sorted and divided by group first, then order within group.",
+    )
     order = models.IntegerField(
-        default=0, help_text="Enter an integer value to define the display order."
+        default=0,
+        help_text="Enter an integer value to define the display order within a group.",
     )
     preview_image = models.ImageField(upload_to="category_previews/", blank=True)
     show_on_front_page = models.BooleanField(default=False)
@@ -57,12 +63,9 @@ class Category(models.Model):
     in_menu = MenuCatsManager()
 
     class Meta:
-        ordering = ["order"]
+        ordering = ["group", "order"]
         verbose_name = gettext_lazy("Category")
         verbose_name_plural = gettext_lazy("Categories")
-
-    def get_absolute_url(self):
-        return reverse("blog:category", args=[self.slug])
 
     def get_tags_that_have_at_least_one_post(self):
         if self.is_tag_list:
@@ -81,6 +84,9 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("blog:category", args=[self.slug])
+
 
 class NonEmptyTagsManager(models.Manager):
     def get_queryset(self):
@@ -90,8 +96,14 @@ class NonEmptyTagsManager(models.Manager):
         return super().get_queryset().filter(Exists(tag_relations))
 
 
+class SubCatTagsManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(is_sub_category=True)
+
+
 class CategoryTag(TagBase):
     categories = models.ManyToManyField(Category, blank=True)
+    is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
         max_length=250, blank=True, help_text="250 characters long"
@@ -105,17 +117,52 @@ class CategoryTag(TagBase):
 
     objects = models.Manager()
     non_empty = NonEmptyTagsManager()
+    sub_categories = SubCatTagsManager()
 
     class Meta:
         verbose_name = gettext_lazy("Tag with categories")
         verbose_name_plural = gettext_lazy("Tags with categories")
-        ordering = ["name"]
+        ordering = ["-is_sub_category", "name"]
 
     def get_absolute_url(self):
         return reverse("blog:posts_by_tag", args=[self.slug])
 
     def get_tagged_posts(self):
         return Post.objects.filter(tags=self).all()
+
+
+class NavItem(models.Model):
+    is_dropdown = models.BooleanField(default=False)
+    primary_category = models.OneToOneField(Category, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = gettext_lazy("Navigation Item")
+        verbose_name_plural = gettext_lazy("Navigation Items")
+
+    def __str__(self) -> str:
+        return f"{self.primary_category.name} Nav"
+
+
+class DropdownNavItem(models.Model):
+    parent_nav_item = models.ForeignKey(
+        NavItem, on_delete=models.CASCADE, related_name="sub_items"
+    )
+    category_tag = models.ForeignKey(
+        CategoryTag,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_sub_category": True},
+    )
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = gettext_lazy("Dropdown Item")
+        verbose_name_plural = gettext_lazy("Dropdown Items")
+
+    def __str__(self) -> str:
+        return f"{self.parent_nav_item.primary_category.name} Nav Dropdown - {self.category_tag.name} Tag"
 
 
 class TaggedWithCategoryTags(GenericTaggedItemBase):
@@ -207,9 +254,11 @@ class Post(models.Model):
         return similar_posts
 
     def generate_unique_slug(self):
+        # TODO: decide whether this should return a slug or set it
         base_slug = self.slug or slugify(self.title)
 
         if not Post.objects.filter(slug=base_slug).exclude(pk=self.pk).exists():
+            self.slug = base_slug
             return base_slug
 
         main_piece, delim, last_piece = base_slug.rpartition("-")
@@ -227,6 +276,7 @@ class Post(models.Model):
             slug = f"{base_slug}-{counter}"
 
         self.slug = slug
+        return slug
 
     def remove_scripts_from_body(self):
         # TODO: replace with django-bleach, delete script tags from other posts

@@ -1,15 +1,77 @@
 {% load blog_tags %}
 {% load core_tags %}
-<header class="section container">
-    <div id="desktop-title" class="is-hidden-touch has-text-centered pb-2">
-        <a href="{% url 'blog:front_page' %}">
-            <h1 class="title is-1">{{ site_identity.title }}</h1>
+<header class="section container mt-o pt-0">
+
+    <div class="navbar-menu is-justify-content-flex-end">
+        {% get_social_media_links as sm_links %}
+        <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
+        
+        {% if sm_links.twitter_url %}
+        <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+            <span class="icon-text">
+                <span class="icon"><i class="fa-brands fa-twitter has-text-link"></i></span>
+                <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+            </span>
         </a>
+        {% endif %}
+        {% if sm_links.youtube_url %}
+        <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+            <span class="icon-text">
+                <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+                <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+            </span>
+        </a>
+        {% endif %}
+
+        <a class="navbar-item" href="/feed" target="_blank">
+            <span class="icon-text">
+                <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
+                <span class="is-hidden-desktop">Subscribe to RSS feed</span>
+            </span>
+        </a>
+
+        {% get_subscription_options as sub_options %}
+        {% if sub_options.show_kofi_link_in_head_menu %}
+        <a class="navbar-item" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
+        data-filter="ko-fi" target="_blank">
+            <span class="icon-text">
+                {% load static %}
+                <img src="{% static 'kofi/kofi_logo_s.png' %}" class="icon">
+                <span>Ko-fi</span>
+            </span>
+        </a>
+        {% endif %}
+
+        <span class="navbar-item m-2" style="cursor:default;">|</span>
+
+        <span class="icon-text navbar-item is-clickable title-search">
+
+            <span class="icon-text title-search-icon">
+                <span class="icon">🔎</span>
+                <span class="">Search</span>
+            </span>
+
+            <form action="{% url 'blog:post_search' %}" method="get"
+            class="control has-icons-left is-hidden title-search-form">
+                <input type="text" class="input title-search-input" placeholder="Search..." name="query">
+                <span class="icon is-left">
+                    🔎
+                </span>
+            </form>
+
+        </span>
     </div>
-    <nav class="navbar is-justify-content-center" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
+
+    <div id="desktop-title" class="is-hidden-touch has-text-centered">
+        <a href="{% url 'blog:front_page' %}">
+            <h1 class="site-title title is-1 has-text-black">{{ site_identity.title }}</h1>
+        </a>
+        
+    </div>
+    <nav class="navbar is-justify-content-center pt-5" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand is-align-items-center">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
-                <h1 class="title" id="mobile-title">{{ site_identity.title }}</h1>
+                <h1 class="site-title title is-1 has-text-black" id="mobile-title">{{ site_identity.title }}</h1>
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
                 data-target="navbarMainMenu">
@@ -21,29 +83,61 @@
 
         <div id="navbarMainMenu" class="navbar-menu is-size-5-widescreen is-justify-content-center">
 
-            {% get_menu_categories as categories %}
-            {% for cat in categories %}
-            <a class="navbar-item " href="{{ cat.get_absolute_url }}">
-                {{ cat.name }}
-            </a>
+            {% get_nav_items as all_nav_items %}
+            {% for nav_item in all_nav_items %}
+                {% if nav_item.is_dropdown %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{{ nav_item.primary_category.get_absolute_url }}">
+                        {{ nav_item.primary_category.name }}
+                    </a>
+                    <div class="navbar-dropdown is-size-6-widescreen">
+                        <a class="navbar-item" href="{{ nav_item.primary_category.get_absolute_url }}">
+                            All {{ nav_item.primary_category.name }}
+                        </a>
+                        <hr class="navbar-divider">
+                        {% for subitem in nav_item.sub_items.all %}
+                        <a class="navbar-item is-size-6-widescreen" href="{{ subitem.category_tag.get_absolute_url }}">
+                            {{ subitem.category_tag.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <a class="navbar-item" href="{{ nav_item.primary_category.get_absolute_url }}">
+                    {{ nav_item.primary_category.name }}
+                </a>
+                {% endif %}
             {% endfor %}
-
+            {% comment %} {% regroup all_categories by group as categories_by_group %}
+            {% for group, categories in categories_by_group %}
+                {% for cat in categories %}
+                <a class="navbar-item " href="{{ cat.get_absolute_url }}">
+                    {{ cat.name }}
+                </a>
+                {% endfor %}
+                {% if not forloop.last %}
+                <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span>
+                <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
+                {% endif %}
+            {% endfor %} {% endcomment %}
+            
+            
             {% get_social_media_links as sm_links %}
-            <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span>
+            {% comment %} <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span> {% endcomment %}
             <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
-            <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
+            <a class="navbar-item is-hidden-desktop" href="{% url 'about' %}" data-filter="about">About</a>
             
             {% if sm_links.twitter_url %}
-            <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+            <a class="navbar-item is-hidden-desktop" href="{{ sm_links.twitter_url }}" target="_blank">
                 <span class="icon-text">
-                    <span class="icon"><i class="fa-brands fa-twitter has-text-info"></i></span>
+                    <span class="icon"><i class="fa-brands fa-twitter has-text-link"></i></span>
                     <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
                 </span>
             </a>
             {% endif %}
             {% if sm_links.youtube_url %}
-            <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+            <a class="navbar-item is-hidden-desktop" href="{{ sm_links.youtube_url }}" target="_blank">
                 <span class="icon-text">
                     <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
                     <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
@@ -51,7 +145,7 @@
             </a>
             {% endif %}
 
-            <a class="navbar-item" href="/feed" target="_blank">
+            <a class="navbar-item is-hidden-desktop" href="/feed" target="_blank">
                 <span class="icon-text">
                     <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
                     <span class="is-hidden-desktop">Subscribe to RSS feed</span>
@@ -60,28 +154,28 @@
 
             {% get_subscription_options as sub_options %}
             {% if sub_options.show_kofi_link_in_head_menu %}
-            <a class="navbar-item" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
+            <a class="navbar-item is-hidden-desktop" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
             data-filter="ko-fi" target="_blank">
                 <span class="icon-text">
                     {% load static %}
-                    <img src="{% static 'kofi\kofi_logo_s.png' %}" class="icon">
+                    <img src="{% static 'kofi/kofi_logo_s.png' %}" class="icon">
                     <span>Ko-fi</span>
                 </span>
             </a>
             {% endif %}
 
-            <span class="navbar-item m-2 is-hidden-touch " style="cursor:default;">|</span>
+            <span class="navbar-item m-2 is-hidden-touch is-hidden-desktop" style="cursor:default;">|</span>
 
-            <span class="icon-text navbar-item is-clickable" id="title-search">
+            <span class="icon-text navbar-item is-clickable is-hidden-desktop title-search">
 
-                <span class="icon-text" id="title-search-icon">
+                <span class="icon-text title-search-icon">
                     <span class="icon">🔎</span>
                     <span class="">Search</span>
                 </span>
 
                 <form action="{% url 'blog:post_search' %}" method="get"
-                class="control has-icons-left is-hidden" id="title-search-form">
-                    <input type="text" class="input" id="title-search-input" placeholder="Search..." name="query">
+                class="control has-icons-left is-hidden title-search-form">
+                    <input type="text" class="input title-search-input" placeholder="Search..." name="query">
                     <span class="icon is-left">
                         🔎
                     </span>

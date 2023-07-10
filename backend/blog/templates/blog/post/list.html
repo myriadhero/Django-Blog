@@ -4,8 +4,8 @@
 {% block content %}
     <div class="section">
         <div class="block">
-            {% if tag %}Posts tagged with <span class="tag is-info is-light">{{ tag }}</span>{% endif %}
-            {% if category %}Posts for category: <span class="tag is-primary is-light">{{ category }}</span>{% endif %}
+            {% if tag %}Posts tagged with <span class="tag is-warning is-large">{{ tag }}</span>{% endif %}
+            {% if category %}Posts for category: <span class="tag is-primary is-large">{{ category }}</span>{% endif %}
         </div>
         {% include "blog/post/includes/post_list.html" %}
     </div>

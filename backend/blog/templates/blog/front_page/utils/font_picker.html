@@ -1,66 +1,291 @@
-<div class="p-5 is-flex is-flex-direction-column is-align-items-center" style="position:fixed;bottom:0px;background:#00000091;left:50%;translate:-50%;z-index:5;border-radius:25px;">
+<div class="p-2 is-flex is-flex-direction-column is-align-items-center is-size-7 has-text-light" style="position:fixed;bottom:0px;background:#00000091;left:50%;translate:-50%;z-index:5;border-radius:25px;">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ms+Madi|Kaushan+Script|Ephesis|Qwigley|Allison">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Be+Vietnam+Pro|Urbanist|Sofia+Sans|Alumni+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Taviraj|Lato|Roboto+Serif|Poppins|Libre+Franklin|Karla|Jost">
     
-    <label class="label has-text-info-light">Font for Title</label>
-    <div class="select level-item">
-        <select 
-            name="title-style" 
-            id="title-style_select"
-        >
-            <option value="">Select a font</option>
-            <option value="Ms Madi">Ms Madi</option>
-            <option value="Kaushan Script">Kaushan Script</option>
-            <option value="Ephesis">Ephesis</option>
-            <option value="Qwigley">Qwigley</option>
-            <option value="Allison">Allison</option>
-            <option value="">______</option>
-            <option value="Be Vietnam Pro">Be Vietnam Pro</option>
-            <option value="Urbanist">Urbanist</option>
-            <option value="Sofia Sans">Sofia Sans</option>
-            <option value="Alumni Sans">Alumni Sans</option>
+    <button type="button" id="hide-show-button" class="button is-small is-info is-rounded">
+      Hide/Show
+    </button>
+
+
+    <div class="columns" id="font-picker-toggles">
+      <div class="column">
+        <div class="columns">
+          <div class="column">
+
+            <label class="label has-text-info-light">Font for main menu items</label>
+            <div class="select">
+                <select id="menu-style_select" class="font-picker"
+                data-apply-selectors=".navbar-item"
+                ></select>
+            </div>
+
+            <div class="control caps-control" 
+            data-caps-for="menu-style_select">
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                c
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                u
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                x
+              </label>
+            </div>
+
+          </div>
+
+          <div class="column">
+            <label class="label has-text-info-light">Font Size</label>
+            <input type="range" class="font-picker-size" min="0.5" max="5" step="0.5" value="2"
+            data-slider-for="menu-style_select">
+            <label class="label has-text-info-light">Font Weight</label>
+            <input type="range" class="font-picker-weight" min="50" max="1000" step="50" value="400"
+            data-slider-for="menu-style_select">
+          </div>
+        </div>
+        
+        <div class="columns">
+          <div class="column">
+
+            <label class="label has-text-info-light">Font for titles</label>
+            <div class="select">
+                <select id="title-style_select" class="font-picker"
+                data-apply-selectors=".title:not(.site-title)"
+                ></select>
+            </div>
+
+            <div class="control caps-control" 
+            data-caps-for="title-style_select">
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                c
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                u
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                x
+              </label>
+            </div>
+
+          </div>
+          <div class="column">
+            <label class="label has-text-info-light">Font Size</label>
+            <input type="range" class="font-picker-size" min="0.5" max="5" step="0.5" value="2"
+            data-slider-for="title-style_select">
+            <label class="label has-text-info-light">Font Weight</label>
+            <input type="range" class="font-picker-weight" min="50" max="1000" step="50" value="400"
+            data-slider-for="title-style_select">
+          </div>
+        </div>
+        
+        
+      </div>
+
+      <div class="column">
+        <div class="columns">
+          <div class="column">
+            <label class="label has-text-info-light">Font for subtitles</label>
+            <div class="select">
+              <select id="subtitle-style_select" class="font-picker"
+                data-apply-selectors=".subtitle"
+                ></select>
+            </div>
             
-        </select>
-    </div>
-    <label class="label has-text-info-light">Font for Category menu items</label>
-    <div class="select level-item">
-        <select 
-            name="cat-style" 
-            id="cat-style_select"
-        >
-            <option value="">Select a font</option>
-            <option value="Be Vietnam Pro">Be Vietnam Pro</option>
-            <option value="Urbanist">Urbanist</option>
-            <option value="Sofia Sans">Sofia Sans</option>
-            <option value="Alumni Sans">Alumni Sans</option>
-            <option value="">______</option>
-            <option value="Ms Madi">Ms Madi</option>
-            <option value="Kaushan Script">Kaushan Script</option>
-            <option value="Ephesis">Ephesis</option>
-            <option value="Qwigley">Qwigley</option>
-            <option value="Allison">Allison</option>
+            <div class="control caps-control" 
+            data-caps-for="subtitle-style_select">
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                c
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                u
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                x
+              </label>
+            </div>
+
+          </div>
+          <div class="column">
+            <label class="label has-text-info-light">Font Size</label>
+            <input type="range" class="font-picker-size" min="0.5" max="5" step="0.5" value="2"
+            data-slider-for="subtitle-style_select">
+            <label class="label has-text-info-light">Font Weight</label>
+            <input type="range" class="font-picker-weight" min="50" max="1000" step="50" value="400"
+            data-slider-for="subtitle-style_select">
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <label class="label has-text-info-light">Font for tags</label>
+            <div class="select">
+                <select id="tag-style_select" class="font-picker"
+                data-apply-selectors=".tag"
+                ></select>
+            </div>
             
-        </select>
+            <div class="control caps-control" 
+            data-caps-for="tag-style_select">
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                c
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                u
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                x
+              </label>
+            </div>
+
+          </div>
+          <div class="column">
+            <label class="label has-text-info-light">Font Size</label>
+            <input type="range" class="font-picker-size" min="0.5" max="5" step="0.5" value="2"
+            data-slider-for="tag-style_select">
+            <label class="label has-text-info-light">Font Weight</label>
+            <input type="range" class="font-picker-weight" min="50" max="1000" step="50" value="400"
+            data-slider-for="tag-style_select">
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="columns">
+          <div class="column">
+            <label class="label has-text-info-light">Font for body (everything else)</label>
+            <div class="select">
+                <select id="body-style_select" class="font-picker"
+                data-apply-selectors=".content"
+                ></select>
+            </div>
+            
+            <div class="control caps-control " 
+            data-caps-for="body-style_select">
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                c
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                u
+              </label>
+              <label class="radio">
+                <input type="radio" name="cap-radio">
+                x
+              </label>
+            </div>
+
+          </div>
+          <div class="column">
+            <label class="label has-text-info-light">Font Size</label>
+            <input type="range" class="font-picker-size" min="0.5" max="5" step="0.5" value="2"
+            data-slider-for="body-style_select">
+            <label class="label has-text-info-light">Font Weight</label>
+            <input type="range" class="font-picker-weight" min="50" max="1000" step="50" value="400"
+            data-slider-for="body-style_select">
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+
+      </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded',function () {
-            // onchange="this.setAttribute('hx-push-url', '{{ category.get_absolute_url }}' + (this.value !== '' ? ('?tag=' + this.value) : ''));"
-            let selectElement = document.getElementById('title-style_select');
-            if (selectElement) {
-              selectElement.addEventListener('change', function () {
-                let newfont = this.value;
-                document.getElementById("desktop-title").style.fontFamily=newfont;
-                document.getElementById("mobile-title").style.fontFamily=newfont;
+          function populateOptionsWithFonts(){
+            const options = ["", "Taviraj", "Lato", "Roboto Serif", "Poppins",
+            "Libre Franklin", "Karla", "Jost", "Be Vietnam Pro", "Urbanist","Sofia Sans","Alumni Sans"];
+
+            function applyStyles(){
+              const newfont = this.value;
+              document.querySelectorAll(this.dataset.applySelectors).forEach(
+                elem => {
+                  elem.style.fontFamily = newfont;
+                }
+              );
+            }
+
+            const fontEls = document.querySelectorAll(".font-picker");
+            fontEls.forEach(fEl => {
+              options.forEach(opt => {
+                const thisOpt = document.createElement("option");
+                thisOpt.innerText = opt;
+                fEl.appendChild(thisOpt);
+              });
+
+              fEl.addEventListener("change", applyStyles);
+            });
+          }
+
+          function activateSliders(){
+            function applySize(){
+              const thisSize = this.value + "rem";
+              const selectElem = document.getElementById(this.dataset.sliderFor);
+          
+              document.querySelectorAll(selectElem.dataset.applySelectors).forEach(elem => {
+                elem.style.fontSize = thisSize;
               });
             }
-            selectElement = document.getElementById('cat-style_select');
-            if (selectElement) {
-              selectElement.addEventListener('change', function () {
-                let newfont = this.value;
-                document.querySelectorAll('.navbar-item').forEach(item => item.style.fontFamily=newfont);
-                document.querySelectorAll('.category-name').forEach(item => item.style.fontFamily=newfont);
+            function applyWeight(){
+              const thisWeight = this.value;
+              const selectElem = document.getElementById(this.dataset.sliderFor);
+
+              document.querySelectorAll(selectElem.dataset.applySelectors).forEach(elem => {
+                elem.style.fontWeight = thisWeight;
               });
             }
-          });
+
+            document.querySelectorAll(".font-picker-size").forEach(slider => {
+              slider.addEventListener("input", applySize);
+            });
+            document.querySelectorAll(".font-picker-weight").forEach(slider => {
+              slider.addEventListener("input", applyWeight);
+            });
+          }
+
+          function activateCapRadio(){
+            const capOptions = {"c":"capitalize", "u":"uppercase", "x":""};
+            
+            function switchCapitalisation(){
+              const styleToApply = capOptions[this.querySelector(":checked").parentElement.innerText.trim().toLowerCase()];
+              const selectElem = document.getElementById(this.dataset.capsFor);
+              
+              document.querySelectorAll(selectElem.dataset.applySelectors).forEach(elem => {
+                elem.style.textTransform = styleToApply;
+              });
+            }
+            
+            const capElems = document.querySelectorAll(".caps-control");
+            capElems.forEach(elem => {
+              elem.addEventListener("change", switchCapitalisation);
+            });
+          }
+
+          populateOptionsWithFonts();
+          activateSliders();
+          activateCapRadio();
+
+
+          const hideButton = document.getElementById("hide-show-button");
+          hideButton.addEventListener("click", (() => {
+            document.getElementById("font-picker-toggles").classList.toggle("is-hidden");
+          }));
+
+        });
     </script>
 </div>

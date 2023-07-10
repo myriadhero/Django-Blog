@@ -14,6 +14,7 @@
 
     --swiper-navigation-arrows-top-fraction: 0.5;
     --swiper-navigation-top-offset: calc(var(--swiper-navigation-arrows-top-fraction) * var(--carousel-card-height));
+
 }
 
 /* touch devices */
@@ -54,6 +55,29 @@
     :root {
         --carousel-container-width: 1248px;
     }
+}
+
+#desktop-title h1 {
+    font-size: 5rem;
+}
+
+h1.site-title {
+    font-family: Ephesis !important;
+}
+
+.navbar,
+.tag,
+.navbar-menu,
+.subtitle {
+    font-family: Urbanist;
+}
+
+.title {
+    font-family: Poppins;
+}
+
+.content {
+    font-family: Jost;
 }
 
 #alpha-links,

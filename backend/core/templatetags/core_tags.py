@@ -17,3 +17,4 @@ def get_subscription_options():
 @register.simple_tag
 def get_social_media_links():
     return SocialMedia.objects.get_instance()
+
