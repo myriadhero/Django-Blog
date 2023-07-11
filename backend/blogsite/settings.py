@@ -108,11 +108,11 @@ WSGI_APPLICATION = "blogsite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("POSTGRES_DB_HOST"),
+        "PORT": os.environ.get("POSTGRES_DB_PORT", 5432),
         "NAME": os.environ.get("POSTGRES_DB_NAME"),
         "USER": os.environ.get("POSTGRES_DB_USER"),
         "PASSWORD": os.environ.get("POSTGRES_DB_PASSWORD"),
-        "PORT": os.environ.get("POSTGRES_DB_PORT", 5432),
-        "HOST": os.environ.get("POSTGRES_DB_HOST"),
     }
 }
 
@@ -272,7 +272,7 @@ LOGGING = {
             "level": "INFO",
             "class": "logging.handler.RotatingFileHandler",
             "filename": os.path.join(LOGS_DIR, "django.log"),
-            "maxBytes": 1024 * 1024 * 10,  # 10MB
+            "maxBytes": 1024 * 1024 * 5,  # 5MB
             "backupCount": 5,  # 5 total files
             # "formatter": "verbose",
         },

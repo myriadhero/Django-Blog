@@ -23,10 +23,9 @@ WORKDIR ${CODE_DIR}
 COPY --from=builder ${CODE_DIR}/.venv/ ./.venv/
 
 # Finalise the image here
-ARG DOCKER_WORLD_PORT
+# activate venv by adding it first in path
 ENV VIRTUAL_ENV=${CODE_DIR}/.venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV OUTER_WORLD_PORT=${DOCKER_WORLD_PORT}
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
