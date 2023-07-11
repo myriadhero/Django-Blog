@@ -250,7 +250,7 @@ CKEDITOR_CONFIGS = {
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
@@ -259,6 +259,8 @@ CRISPY_TEMPLATE_PACK = "bulma"
 # it is recommended to change django admin url path from the default admin/
 ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH") or "admin/"
 
+LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -266,9 +268,17 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
         },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handler.RotatingFileHandler",
+            "filename": os.path.join(LOGS_DIR, "django.log"),
+            "maxBytes": 1024 * 1024 * 10,  # 10MB
+            "backupCount": 5,  # 5 total files
+            # "formatter": "verbose",
+        },
     },
     "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
+        "handlers": ["file"],
+        "level": "INFO",
     },
 }

@@ -32,8 +32,9 @@ ENV PYTHONUNBUFFERED 1
 
 ENV STATICFILES_DIR=${CODE_DIR}/staticfiles
 ENV MEDIAFILES_DIR=${CODE_DIR}/mediafiles
+ENV LOGS_DIR=${CODE_DIR}/logs
 
-RUN addgroup -S ${UGROUP} && adduser -S ${USER} -G ${UGROUP} && mkdir app && mkdir staticfiles && mkdir mediafiles && chown -R ${USER}:${UGROUP} ${STATICFILES_DIR} && chown -R ${USER}:${UGROUP} ${MEDIAFILES_DIR}
+RUN addgroup -S ${UGROUP} && adduser -S ${USER} -G ${UGROUP} && mkdir app && mkdir staticfiles mediafiles logs && chown -R ${USER}:${UGROUP} ${STATICFILES_DIR} ${MEDIAFILES_DIR} ${LOGS_DIR}
 COPY ./backend ./app
 
 USER ${USER}

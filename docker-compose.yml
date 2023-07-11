@@ -32,6 +32,7 @@ services:
     volumes:
       - static_volume:${DOCKER_CODE_DIR}/staticfiles
       - media_volume:${DOCKER_CODE_DIR}/mediafiles
+      - django_logs:${DOCKER_CODE_DIR}/logs
     depends_on:
       - db
     command: gunicorn blogsite.wsgi:application --bind 0.0.0.0:8000
@@ -56,7 +57,6 @@ services:
     build: ./nginx
     ports:
       - 443:8080
-      - 80:8090
     depends_on:
       - web
     volumes:
@@ -68,4 +68,5 @@ services:
 volumes:
   static_volume:
   media_volume:
+  django_logs:
   db-data:
