@@ -4,7 +4,7 @@ upstream tiffilosophy.com {
 
 server {
     listen 443 ssl;
-    server_name tiffilosophy.com;
+    server_name mysite.com;
 
     ssl_certificate /etc/nginx/certs/nginxcert.crt;
     ssl_certificate_key /etc/nginx/certs/nginxcert.key;
