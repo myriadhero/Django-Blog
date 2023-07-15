@@ -16,4 +16,4 @@ raw-data*.json
 *.save
 
 # sample env file
-!settings/.env
+!example_settings/*

@@ -66,9 +66,7 @@ INSTALLED_APPS = [
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
-
     import mimetypes
-
     mimetypes.add_type("application/javascript", ".js", True)
 
 MIDDLEWARE = [
@@ -259,7 +257,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"
 
 # it is recommended to change django admin url path from the default admin/
-ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH") or "admin/"
+ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/")
 
 LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
 
