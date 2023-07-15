@@ -28,11 +28,13 @@ DEBUG = os.environ.get("DJANGO_DEBUG").lower() in ("true", "1", "t")
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
     "localhost",
     "127.0.0.1",
 ]
+
 if DEBUG:
     INTERNAL_IPS = [
         "localhost",
@@ -64,9 +66,7 @@ INSTALLED_APPS = [
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
-
     import mimetypes
-
     mimetypes.add_type("application/javascript", ".js", True)
 
 MIDDLEWARE = [
@@ -257,7 +257,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"
 
 # it is recommended to change django admin url path from the default admin/
-ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH") or "admin/"
+ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/")
 
 LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
 
@@ -270,7 +270,7 @@ LOGGING = {
         },
         "file": {
             "level": "INFO",
-            "class": "logging.handler.RotatingFileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(LOGS_DIR, "django.log"),
             "maxBytes": 1024 * 1024 * 5,  # 5MB
             "backupCount": 5,  # 5 total files

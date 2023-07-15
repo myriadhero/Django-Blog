@@ -5,13 +5,13 @@ ARG CODE_DIR
 WORKDIR ${CODE_DIR}
 RUN pip install pipenv
 
-COPY ./Pipfile ./Pipfile.lock ${CODE_DIR}/
+COPY ./Pipfile ${CODE_DIR}/
 
 # set environment variables
 ENV PIPENV_VENV_IN_PROJECT=1
 ENV PIPENV_CACHE_DIR=${CODE_DIR}/pipenv_cache/
 
-RUN pipenv sync
+RUN pipenv install
 
 # Runtime container from this line
 FROM python:3.11-alpine AS runtime
@@ -33,7 +33,7 @@ ENV STATICFILES_DIR=${CODE_DIR}/staticfiles
 ENV MEDIAFILES_DIR=${CODE_DIR}/mediafiles
 ENV LOGS_DIR=${CODE_DIR}/logs
 
-RUN addgroup -S ${UGROUP} && adduser -S ${USER} -G ${UGROUP} && mkdir app && mkdir staticfiles mediafiles logs && chown -R ${USER}:${UGROUP} ${STATICFILES_DIR} ${MEDIAFILES_DIR} ${LOGS_DIR}
+RUN addgroup -S ${UGROUP} && adduser -S ${USER} -G ${UGROUP} && mkdir app staticfiles mediafiles logs && chown -R ${USER}:${UGROUP} staticfiles mediafiles logs
 COPY ./backend ./app
 
 USER ${USER}

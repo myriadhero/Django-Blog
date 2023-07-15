@@ -1,7 +1,6 @@
 .vscode/
 *.pyc
 .DS_Store
-Pipfile.lock
 package-lock.json
 dockertest/*
 tutorial1poll/*
@@ -14,6 +13,7 @@ raw-data*.json
 *.crt
 *.key
 /nginx/*.conf
+*.save
 
 # sample env file
-!settings/.env
+!example_settings/*

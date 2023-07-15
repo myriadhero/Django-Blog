@@ -55,7 +55,7 @@ services:
     restart: always
     build: ./nginx
     ports:
-      - 443:8080
+      - 8080:8080
     depends_on:
       - web
     volumes:
