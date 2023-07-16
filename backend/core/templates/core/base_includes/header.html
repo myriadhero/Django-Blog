@@ -2,6 +2,14 @@
 {% load core_tags %}
 <header class="section container mt-o pt-0">
 
+    {% if site_identity.header_message %}
+    <div class="">
+        <i class="fa-solid fa-circle-info has-text-info"></i>
+        This site is still under construction
+        <i class="fa-solid fa-brush"></i>
+    </div>
+    {% endif %}
+
     <div class="navbar-menu is-justify-content-flex-end">
         {% get_social_media_links as sm_links %}
         <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>

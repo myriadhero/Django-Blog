@@ -16,6 +16,7 @@ class SiteIdentity(models.Model):
     logo = models.ImageField(upload_to="site_identity/", blank=True)
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     footer = RichTextField(blank=True)
+    header_message = models.RichTextField(blank=True)
 
     objects = SingletonManager()
 
