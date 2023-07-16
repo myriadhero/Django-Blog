@@ -260,25 +260,25 @@ CRISPY_TEMPLATE_PACK = "bulma"
 ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/")
 
 LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
+if not DEBUG:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+            },
+            "file": {
+                "level": "INFO",
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": os.path.join(LOGS_DIR, "django.log"),
+                "maxBytes": 1024 * 1024 * 5,  # 5MB
+                "backupCount": 5,  # 5 total files
+                # "formatter": "verbose",
+            },
         },
-        "file": {
+        "root": {
+            "handlers": ["file"],
             "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOGS_DIR, "django.log"),
-            "maxBytes": 1024 * 1024 * 5,  # 5MB
-            "backupCount": 5,  # 5 total files
-            # "formatter": "verbose",
         },
-    },
-    "root": {
-        "handlers": ["file"],
-        "level": "INFO",
-    },
-}
+    }
