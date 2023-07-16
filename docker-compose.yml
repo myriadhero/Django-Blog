@@ -34,7 +34,7 @@ services:
       - django_logs:${DOCKER_CODE_DIR}/logs
     depends_on:
       - db
-    command: python manage.py migrate && gunicorn blogsite.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn blogsite.wsgi:application --bind 0.0.0.0:8000
     # command: tail -f /dev/null
     env_file:
       - .env
