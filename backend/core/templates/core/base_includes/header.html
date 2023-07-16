@@ -3,10 +3,9 @@
 <header class="section container mt-o pt-0">
 
     {% if site_identity.header_message %}
-    <div class="">
-        <i class="fa-solid fa-circle-info has-text-info"></i>
-        This site is still under construction
-        <i class="fa-solid fa-brush"></i>
+    <div class="p-2 m-2 box has-text-centered has-background-warning">
+        <button class="delete" style="float:right;margin-top:2px;" onclick="this.parentElement.style.display='none';"></button>
+        <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
     </div>
     {% endif %}
 

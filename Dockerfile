@@ -11,7 +11,7 @@ COPY ./Pipfile ${CODE_DIR}/
 ENV PIPENV_VENV_IN_PROJECT=1
 ENV PIPENV_CACHE_DIR=${CODE_DIR}/pipenv_cache/
 
-RUN pipenv install
+RUN pipenv sync
 
 # Runtime container from this line
 FROM python:3.11-alpine AS runtime
