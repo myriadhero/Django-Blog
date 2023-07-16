@@ -1,32 +1,15 @@
 @charset "utf-8";
-
-
-// $cream: #F6F6F6;
-// $pinklite: #FFE2E2;
-// $pink: #FFC7C7;
-// $grey: #AAAAAA;
+// Import a Google Fonts
+@import url('https://fonts.googleapis.com/css?family=Ephesis|Urbanist|Poppins|Jost');
+// $family-sans-serif
+// $family-primary
+// $family-secondary
+// $body-family
 
 $bgcolour: #ffffff;
 $textcolour: #000000;
 $accentcolour: #D6A496;
 $highlightcolour: #FEDD90;
-
-// pinks 
-// #D6A496
-// #FFC7C7
-// #FFD1D1
-// #FCD8D4;
-
-// background colours
-// #F7F7F5;
-// #FDF6F0;
-// #FFF5E4;
-// #FFFFFF;
-
-// yellow accents
-// #ECD9CC
-// #FFE6C6
-// #F8E2CF
 
 $black: #000000;
 $black-bis: #151d28;
@@ -78,6 +61,26 @@ $navbar-dropdown-item-active-background-color: $white-bis;
 $navbar-divider-background-color: $accentcolour;
 
 @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma/sass/utilities/_all.sass";
+@import "../node_modules/bulma/sass/base/_all.sass";
+@import "../node_modules/bulma/sass/helpers/_all.sass";
+@import "../node_modules/bulma/sass/layout/footer.sass";
+@import "../node_modules/bulma/sass/layout/section.sass";
+@import "../node_modules/bulma/sass/grid/columns.sass";
+@import "../node_modules/bulma/sass/elements/box.sass";
+@import "../node_modules/bulma/sass/elements/button.sass";
+@import "../node_modules/bulma/sass/elements/container.sass";
+@import "../node_modules/bulma/sass/elements/content.sass";
+@import "../node_modules/bulma/sass/elements/icon.sass";
+@import "../node_modules/bulma/sass/elements/image.sass";
+@import "../node_modules/bulma/sass/elements/tag.sass";
+@import "../node_modules/bulma/sass/elements/title.sass";
+@import "../node_modules/bulma/sass/elements/other.sass";
+@import "../node_modules/bulma/sass/form/_all.sass";
+@import "../node_modules/bulma/sass/components/card.sass";
+@import "../node_modules/bulma/sass/components/level.sass";
+@import "../node_modules/bulma/sass/components/navbar.sass";
+
 
 :root {
     --swiper-theme-color: #{$accentcolour} !important;
