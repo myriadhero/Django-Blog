@@ -5,7 +5,7 @@ ARG CODE_DIR
 WORKDIR ${CODE_DIR}
 RUN pip install pipenv
 
-COPY ./Pipfile ${CODE_DIR}/
+COPY Pipfile Pipfile.lock ${CODE_DIR}/
 
 # set environment variables
 ENV PIPENV_VENV_IN_PROJECT=1
