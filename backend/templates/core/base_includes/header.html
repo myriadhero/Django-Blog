@@ -2,6 +2,13 @@
 {% load core_tags %}
 <header class="section container mt-o pt-0">
 
+    {% if site_identity.header_message %}
+    <div class="p-2 m-2 box has-text-centered has-background-warning">
+        <button class="delete" style="float:right;margin-top:2px;" onclick="this.parentElement.style.display='none';"></button>
+        <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
+    </div>
+    {% endif %}
+
     <div class="navbar-menu is-justify-content-flex-end">
         {% get_social_media_links as sm_links %}
         <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>

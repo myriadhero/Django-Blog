@@ -67,6 +67,7 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
     import mimetypes
+
     mimetypes.add_type("application/javascript", ".js", True)
 
 MIDDLEWARE = [
@@ -86,7 +87,7 @@ ROOT_URLCONF = "blogsite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -148,7 +149,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_STORAGE = (
+    "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    if not DEBUG
+    else "django.contrib.staticfiles.storage.StaticFilesStorage"
+)
 STATIC_URL = "static/"
 STATIC_ROOT = os.environ.get("STATICFILES_DIR") or BASE_DIR / "staticfiles"
 
@@ -260,25 +266,25 @@ CRISPY_TEMPLATE_PACK = "bulma"
 ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/")
 
 LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
+if not DEBUG:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+            },
+            "file": {
+                "level": "INFO",
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": os.path.join(LOGS_DIR, "django.log"),
+                "maxBytes": 1024 * 1024 * 5,  # 5MB
+                "backupCount": 5,  # 5 total files
+                # "formatter": "verbose",
+            },
         },
-        "file": {
+        "root": {
+            "handlers": ["file"],
             "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOGS_DIR, "django.log"),
-            "maxBytes": 1024 * 1024 * 5,  # 5MB
-            "backupCount": 5,  # 5 total files
-            # "formatter": "verbose",
         },
-    },
-    "root": {
-        "handlers": ["file"],
-        "level": "INFO",
-    },
-}
+    }

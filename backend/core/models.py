@@ -16,6 +16,10 @@ class SiteIdentity(models.Model):
     logo = models.ImageField(upload_to="site_identity/", blank=True)
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     footer = RichTextField(blank=True)
+    header_message = models.TextField(
+        blank=True,
+        help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
+    )
 
     objects = SingletonManager()
 
