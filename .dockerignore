@@ -16,3 +16,4 @@ readme.md
 Dockerfile
 docker-compose.yml
 .dockerignore
+/backend/logs/*

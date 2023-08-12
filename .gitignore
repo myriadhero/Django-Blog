@@ -5,6 +5,7 @@ package-lock.json
 dockertest/*
 tutorial1poll/*
 *.sqlite3
+/backend/logs
 backend/media/*
 /frontend/node_modules
 raw-data*.json
@@ -14,6 +15,7 @@ raw-data*.json
 *.key
 /nginx/*.conf
 *.save
+*.log
 
 # sample env file
 !example_settings/*
