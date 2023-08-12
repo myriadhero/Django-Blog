@@ -1,6 +1,7 @@
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
 from django.db.models.query import QuerySet
@@ -26,9 +27,10 @@ class MenuCatsManager(models.Manager):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
     slug = models.SlugField(
         max_length=50,
+        validators=[MinLengthValidator(1)],
         unique=True,
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique.",
     )
