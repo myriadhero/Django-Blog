@@ -1833,7 +1833,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     visibility: hidden !important; } }
 
 .footer {
-  background-color: #e0dfdc;
+  background-color: #D6A496;
   padding: 3rem 1.5rem 6rem; }
 
 .section {
@@ -5954,7 +5954,7 @@ a.navbar-item,
   .navbar-link:focus-within,
   .navbar-link:hover,
   .navbar-link.is-active {
-    background-color: #e0dfdc;
+    background-color: #FEDD90;
     color: #D6A496; }
 
 .navbar-item {
@@ -6070,10 +6070,10 @@ a.navbar-item,
     .navbar.is-transparent .navbar-item.has-dropdown.is-active .navbar-link, .navbar.is-transparent .navbar-item.has-dropdown.is-hoverable:focus .navbar-link, .navbar.is-transparent .navbar-item.has-dropdown.is-hoverable:focus-within .navbar-link, .navbar.is-transparent .navbar-item.has-dropdown.is-hoverable:hover .navbar-link {
       background-color: transparent !important; }
     .navbar.is-transparent .navbar-dropdown a.navbar-item:focus, .navbar.is-transparent .navbar-dropdown a.navbar-item:hover {
-      background-color: #e0dfdc;
+      background-color: #FEDD90;
       color: #D6A496; }
     .navbar.is-transparent .navbar-dropdown a.navbar-item.is-active {
-      background-color: #e0dfdc;
+      background-color: #FEDD90;
       color: #4f8cb5; }
   .navbar-burger {
     display: none; }
@@ -6126,10 +6126,10 @@ a.navbar-item,
     .navbar-dropdown a.navbar-item {
       padding-right: 3rem; }
       .navbar-dropdown a.navbar-item:focus, .navbar-dropdown a.navbar-item:hover {
-        background-color: #e0dfdc;
+        background-color: #FEDD90;
         color: #D6A496; }
       .navbar-dropdown a.navbar-item.is-active {
-        background-color: #e0dfdc;
+        background-color: #FEDD90;
         color: #4f8cb5; }
     .navbar.is-spaced .navbar-dropdown, .navbar-dropdown.is-boxed {
       border-radius: 6px;
@@ -6183,7 +6183,7 @@ a.navbar-item,
   .navbar-link.is-active:not(:focus):not(:hover) {
     background-color: transparent; }
   .navbar-item.has-dropdown:focus .navbar-link, .navbar-item.has-dropdown:hover .navbar-link, .navbar-item.has-dropdown.is-active .navbar-link {
-    background-color: #e0dfdc; } }
+    background-color: #FEDD90; } }
 
 .hero.is-fullheight-with-navbar {
   min-height: calc(100vh - 3.25rem); }

@@ -23,18 +23,19 @@ $accentcolour: #D6A496;
 $highlightcolour: #FEDD90;
 $accentdisabled: #D9CFCC;
 $highlightedtext: $accentcolour;
-$sitetitletext: $textcolour;
-$tagtext: $textcolour;
-$categorytagbgcolor: $accentcolour;
-$tagbgcolor: $highlightcolour;
-$posttitletext: $textcolour;
-$carouseltitlecolor: $textcolour;
-$carousellinkcolor: $accentcolour;
-$carouselposttitle: $textcolour;
-$footerbg: $accentcolour;
-$topiconsbg: $bgcolour;
-$readmorebubblebg: $highlightcolour;
-$taglistnamecolor: $accentcolour;
+
+// $sitetitletext: $textcolour;
+// $tagtext: $textcolour;
+// $categorytagbgcolor: $accentcolour;
+// $tagbgcolor: $highlightcolour;
+// $posttitletext: $textcolour;
+// $carouseltitlecolor: $textcolour;
+// $carousellinkcolor: $accentcolour;
+// $carouselposttitle: $textcolour;
+// $footerbg: $accentcolour;
+// $topiconsbg: $bgcolour;
+// $readmorebubblebg: $highlightcolour;
+// $taglistnamecolor: $accentcolour;
 
 
 
@@ -81,14 +82,15 @@ $link-hover: $grey-darker;
 $link-focus: $grey-darker;
 $link-active: $grey-darker;
 
-// $navbar-item-hover-background-color:
 $navbar-item-hover-color: $accentcolour;
+$navbar-item-hover-background-color: $highlightcolour;
 $navbar-dropdown-item-hover-color: $accentcolour;
-$navbar-dropdown-item-hover-background-color: $white-bis;
-$navbar-dropdown-item-active-background-color: $white-bis;
+$navbar-dropdown-item-hover-background-color: $highlightcolour;
+$navbar-dropdown-item-active-background-color: $highlightcolour;
 $navbar-divider-background-color: $accentcolour;
 $navbar-dropdown-arrow: $accentcolour;
 
+$footer-background-color: $accentcolour;
 
 :root {
     --swiper-theme-color: #{$accentcolour} !important;
