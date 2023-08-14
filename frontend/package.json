@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "patch-package",
-    "css-build": "node-sass --omit-source-map-url sass/custom_bulma.scss ../backend/static/css/custom_bulma.css",
+    "css-build": "node-sass --omit-source-map-url sass/site_styles_with_bulma.scss ../backend/static/css/site_styles_with_bulma.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch"
   },
