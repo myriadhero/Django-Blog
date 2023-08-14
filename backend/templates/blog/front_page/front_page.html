@@ -12,11 +12,11 @@
     
     <div class="is-flex is-flex-direction-row is-justify-content-space-between is-align-items-baseline">
         <a href="{{ category.get_absolute_url }}">
-            <h3 class="title is-3 m-2 category-name">
+            <h3 class="title is-3 m-2 category-name is-uppercase">
                 {{ category.name }}
             </h3>
         </a>
-        <a href="{{ category.get_absolute_url }}" class="subtitle is-5 has-text-primary m-2">
+        <a href="{{ category.get_absolute_url }}" class="is-size-5 has-text-primary m-2">
             View all    
         </a>
     </div>
@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="block has-text-centered slide-annotation">
-                        <p class="subtitle is-5">
+                        <p class="is-size-5 has-text-black">
                             {{ featured_post.post.title }}
                         </p>
                     </div>

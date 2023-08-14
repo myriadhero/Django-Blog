@@ -2,7 +2,7 @@
 {% block title %}{{ site_identity.title }} - {{ category.name }}{% endblock %}
 {% block content %}
     <div class="section">
-        <h3 class="title is-3">{{ category.name }}</h3>
+        <h3 class="title is-3 is-uppercase">{{ category.name }}</h3>
         <div id="list-items">
             {% regroup tags by name.0 as alpha_tags %}
             <div id="alpha-links" class="level">
