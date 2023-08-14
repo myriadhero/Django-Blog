@@ -1,0 +1,183 @@
+@charset "utf-8";
+// Import a Google Font
+// @import url('https://fonts.googleapis.com/css?family=Arsenal|Open+Sans|Dawning+of+a+New+Day');
+// $footerfont:
+// $sitetitlefont:
+// $posttitlefont:
+// $caruoseltitlefont:
+// $carousellinkfont:
+// $carouselposttitlefont:
+// $menufont:
+// $readmorefont:
+// $taglisttitlefont:
+// $taglistnamefont:
+
+$family-sans-serif: 'Open Sans';
+// $family-primary: 
+// $family-secondary: 
+// $body-family: 
+
+$bgcolour: #ffffff;
+$textcolour: #000000;
+$accentcolour: #D6A496;
+$highlightcolour: #FEDD90;
+$accentdisabled: #D9CFCC;
+$highlightedtext: $accentcolour;
+
+// $sitetitletext: $textcolour;
+// $tagtext: $textcolour;
+// $categorytagbgcolor: $accentcolour;
+// $tagbgcolor: $highlightcolour;
+// $posttitletext: $textcolour;
+// $carouseltitlecolor: $textcolour;
+// $carousellinkcolor: $accentcolour;
+// $carouselposttitle: $textcolour;
+// $footerbg: $accentcolour;
+// $topiconsbg: $bgcolour;
+// $readmorebubblebg: $highlightcolour;
+// $taglistnamecolor: $accentcolour;
+
+
+
+
+$black: #000000;
+$black-bis: #151d28;
+$black-ter: #202e37;
+$grey-darker: #394a50;
+$grey-dark: $textcolour;
+$grey: #819796;
+$grey-light: #a8b5b2;
+$grey-lighter: #c7cfcc;
+$grey-lightest: #ebede9;
+$white-ter: $bgcolour;
+$white-bis: #e0dfdc;
+$white: $bgcolour;
+$orange: #be772b;
+$yellow: $highlightcolour;
+$green: #9eda91;
+$turquoise: #a4dddb;
+$cyan: #81cfe4;
+$blue: #4f8cb5;
+$purple: #6a536e;
+$red: #c6596b;
+
+
+$primary: $accentcolour;
+
+$info: $cyan;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+
+$light: $white-ter;
+$dark: $grey-darker;
+
+$scheme-main: $white;
+$background: $white-ter;
+
+$text: $grey-dark;
+
+$link: $blue;
+$link-hover: $grey-darker;
+$link-focus: $grey-darker;
+$link-active: $grey-darker;
+
+$navbar-item-hover-color: $accentcolour;
+$navbar-item-hover-background-color: $highlightcolour;
+$navbar-dropdown-item-hover-color: $accentcolour;
+$navbar-dropdown-item-hover-background-color: $highlightcolour;
+$navbar-dropdown-item-active-background-color: $highlightcolour;
+$navbar-divider-background-color: $accentcolour;
+$navbar-dropdown-arrow: $accentcolour;
+
+$footer-background-color: $accentcolour;
+
+:root {
+    --swiper-theme-color: #{$accentcolour} !important;
+}
+
+#desktop-title h1 {
+    font-size: 5rem;
+}
+
+h1.site-title {
+    font-family: 'Dawning of a New Day' !important;
+}
+
+.title,
+.navbar,
+.tag,
+.navbar-menu,
+.navbar-item,
+.subtitle,
+.footer {
+    font-family: Arsenal;
+}
+
+.navbar-menu>.navbar-item {
+    text-transform: uppercase;
+}
+
+.navbar-dropdown {
+    text-transform: none;
+}
+
+// .content {
+//     font-family: 'Open Sans';
+// }
+
+#alpha-links,
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.letter-link {
+    padding: 1.2px;
+}
+
+.letter-link:hover {
+    font-weight: bold;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.post-preview-image {
+    border-radius: 3%;
+    overflow: hidden;
+}
+
+.post-detail-header-image {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+a.tag-expander {
+    white-space: nowrap;
+}
+
+i.fa-square-rss {
+    color: #f69537;
+}
+
+// @import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma/sass/utilities/_all.sass";
+@import "../node_modules/bulma/sass/base/_all.sass";
+@import "../node_modules/bulma/sass/helpers/_all.sass";
+@import "../node_modules/bulma/sass/layout/footer.sass";
+@import "../node_modules/bulma/sass/layout/section.sass";
+@import "../node_modules/bulma/sass/grid/columns.sass";
+@import "../node_modules/bulma/sass/elements/box.sass";
+@import "../node_modules/bulma/sass/elements/button.sass";
+@import "../node_modules/bulma/sass/elements/container.sass";
+@import "../node_modules/bulma/sass/elements/content.sass";
+@import "../node_modules/bulma/sass/elements/icon.sass";
+@import "../node_modules/bulma/sass/elements/image.sass";
+@import "../node_modules/bulma/sass/elements/tag.sass";
+@import "../node_modules/bulma/sass/elements/title.sass";
+@import "../node_modules/bulma/sass/elements/other.sass";
+@import "../node_modules/bulma/sass/form/_all.sass";
+@import "../node_modules/bulma/sass/components/card.sass";
+@import "../node_modules/bulma/sass/components/level.sass";
+@import "../node_modules/bulma/sass/components/navbar.sass";

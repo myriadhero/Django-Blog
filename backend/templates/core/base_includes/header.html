@@ -1,6 +1,6 @@
 {% load blog_tags %}
 {% load core_tags %}
-<header class="section container mt-o pt-0">
+<header class="section container mt-0 pt-0">
 
     {% if site_identity.header_message %}
     <div class="p-2 m-2 box has-text-centered has-background-warning">
@@ -75,7 +75,7 @@
         </a>
         
     </div>
-    <nav class="navbar is-justify-content-center pt-5" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-justify-content-center mt-5" role="navigation" aria-label="main navigation">
         <div class="navbar-brand is-align-items-center">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
                 <h1 class="site-title title is-1 has-text-black" id="mobile-title">{{ site_identity.title }}</h1>
