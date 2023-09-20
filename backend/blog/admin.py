@@ -1,9 +1,10 @@
 from itertools import chain
-from typing import Any, Sequence
+from typing import Any
 
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib import admin
+from django.core.validators import validate_slug
 from django.db import models
 from django.db.models import Count
 from django.db.models.query import QuerySet
@@ -226,8 +227,20 @@ class TagsWithNoPostsFilter(admin.SimpleListFilter):
             ).filter(ntag=0)
 
 
+class CategoryTagAdminForm(forms.ModelForm):
+    class Meta:
+        model = CategoryTag
+        fields = "__all__"
+
+    def clean_slug(self):
+        slug = self.cleaned_data["slug"]
+        validate_slug(slug)
+        return slug
+
+
 @admin.register(CategoryTag)
 class CategoryTagAdmin(admin.ModelAdmin):
+    form = CategoryTagAdminForm
     list_display = ["name", "slug", "description", "get_categories", "is_sub_category"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
