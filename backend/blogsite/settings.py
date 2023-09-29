@@ -256,7 +256,7 @@ CKEDITOR_CONFIGS = {
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.environ.get("MEDIAFILES_DIR", BASE_DIR / "media")
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
