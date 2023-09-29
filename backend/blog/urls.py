@@ -18,6 +18,7 @@ urlpatterns = [
     path("feed/", LatestPostsFeed(), name="post_feed"),
     path("search/", views.PostSearchListView.as_view(), name="post_search"),
     path("htmx/post_list/", views.HTMXPostListView.as_view(), name="htmx_post_list"),
+    path("htmx/tag/<slug:tag_slug>/", views.HTMXTagPostListView.as_view(), name="htmx_tag_post_list"),
     path("htmx/search/", views.HTMXPostSearchListView.as_view(), name="htmx_search"),
     path(
         "htmx/category/<slug:category_slug>/",

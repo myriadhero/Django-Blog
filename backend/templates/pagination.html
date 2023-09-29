@@ -9,6 +9,8 @@
         {% url 'blog:htmx_category_list' category.slug as htmx_url %}
       {% elif form %}
         {% url 'blog:htmx_search' as htmx_url %}
+      {% elif tag %}
+        {% url 'blog:htmx_tag_post_list' tag.slug as htmx_url %}
       {% else %}
         {% url 'blog:htmx_post_list' as htmx_url %}
       {% endif %}

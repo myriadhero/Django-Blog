@@ -20,7 +20,10 @@ class PostListView(ListView):
     template_name = "blog/post/list.html"
 
 
-# TODO: fix pagination bug as it seems to not return the correct tagged items
+class HTMXPostListView(PostListView):
+    template_name = "blog/post/includes/post_list.html"
+
+
 class TagPostListView(PostListView):
     def get_queryset(self):
         tag = get_object_or_404(CategoryTag, slug=self.kwargs.get("tag_slug"))
@@ -34,7 +37,7 @@ class TagPostListView(PostListView):
         return context
 
 
-class HTMXPostListView(PostListView):
+class HTMXTagPostListView(TagPostListView):
     template_name = "blog/post/includes/post_list.html"
 
 
