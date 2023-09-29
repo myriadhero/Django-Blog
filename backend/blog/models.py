@@ -241,6 +241,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         self.generate_unique_slug()
         self.remove_scripts_from_body()
+        self.check_youtube_iframe()
         super().save(*args, **kwargs)
 
     def get_similar_posts(self, post_num=5):
@@ -286,6 +287,15 @@ class Post(models.Model):
 
         for tag in root.xpath("//script"):
             tag.drop_tree()
+
+        self.body = html.tostring(root, encoding="unicode")
+
+    def check_youtube_iframe(self):
+        root = html.fromstring(self.body)
+
+        for tag in root.xpath("//iframe"):
+            if not tag.attrib.get("src", "").startswith("https://www.youtube.com"):
+                tag.drop_tree()
 
         self.body = html.tostring(root, encoding="unicode")
 

@@ -173,6 +173,10 @@ i.fa-square-rss {
     color: $primary !important;
 }
 
+.content iframe {
+    border-radius: 10px;
+}
+
 // @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";

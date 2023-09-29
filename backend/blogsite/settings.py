@@ -249,7 +249,7 @@ CKEDITOR_CONFIGS = {
             ]
         ),
         "filebrowserUploadUrl": "/ckeditor/upload/",
-        "extraAllowedContent": "blockquote(twitter-tweet)[data-conversation]; p[lang,dir]",
+        "extraAllowedContent": "blockquote(twitter-tweet)[data-conversation]; p[lang,dir]; iframe[width,height,src,title,frameborder,allow,allowfullscreen]",
     },
 }
 

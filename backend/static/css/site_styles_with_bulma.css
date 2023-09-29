@@ -59,6 +59,9 @@ i.fa-square-rss {
 .text-pink-on-hover:hover {
   color: #D6A496 !important; }
 
+.content iframe {
+  border-radius: 10px; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {
