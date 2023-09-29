@@ -390,7 +390,7 @@ span {
   font-weight: inherit; }
 
 strong {
-  color: #394a50;
+  color: #000000;
   font-weight: 700; }
 
 fieldset {
@@ -419,7 +419,7 @@ table th {
     text-align: inherit; }
 
 table th {
-  color: #394a50; }
+  color: #000000; }
 
 @keyframes spinAround {
   from {
@@ -3004,7 +3004,7 @@ a.box:active {
   background-color: #ffffff;
   border-color: #c7cfcc;
   border-width: 1px;
-  color: #394a50;
+  color: #000000;
   cursor: pointer;
   justify-content: center;
   padding-bottom: calc(0.5em - 1px);
@@ -3045,10 +3045,10 @@ a.box:active {
     text-decoration: underline; }
     .button.is-text:hover, .button.is-text.is-hovered, .button.is-text:focus, .button.is-text.is-focused {
       background-color: #ffffff;
-      color: #394a50; }
+      color: #000000; }
     .button.is-text:active, .button.is-text.is-active {
       background-color: #f2f2f2;
-      color: #394a50; }
+      color: #000000; }
     .button.is-text[disabled],
     fieldset[disabled] .button.is-text {
       background-color: transparent;
@@ -3962,7 +3962,7 @@ a.box:active {
 .content h4,
 .content h5,
 .content h6 {
-  color: #394a50;
+  color: #000000;
   font-weight: 600;
   line-height: 1.125; }
 
@@ -4062,17 +4062,17 @@ a.box:active {
     padding: 0.5em 0.75em;
     vertical-align: top; }
   .content table th {
-    color: #394a50; }
+    color: #000000; }
     .content table th:not([align]) {
       text-align: inherit; }
   .content table thead td,
   .content table thead th {
     border-width: 0 0 2px;
-    color: #394a50; }
+    color: #000000; }
   .content table tfoot td,
   .content table tfoot th {
     border-width: 2px 0 0;
-    color: #394a50; }
+    color: #000000; }
   .content table tbody tr:last-child td,
   .content table tbody tr:last-child th {
     border-bottom-width: 0; }
@@ -4374,7 +4374,7 @@ a.tag:hover {
     vertical-align: middle; }
 
 .title {
-  color: #394a50;
+  color: #000000;
   font-size: 2rem;
   font-weight: 600;
   line-height: 1.125; }
@@ -4404,7 +4404,7 @@ a.tag:hover {
   font-weight: 400;
   line-height: 1.25; }
   .subtitle strong {
-    color: #394a50;
+    color: #000000;
     font-weight: 600; }
   .subtitle:not(.is-spaced) + .title {
     margin-top: -1.25rem; }
@@ -4449,15 +4449,15 @@ a.tag:hover {
   background-color: #ffffff;
   border-color: #c7cfcc;
   border-radius: 4px;
-  color: #394a50; }
+  color: #000000; }
   .input::-moz-placeholder, .textarea::-moz-placeholder, .select select::-moz-placeholder {
-    color: rgba(57, 74, 80, 0.3); }
+    color: rgba(0, 0, 0, 0.3); }
   .input::-webkit-input-placeholder, .textarea::-webkit-input-placeholder, .select select::-webkit-input-placeholder {
-    color: rgba(57, 74, 80, 0.3); }
+    color: rgba(0, 0, 0, 0.3); }
   .input:-moz-placeholder, .textarea:-moz-placeholder, .select select:-moz-placeholder {
-    color: rgba(57, 74, 80, 0.3); }
+    color: rgba(0, 0, 0, 0.3); }
   .input:-ms-input-placeholder, .textarea:-ms-input-placeholder, .select select:-ms-input-placeholder {
-    color: rgba(57, 74, 80, 0.3); }
+    color: rgba(0, 0, 0, 0.3); }
   .input:hover, .textarea:hover, .select select:hover, .is-hovered.input, .is-hovered.textarea, .select select.is-hovered {
     border-color: #a8b5b2; }
   .input:focus, .textarea:focus, .select select:focus, .is-focused.input, .is-focused.textarea, .select select.is-focused, .input:active, .textarea:active, .select select:active, .is-active.input, .is-active.textarea, .select select.is-active {
@@ -4591,7 +4591,7 @@ a.tag:hover {
   .checkbox input, .radio input {
     cursor: pointer; }
   .checkbox:hover, .radio:hover {
-    color: #394a50; }
+    color: #000000; }
   .checkbox[disabled], .radio[disabled],
   fieldset[disabled] .checkbox,
   fieldset[disabled] .radio,
@@ -4636,7 +4636,7 @@ a.tag:hover {
       .select select[multiple] option {
         padding: 0.5em 1em; }
   .select:not(.is-multiple):not(.is-loading):hover::after {
-    border-color: #394a50; }
+    border-color: #000000; }
   .select.is-white:not(:hover)::after {
     border-color: #ffffff; }
   .select.is-white select {
@@ -4980,12 +4980,12 @@ a.tag:hover {
   position: relative; }
   .file-label:hover .file-cta {
     background-color: #f9f9f9;
-    color: #394a50; }
+    color: #000000; }
   .file-label:hover .file-name {
     border-color: #c0c9c6; }
   .file-label:active .file-cta {
     background-color: #f2f2f2;
-    color: #394a50; }
+    color: #000000; }
   .file-label:active .file-name {
     border-color: #b9c3bf; }
 
@@ -5032,7 +5032,7 @@ a.tag:hover {
     font-size: 14px; }
 
 .label {
-  color: #394a50;
+  color: #000000;
   display: block;
   font-size: 1rem;
   font-weight: 700; }
@@ -5277,7 +5277,7 @@ a.tag:hover {
 
 .card-header-title {
   align-items: center;
-  color: #394a50;
+  color: #000000;
   display: flex;
   flex-grow: 1;
   font-weight: 700;

@@ -69,13 +69,12 @@
         </span>
     </div>
 
-    <div id="desktop-title" class="is-hidden-touch has-text-centered">
+    <div id="desktop-title" class="is-hidden-touch has-text-centered m-4">
         <a href="{% url 'blog:front_page' %}">
             <h1 class="site-title title is-1 has-text-black">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
         </a>
-        
     </div>
-    <nav class="navbar is-justify-content-center mt-5" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-justify-content-center" role="navigation" aria-label="main navigation">
         <div class="navbar-brand is-align-items-center">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
                 <h1 class="site-title title is-1 has-text-black" id="mobile-title">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
