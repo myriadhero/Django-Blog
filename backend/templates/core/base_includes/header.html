@@ -71,14 +71,14 @@
 
     <div id="desktop-title" class="is-hidden-touch has-text-centered">
         <a href="{% url 'blog:front_page' %}">
-            <h1 class="site-title title is-1 has-text-black">{{ site_identity.title }}</h1>
+            <h1 class="site-title title is-1 has-text-black">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
         </a>
         
     </div>
     <nav class="navbar is-justify-content-center mt-5" role="navigation" aria-label="main navigation">
         <div class="navbar-brand is-align-items-center">
             <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
-                <h1 class="site-title title is-1 has-text-black" id="mobile-title">{{ site_identity.title }}</h1>
+                <h1 class="site-title title is-1 has-text-black" id="mobile-title">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
                 data-target="navbarMainMenu">

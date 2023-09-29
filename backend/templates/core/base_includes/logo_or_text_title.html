@@ -1,0 +1,5 @@
+{% if site_identity.logo %}
+<img src="{{ site_identity.logo.url }}" alt="Tiffilosophy">
+{% else %}
+{{ site_identity.title }}
+{% endif %}
