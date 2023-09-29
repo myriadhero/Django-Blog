@@ -14,7 +14,15 @@ from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 from django_select2 import forms as s2forms
 
-from .models import Category, CategoryTag, DropdownNavItem, FeaturedPost, NavItem, Post
+from .models import (
+    Category,
+    CategoryTag,
+    DropdownNavItem,
+    FeaturedPost,
+    NavItem,
+    Post,
+    TaggedWithCategoryTags,
+)
 
 
 # Register your models here.
@@ -179,6 +187,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ["status", "publish"]
     formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
     autocomplete_fields = ["tags"]
+    ordering = ["-publish"]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         qs = (
@@ -196,7 +205,8 @@ class PostAdmin(admin.ModelAdmin):
         return ", ".join(
             cat.name
             for cat in chain(
-                obj.categories.all(), obj.tags.filter(is_sub_category=True)
+                obj.categories.all(),
+                [tag for tag in obj.tags.all() if tag.is_sub_category],
             )
         )
 
