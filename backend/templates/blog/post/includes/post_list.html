@@ -10,17 +10,7 @@
             </div>
             {% endif %}
             <div class="column">
-                <div class="block">
-                    <a href="{{ post.get_absolute_url }}">
-                        <h2 class="title is-3">{{ post.title }}</h2>
-                    </a>
-                    <div class="py-2">
-                        {% include 'blog/post/includes/post_tags.html' with tpost=post %}
-                    </div>
-                    <p class="date">
-                        Published {{ post.publish }} by {{ post.author.first_name }}
-                    </p>
-                </div>
+                {% include "blog/post/includes/post_title_header.html" with is_list=True %}
                 <div class="content">
                     {{ post.body|tweet_or_truncate:30|html_preview|safe }}
                 </div>

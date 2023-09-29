@@ -1,0 +1,15 @@
+<div class="block">
+    {% if is_list %}
+    <a href="{{ post.get_absolute_url }}">
+        <h2 class="title is-3">{{ post.title }}</h2>
+    </a>
+    {% else %}
+    <h2 class="title is-3">{{ post.title }}</h2>
+    {% endif %}
+    <div class="py-2">
+        {% include 'blog/post/includes/post_tags.html' with tpost=post %}
+    </div>
+    <p class="date">
+        Published {{ post.publish|date:"DATE_FORMAT" }} by {{ post.author.first_name }}
+    </p>
+</div>
