@@ -1,7 +1,7 @@
 {% load blog_tags %}
 <div class="section sticky">
     {% if similar_posts %}
-    <h3 class="title is-4 block">Related posts</h3>
+    <h3 class="title is-4 block has-text-black">Related Posts</h3>
     {% for spost in similar_posts %}
     <div class="box">
         <a href="{{ spost.get_absolute_url }}" class="title is-6 has-text-dark">
@@ -14,7 +14,7 @@
     {% endfor %}
     <div class="pb-4"></div>
     {% endif %}
-    <h3 class="title is-4 block">Latest posts</h3>
+    <h3 class="title is-4 block has-text-black">Latest Posts</h3>
     {% get_latest_posts as latest_posts %}
     {% for spost in latest_posts %}
     <div class="box">

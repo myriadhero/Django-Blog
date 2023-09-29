@@ -1,10 +1,10 @@
 {% for cat in tpost.categories.all %}
-    <a href="{{ cat.get_absolute_url }}" class="tag is-primary has-text-dark has-text-weight-semibold">
+    <a href="{{ cat.get_absolute_url }}" class="tag is-primary has-text-black has-text-weight-semibold">
         {{ cat }}
     </a>
 {% endfor %}
 {% for tag in tpost.tags.all %}
-<a href="{{ tag.get_absolute_url }}" class="tag is-warning has-text-weight-semibold {% if forloop.counter > 10 %}is-hidden{% endif %}">
+<a href="{{ tag.get_absolute_url }}" class="tag is-warning has-text-weight-semibold has-text-black {% if forloop.counter > 10 %}is-hidden{% endif %}">
     {{ tag }}
 </a>
 {% if forloop.counter == 10 and not forloop.last %}

@@ -50,6 +50,12 @@ a.tag-expander {
 i.fa-square-rss {
   color: #f69537; }
 
+.text-pink-on-hover {
+  color: black !important; }
+
+.text-pink-on-hover:hover {
+  color: #D6A496 !important; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {
