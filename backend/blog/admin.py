@@ -89,6 +89,9 @@ class NavItemAdmin(admin.ModelAdmin):
     list_display = ["__str__", "order", "is_dropdown"]
     inlines = [DropdownNavItemInline]
 
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).select_related("primary_category")
+
 
 class SubCategoryTagsFilter(admin.SimpleListFilter):
     title = _("Filter by sub category")
