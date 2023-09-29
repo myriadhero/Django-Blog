@@ -12,16 +12,19 @@ RECOMMENDED_POSTS_NUM = 5
 
 # Create your views here.
 class PostListView(ListView):
-    queryset = Post.published.all()
+    queryset = Post.published.select_related("author").prefetch_related(
+        "categories", "tags"
+    )
     context_object_name = "posts"
     paginate_by = POSTS_PER_PAGE
     template_name = "blog/post/list.html"
 
 
+# TODO: fix pagination bug as it seems to not return the correct tagged items
 class TagPostListView(PostListView):
     def get_queryset(self):
         tag = get_object_or_404(CategoryTag, slug=self.kwargs.get("tag_slug"))
-        return Post.published.filter(tags=tag)
+        return super().get_queryset().filter(tags=tag)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -44,7 +47,11 @@ class CategoryDetailView(ListView):
         if category.is_tag_list:
             return Post.objects.none()
 
-        queryset = Post.published.filter(categories=category)
+        queryset = (
+            Post.published.filter(categories=category)
+            .select_related("author")
+            .prefetch_related("categories", "tags")
+        )
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:
             # TODO: this probably should NOT return 404, but ignore wrong tag instead
@@ -94,9 +101,6 @@ class PostDetailView(DetailView):
             RECOMMENDED_POSTS_NUM
         )
         return context
-
-    def get_queryset(self):
-        return Post.published.filter(slug=self.kwargs["slug"])
 
 
 class FrontPageView(ListView):
