@@ -17,7 +17,7 @@ h1.site-title img {
 .navbar-item,
 .subtitle,
 .footer {
-  font-family: Arsenal; }
+  font-family: "Mallanna", sans-serif; }
 
 .navbar-menu > .navbar-item {
   text-transform: uppercase; }
@@ -337,7 +337,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: "Open Sans"; }
+  font-family: "Inter", sans-serif; }
 
 code,
 pre {
@@ -1547,13 +1547,13 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   font-weight: 700 !important; }
 
 .is-family-primary {
-  font-family: "Open Sans" !important; }
+  font-family: "Inter", sans-serif !important; }
 
 .is-family-secondary {
-  font-family: "Open Sans" !important; }
+  font-family: "Inter", sans-serif !important; }
 
 .is-family-sans-serif {
-  font-family: "Open Sans" !important; }
+  font-family: "Inter", sans-serif !important; }
 
 .is-family-monospace {
   font-family: monospace !important; }

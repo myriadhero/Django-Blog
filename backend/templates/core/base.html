@@ -11,7 +11,10 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/site_styles_with_bulma.css' %}">
     <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arsenal|Open+Sans|Dawning+of+a+New+Day">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mallanna&display=swap" rel="stylesheet">
+    {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mallanna|Inter|Open+Sans|Dawning+of+a+New+Day"> {% endcomment %}
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">

@@ -12,7 +12,10 @@
 // $taglisttitlefont:
 // $taglistnamefont:
 
-$family-sans-serif: 'Open Sans';
+$font-family-inter: 'Inter', sans-serif;
+$font-family-mallanna: 'Mallanna', sans-serif;
+$font-family-opensans: 'Open Sans';
+$family-sans-serif: $font-family-inter;
 // $family-primary: 
 // $family-secondary: 
 // $body-family: 
@@ -116,7 +119,7 @@ h1.site-title img {
 .navbar-item,
 .subtitle,
 .footer {
-    font-family: Arsenal;
+    font-family: $font-family-mallanna;
 }
 
 .navbar-menu>.navbar-item {
