@@ -16,6 +16,11 @@
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+
+    {% if site_identity.favicon %}
+      <link rel="shortcut icon" type="image/png" href="{{ site_identity.favicon.url }}"/>
+    {% endif %}
+    <meta name="theme-color" content="#ffffff">
     {% block head_links %}
     {% endblock %}
 </head>
