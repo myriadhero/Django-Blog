@@ -1,5 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy
 
@@ -15,6 +16,15 @@ class SiteIdentity(models.Model):
     title = models.CharField(max_length=100)
     logo = models.ImageField(upload_to="site_identity/", blank=True)
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
+    # TODO: validate svg/images
+    carousel_logo = models.FileField(
+        upload_to="site_identity/",
+        blank=True,
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg", "png", "svg", "gif"])
+        ],
+        help_text="This logo is used as a placeholder pic for carousel cards. Can be jpg png svg gif, use .svg for best fit, do not upload untrusted files!",
+    )
     footer = RichTextField(blank=True)
     header_message = models.TextField(
         blank=True,

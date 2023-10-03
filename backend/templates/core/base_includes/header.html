@@ -9,7 +9,7 @@
     </div>
     {% endif %}
 
-    <div class="navbar-menu is-justify-content-flex-end">
+    <div class="navbar-menu has-text-weight-medium is-justify-content-flex-end">
         {% get_social_media_links as sm_links %}
         <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
         
@@ -71,13 +71,13 @@
 
     <div id="desktop-title" class="is-hidden-touch has-text-centered m-4">
         <a href="{% url 'blog:front_page' %}">
-            <h1 class="site-title title is-1 has-text-black">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
+            {% include "core/base_includes/logo_or_text_title.html" %}
         </a>
     </div>
-    <nav class="navbar is-justify-content-center" role="navigation" aria-label="main navigation">
+    <nav class="navbar has-text-weight-medium is-justify-content-center" role="navigation" aria-label="main navigation">
         <div class="navbar-brand is-align-items-center">
-            <a class="navbar-item is-hidden-desktop" href="{% url 'blog:front_page' %}">
-                <h1 class="site-title title is-1 has-text-black" id="mobile-title">{% include "core/base_includes/logo_or_text_title.html" %}</h1>
+            <a class="navbar-item is-hidden-desktop" id="mobile-title" href="{% url 'blog:front_page' %}">
+                {% include "core/base_includes/logo_or_text_title.html" %}
             </a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
                 data-target="navbarMainMenu">
@@ -87,7 +87,7 @@
             </a>
         </div>
 
-        <div id="navbarMainMenu" class="navbar-menu is-size-5-widescreen is-justify-content-center">
+        <div id="navbarMainMenu" class="navbar-menu is-justify-content-center">
 
             {% get_nav_items as all_nav_items %}
             {% for nav_item in all_nav_items %}
@@ -96,13 +96,13 @@
                     <a class="navbar-link" href="{{ nav_item.primary_category.get_absolute_url }}">
                         {{ nav_item.primary_category.name }}
                     </a>
-                    <div class="navbar-dropdown is-size-6-widescreen">
+                    <div class="navbar-dropdown">
                         <a class="navbar-item" href="{{ nav_item.primary_category.get_absolute_url }}">
                             All {{ nav_item.primary_category.name }}
                         </a>
                         <hr class="navbar-divider">
                         {% for subitem in nav_item.sub_items.all %}
-                        <a class="navbar-item is-size-6-widescreen" href="{{ subitem.category_tag.get_absolute_url }}">
+                        <a class="navbar-item" href="{{ subitem.category_tag.get_absolute_url }}">
                             {{ subitem.category_tag.name }}
                         </a>
                         {% endfor %}

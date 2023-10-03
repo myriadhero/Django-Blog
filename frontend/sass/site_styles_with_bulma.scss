@@ -108,7 +108,7 @@ h1.site-title {
     font-family: 'Dawning of a New Day' !important;
 }
 
-h1.site-title img {
+img.site-title {
     max-width: 400px;
 }
 
@@ -124,10 +124,12 @@ h1.site-title img {
 
 .navbar-menu>.navbar-item {
     text-transform: uppercase;
+    font-size: 20px;
 }
 
 .navbar-dropdown {
     text-transform: none;
+    font-size: 18px !important;
 }
 
 // .content {
@@ -179,6 +181,14 @@ i.fa-square-rss {
 
 .content iframe {
     border-radius: 10px;
+}
+
+.category-name {
+    font-size: 28px;
+}
+
+#mobile-title img {
+    max-height: 2.5rem;
 }
 
 // @import "../node_modules/bulma/bulma.sass";
