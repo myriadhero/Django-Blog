@@ -16,7 +16,7 @@
         {% if sm_links.twitter_url %}
         <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
             <span class="icon-text">
-                <span class="icon"><i class="fa-brands fa-twitter has-text-link"></i></span>
+                <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
                 <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
             </span>
         </a>
@@ -114,22 +114,9 @@
                 </a>
                 {% endif %}
             {% endfor %}
-            {% comment %} {% regroup all_categories by group as categories_by_group %}
-            {% for group, categories in categories_by_group %}
-                {% for cat in categories %}
-                <a class="navbar-item " href="{{ cat.get_absolute_url }}">
-                    {{ cat.name }}
-                </a>
-                {% endfor %}
-                {% if not forloop.last %}
-                <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span>
-                <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
-                {% endif %}
-            {% endfor %} {% endcomment %}
             
             
             {% get_social_media_links as sm_links %}
-            {% comment %} <span class="navbar-item m-2 is-hidden-touch" style="cursor:default;">|</span> {% endcomment %}
             <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
             
             <a class="navbar-item is-hidden-desktop" href="{% url 'about' %}" data-filter="about">About</a>
@@ -137,7 +124,7 @@
             {% if sm_links.twitter_url %}
             <a class="navbar-item is-hidden-desktop" href="{{ sm_links.twitter_url }}" target="_blank">
                 <span class="icon-text">
-                    <span class="icon"><i class="fa-brands fa-twitter has-text-link"></i></span>
+                    <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
                     <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
                 </span>
             </a>
