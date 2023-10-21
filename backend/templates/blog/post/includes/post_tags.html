@@ -1,13 +1,17 @@
 {% for cat in tpost.categories.all %}
-    <a href="{{ cat.get_absolute_url }}" class="tag is-primary has-text-black has-text-weight-semibold">
-        {{ cat }}
-    </a>
+    <a href="{{ cat.get_absolute_url }}"
+       class="tag is-primary has-text-black has-text-weight-semibold">{{ cat }}</a>
+{% endfor %}
+{% for subcat in tpost.sub_categories.all %}
+    <a href="{{ subcat.get_absolute_url }}"
+       class="tag is-warning has-text-black has-text-weight-semibold">{{ subcat }}</a>
 {% endfor %}
 {% for tag in tpost.tags.all %}
-<a href="{{ tag.get_absolute_url }}" class="tag is-warning has-text-weight-semibold has-text-black {% if forloop.counter > 10 %}is-hidden{% endif %}">
-    {{ tag }}
-</a>
-{% if forloop.counter == 10 and not forloop.last %}
-    <a class="tag-expander is-size-7 pl-2 has-text-primary">Show all tags...</a>
-{% endif %}
+    <a href="{{ tag.get_absolute_url }}"
+       class="tag is-warning has-text-weight-semibold has-text-black {% if forloop.counter > 10 %}is-hidden{% endif %}">
+        {{ tag }}
+    </a>
+    {% if forloop.counter == 10 and not forloop.last %}
+        <a class="tag-expander is-size-7 pl-2 has-text-primary">Show all tags...</a>
+    {% endif %}
 {% endfor %}

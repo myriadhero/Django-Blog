@@ -6,6 +6,7 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
 from django.db.models.query import QuerySet
+from django.http import Http404
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -133,7 +134,17 @@ class SubCatTagsManager(models.Manager):
 
 class CategoryTag(ModelMeta, TagBase):
     categories = models.ManyToManyField(Category, blank=True)
-    is_sub_category = models.BooleanField(default=False)
+    parent_sub_categories = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        blank=True,
+        related_name="children_tags",
+        limit_choices_to={"is_sub_category": True},
+    )
+    is_sub_category = models.BooleanField(
+        default=False,
+        help_text="⚠ Toggling this will remove this tag from related posts.",
+    )
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
         max_length=250,
@@ -181,11 +192,44 @@ class CategoryTag(ModelMeta, TagBase):
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
 
-    def get_absolute_url(self):
-        return reverse("blog:posts_by_tag", args=[self.slug])
+    def save(self, *args, **kwargs):
+        if self.pk:
+            previous_is_sub_category = CategoryTag.objects.get(
+                pk=self.pk
+            ).is_sub_category
 
-    def get_tagged_posts(self):
-        return Post.objects.filter(tags=self).all()
+            if not previous_is_sub_category and self.is_sub_category:
+                self.parent_sub_categories.clear()
+                for post in Post.objects.filter(tags=self):
+                    post.tags.remove(self)
+
+            elif previous_is_sub_category and not self.is_sub_category:
+                for post in Post.objects.filter(sub_categories=self):
+                    post.sub_categories.remove(self)
+
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self, **kwargs):
+        if not self.is_sub_category:
+            return reverse("blog:posts_by_tag", args=[self.slug])
+        if current_category := kwargs.get("category_slug"):
+            if not self.categories.filter(slug=current_category).exists():
+                raise Http404(
+                    f"Tag {self.name} does not belong to category {current_category}."
+                )
+            return reverse(
+                "blog:category_sub_category",
+                args=[current_category, self.slug],
+            )
+        return reverse("blog:sub_category", args=[self.slug])
+
+    def get_tagged_posts(self, force_get_category=False, force_get_tagged=False):
+        if not force_get_tagged and (self.is_sub_category or force_get_category):
+            return self.subcat_posts.all()
+        return Post.objects.filter(tags=self)
+
+    def get_all_related_posts(self):
+        return Post.objects.filter(models.Q(tags=self) | models.Q(sub_categories=self))
 
 
 class NavItem(models.Model):
@@ -269,10 +313,17 @@ class Post(ModelMeta, models.Model):
         User, on_delete=models.CASCADE, related_name="blog_posts"
     )
     categories = models.ManyToManyField(Category)
+    sub_categories = models.ManyToManyField(
+        CategoryTag,
+        blank=True,
+        limit_choices_to={"is_sub_category": True},
+        related_name="subcat_posts",
+    )
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
         verbose_name="Tags with categories",
         help_text="Tags, comma separated",
+        related_name="tag_posts",
     )
     _metadata = {
         "title": "get_title",
