@@ -193,6 +193,11 @@ class Post(models.Model):
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique, auto-insrements if duplicates are found.",
     )
     preview_image = models.ImageField(upload_to="blog_previews/", blank=True)
+    prevew_image_credit = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text="Consider adding a credit and a link to the source. 500 characters long.",
+    )
     body = RichTextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
