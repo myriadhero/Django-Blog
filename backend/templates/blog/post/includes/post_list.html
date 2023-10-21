@@ -2,13 +2,6 @@
 <div id="list-items">
     {% for post in posts %}
         <div class="columns is-vcentered box">
-            {% if post.thumbnail %}
-            <div class="column is-narrow is-hidden-mobile is-flex">
-                <figure class="image post-preview-image">
-                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
-                </figure>
-            </div>
-            {% endif %}
             <div class="column">
                 {% include "blog/post/includes/post_title_header.html" with is_list=True %}
                 <div class="content">
