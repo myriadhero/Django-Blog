@@ -1,14 +1,18 @@
+from collections.abc import Callable, Sequence
 from itertools import chain
 from typing import Any
 
 from ckeditor.widgets import CKEditorWidget
 from django import forms
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.contrib.admin.utils import model_ngettext
 from django.core.validators import validate_slug
 from django.db import models
 from django.db.models import Count
 from django.db.models.query import QuerySet
+from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
@@ -138,9 +142,6 @@ class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
 
 
 class PostAdminForm(forms.ModelForm):
-    subcategory_tags = forms.ModelMultipleChoiceField(
-        queryset=CategoryTag.sub_categories, required=False
-    )
     tags = forms.ModelMultipleChoiceField(
         queryset=CategoryTag.objects.filter(is_sub_category=False),
         required=False,
@@ -156,9 +157,6 @@ class PostAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields["subcategory_tags"].initial = self.instance.tags.filter(
-                is_sub_category=True
-            )
             self.fields["tags"].initial = self.instance.tags.filter(
                 is_sub_category=False
             )
@@ -192,6 +190,7 @@ class PostAdmin(admin.ModelAdmin):
             .prefetch_related(
                 "tags",
                 "categories",
+                "sub_categories",
             )
         )
         return qs
@@ -201,7 +200,7 @@ class PostAdmin(admin.ModelAdmin):
             cat.name
             for cat in chain(
                 obj.categories.all(),
-                [tag for tag in obj.tags.all() if tag.is_sub_category],
+                obj.sub_categories.all(),
             )
         )
 
@@ -213,8 +212,9 @@ class PostAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        obj.tags.clear()
-        obj.tags.add(*form.cleaned_data["subcategory_tags"], *form.cleaned_data["tags"])
+        obj.tags.set(
+            (tag for tag in form.cleaned_data["tags"] if not tag.is_sub_category)
+        )
 
 
 class TagsWithNoPostsFilter(admin.SimpleListFilter):
@@ -257,10 +257,20 @@ class CategoryTagAdmin(admin.ModelAdmin):
         ("preview_image", admin.EmptyFieldListFilter),
     ]
     readonly_fields = ["get_tagged_posts"]
+    actions = ["remove_tags_from_posts", "remove_sub_categories_from_posts"]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         qs = super().get_queryset(request).prefetch_related("categories")
         return qs
+
+    def get_fields(
+        self, request: HttpRequest, obj: Any | None = ...
+    ) -> Sequence[Callable[..., Any] | str]:
+        fields = super().get_fields(request, obj)
+        if obj and obj.is_sub_category:
+            fields.remove("parent_sub_categories")
+
+        return fields
 
     def get_categories(self, obj: CategoryTag):
         return ", ".join(cat.name for cat in obj.categories.all())
@@ -284,6 +294,110 @@ class CategoryTagAdmin(admin.ModelAdmin):
         return format_html("{}<br>{}", html_links, html_see_all)
 
     get_tagged_posts.short_description = "Tagged posts"
+
+    @admin.action(description="Remove selected items as tags from all posts")
+    def remove_tags_from_posts(self, request, queryset):
+        affected_posts = Post.objects.filter(tags__in=list(queryset))
+        if not affected_posts.count():
+            self.message_user(
+                request,
+                "No posts found with selected tags.",
+                messages.INFO,
+            )
+            return None
+
+        # if POST, action the removal
+        if request.POST.get("post"):
+            if affected_posts.count() > 0:
+                for post in affected_posts:
+                    post.tags.remove(*queryset)
+
+                self.message_user(
+                    request,
+                    "Selected tags removed from all posts.",
+                    messages.SUCCESS,
+                )
+            else:
+                self.message_user(
+                    request,
+                    "No posts found with selected tags.",
+                    messages.SUCCESS,
+                )
+            return None
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": _("Are you sure?"),
+            "subtitle": None,
+            "objects_name": model_ngettext(queryset),
+            "queryset": queryset,
+            "affected_posts_by_tag": {
+                tag: [post for post in affected_posts if tag in post.tags.all()]
+                for tag in queryset
+            },
+            "media": self.media,
+            "opts": self.model._meta,
+            "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
+        }
+
+        request.current_app = self.admin_site.name
+
+        # Display the confirmation page
+        return TemplateResponse(
+            request,
+            "admin/blog/categorytag/remove_tags_from_posts.html",
+            context,
+        )
+
+    @admin.action(description="Remove selected items as sub categories from all posts")
+    def remove_sub_categories_from_posts(self, request, queryset):
+        affected_posts = Post.objects.filter(sub_categories__in=list(queryset))
+
+        if not affected_posts.count():
+            self.message_user(
+                request,
+                "No posts found with selected sub categories.",
+                messages.INFO,
+            )
+            return None
+
+        # if POST, action the removal
+        if request.POST.get("post"):
+            for post in affected_posts:
+                post.sub_categories.remove(*queryset)
+
+            self.message_user(
+                request,
+                "Selected sub categories removed from all posts.",
+                messages.SUCCESS,
+            )
+            return None
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": _("Are you sure?"),
+            "subtitle": None,
+            "objects_name": model_ngettext(queryset),
+            "queryset": queryset,
+            "affected_posts_by_tag": {
+                tag: [
+                    post for post in affected_posts if tag in post.sub_categories.all()
+                ]
+                for tag in queryset
+            },
+            "media": self.media,
+            "opts": self.model._meta,
+            "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
+        }
+
+        request.current_app = self.admin_site.name
+
+        # Display the confirmation page
+        return TemplateResponse(
+            request,
+            "admin/blog/categorytag/remove_sub_categories_from_posts.html",
+            context,
+        )
 
 
 # @admin.register(Comment)
