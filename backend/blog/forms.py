@@ -8,6 +8,9 @@ class AdvancedSearchForm(forms.Form):
     categories = forms.ModelMultipleChoiceField(
         Category.objects.all(), required=False, to_field_name="slug"
     )
+    sub_categories = forms.ModelMultipleChoiceField(
+        CategoryTag.sub_categories.all(), required=False, to_field_name="slug"
+    )
     tags = forms.ModelMultipleChoiceField(
         CategoryTag.non_empty.all(), required=False, to_field_name="slug"
     )
@@ -30,16 +33,3 @@ class AdvancedSearchForm(forms.Form):
             self.fields["before"].widget.attrs["max"] = max_date
             self.fields["after"].widget.attrs["min"] = min_date
             self.fields["after"].widget.attrs["max"] = max_date
-
-
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = Comment
-#         fields = ["name", "email", "text"]
-
-
-# class EmailPostForm(forms.Form):
-#     name = forms.CharField(max_length=25)
-#     email = forms.EmailField()
-#     to = forms.EmailField()
-#     comments = forms.CharField(required=False, widget=forms.Textarea)

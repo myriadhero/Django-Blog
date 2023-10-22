@@ -42,8 +42,13 @@ class CategorySetUpMixin:
         )
 
         self.cat = Category.objects.create(name="DoggoCategory", slug="doggocat")
+        self.subcat = CategoryTag.objects.create(
+            name="DoggoSubcategory", slug="doggo-subcat", is_sub_category=True
+        )
+        self.subcat.categories.add(self.cat)
         self.cat_tag = CategoryTag.objects.create(name="DoggoTag", slug="doggo-cat-tag")
         self.cat_tag.categories.add(self.cat)
+        self.cat_tag.parent_sub_categories.add(self.subcat)
 
         self.post = Post.objects.create(
             title="doggo post",
@@ -60,25 +65,51 @@ class CategoryTests(CategorySetUpMixin, TestCase):
     def test_category_templates_used(self):
         url = self.cat.get_absolute_url()
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/categories/post_tag_list.html")
 
         self.cat.is_tag_list = True
         self.cat.save()
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/categories/tag_list.html")
+
+
+class SubategoryTests(CategorySetUpMixin, TestCase):
+    def test_category_templates_used(self):
+        url = self.subcat.get_absolute_url()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/categories/subcategory_post_list.html")
+
+        url = self.subcat.get_absolute_url(category_slug=self.cat.slug)
+        assert self.cat.slug in url
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/categories/subcategory_post_list.html")
 
 
 class TagTests(CategorySetUpMixin, TestCase):
     def test_template_used(self):
         url = self.cat_tag.get_absolute_url()
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/list.html")
+
+
+class SearchTests(CategorySetUpMixin, TestCase):
+    def test_template_used(self):
+        url = reverse("blog:post_search")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post/search.html")
 
 
 class PostTests(CategorySetUpMixin, TestCase):
     def test_template_used(self):
         url = self.post.get_absolute_url()
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
 

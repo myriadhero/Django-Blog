@@ -56,7 +56,7 @@ def get_nav_items():
 def get_page_url(context, page):
     query = context["request"].GET.copy()
     query["page"] = page
-    return query.urlencode()
+    return f"?{query.urlencode()}"
 
 
 @register.filter(name="html_preview")

@@ -1,5 +1,7 @@
-{% extends 'core/base.html' %}
-{% block title %}{{ site_identity.title }} - {{ category.name }}{% endblock %}
+{% extends "core/base.html" %}
+{% block title %}
+    {{ site_identity.title }} - {{ category.name }}
+{% endblock title %}
 {% block content %}
     <div class="section">
         <h3 class="title is-3 is-uppercase">{{ category.name }}</h3>
@@ -7,13 +9,11 @@
             {% regroup tags by name.0 as alpha_tags %}
             <div id="alpha-links" class="level">
                 <div class="level-item">
-                    <a href="#" 
-                    class="letter-link subtitle is-5 has-text-primary has-background-white">
-                    🏡</a>
+                    <a href="#"
+                       class="letter-link subtitle is-5 has-text-primary has-background-white">🏡</a>
                     {% for letter, letter_tags in alpha_tags %}
-                        <a href="#starts-with-{{ letter }}" 
-                        class="letter-link subtitle is-5 has-text-primary has-background-white">
-                        {{ letter }}</a>
+                        <a href="#starts-with-{{ letter }}"
+                           class="letter-link subtitle is-5 has-text-primary has-background-white">{{ letter }}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -23,13 +23,9 @@
                     <div class="columns is-mobile">
                         <div class="column is-narrow">
                             <div class="image is-96x96">
-                                <img src="
-                                {% if tag.thumbnail %}
-                                    {{ tag.thumbnail.url }}
-                                {% else %}
-                                    https://bulma.io/images/placeholders/96x96.png
-                                {% endif %}"
-                                alt="{{ tag.name }}" class="is-rounded">
+                                <img src=" {% if tag.thumbnail %} {{ tag.thumbnail.url }} {% else %} https://bulma.io/images/placeholders/96x96.png {% endif %}"
+                                     alt="{{ tag.name }}"
+                                     class="is-rounded">
                             </div>
                         </div>
                         <div class="column is-flex is-flex-direction-column is-justify-content-center">
@@ -38,7 +34,7 @@
                             </p>
                             <p class="subtitle is-6">
                                 {% if tag.description %}
-                                    {{tag.description}}
+                                    {{ tag.description }}
                                 {% else %}
                                     🐱‍👤🤷‍♀️
                                 {% endif %}
@@ -49,4 +45,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock content %}
