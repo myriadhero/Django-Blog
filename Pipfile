@@ -23,6 +23,7 @@ django-meta = "*"
 black = "*"
 django-debug-toolbar = "*"
 isort = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.11"
