@@ -297,8 +297,12 @@ class CategoryTagAdmin(admin.ModelAdmin):
 
     @admin.action(description="Remove selected items as tags from all posts")
     def remove_tags_from_posts(self, request, queryset):
-        affected_posts = Post.objects.filter(tags__in=list(queryset))
-        if not affected_posts.count():
+        tags_and_posts = {
+            tag: list(tag.get_tagged_posts(force_get_tagged=True).all())
+            for tag in queryset
+        }
+
+        if not any(tags_and_posts.values()):
             self.message_user(
                 request,
                 "No posts found with selected tags.",
@@ -308,21 +312,15 @@ class CategoryTagAdmin(admin.ModelAdmin):
 
         # if POST, action the removal
         if request.POST.get("post"):
-            if affected_posts.count() > 0:
-                for post in affected_posts:
-                    post.tags.remove(*queryset)
+            all_tags = tags_and_posts.keys()
+            for post in set(chain(*tags_and_posts.values())):
+                post.tags.remove(*all_tags)
 
-                self.message_user(
-                    request,
-                    "Selected tags removed from all posts.",
-                    messages.SUCCESS,
-                )
-            else:
-                self.message_user(
-                    request,
-                    "No posts found with selected tags.",
-                    messages.SUCCESS,
-                )
+            self.message_user(
+                request,
+                "Selected tags removed from all posts.",
+                messages.SUCCESS,
+            )
             return None
 
         context = {
@@ -331,10 +329,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
             "subtitle": None,
             "objects_name": model_ngettext(queryset),
             "queryset": queryset,
-            "affected_posts_by_tag": {
-                tag: [post for post in affected_posts if tag in post.tags.all()]
-                for tag in queryset
-            },
+            "affected_posts_by_tag": tags_and_posts,
             "media": self.media,
             "opts": self.model._meta,
             "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
@@ -351,9 +346,12 @@ class CategoryTagAdmin(admin.ModelAdmin):
 
     @admin.action(description="Remove selected items as sub categories from all posts")
     def remove_sub_categories_from_posts(self, request, queryset):
-        affected_posts = Post.objects.filter(sub_categories__in=list(queryset))
+        tags_and_posts = {
+            tag: list(tag.get_tagged_posts(force_get_category=True).all())
+            for tag in queryset
+        }
 
-        if not affected_posts.count():
+        if not any(tags_and_posts.values()):
             self.message_user(
                 request,
                 "No posts found with selected sub categories.",
@@ -363,8 +361,9 @@ class CategoryTagAdmin(admin.ModelAdmin):
 
         # if POST, action the removal
         if request.POST.get("post"):
-            for post in affected_posts:
-                post.sub_categories.remove(*queryset)
+            all_tags = tags_and_posts.keys()
+            for post in set(chain(*tags_and_posts.values())):
+                post.sub_categories.remove(*all_tags)
 
             self.message_user(
                 request,
@@ -379,12 +378,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
             "subtitle": None,
             "objects_name": model_ngettext(queryset),
             "queryset": queryset,
-            "affected_posts_by_tag": {
-                tag: [
-                    post for post in affected_posts if tag in post.sub_categories.all()
-                ]
-                for tag in queryset
-            },
+            "affected_posts_by_tag": tags_and_posts,
             "media": self.media,
             "opts": self.model._meta,
             "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
