@@ -6,7 +6,6 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
 from django.db.models.query import QuerySet
-from django.http import Http404
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -210,16 +209,20 @@ class CategoryTag(ModelMeta, TagBase):
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self, **kwargs):
+        category = (
+            kwargs.get("category")
+            or Category.objects.filter(slug=kwargs.get("category_slug")).first()
+        )
+
         if not self.is_sub_category:
+            if category:
+                return category.get_absolute_url() + f"?tag={self.slug}"
             return reverse("blog:posts_by_tag", args=[self.slug])
-        if current_category := kwargs.get("category_slug"):
-            if not self.categories.filter(slug=current_category).exists():
-                raise Http404(
-                    f"Tag {self.name} does not belong to category {current_category}."
-                )
+
+        if category:
             return reverse(
                 "blog:category_sub_category",
-                args=[current_category, self.slug],
+                args=[category.slug, self.slug],
             )
         return reverse("blog:sub_category", args=[self.slug])
 
@@ -250,6 +253,9 @@ class NavItem(models.Model):
     def __str__(self) -> str:
         return f"{self.primary_category.name} Nav"
 
+    def get_absolute_url(self):
+        return self.primary_category.get_absolute_url()
+
 
 class DropdownNavItem(models.Model):
     parent_nav_item = models.ForeignKey(
@@ -269,6 +275,11 @@ class DropdownNavItem(models.Model):
 
     def __str__(self) -> str:
         return f"{self.parent_nav_item.primary_category.name} Nav Dropdown - {self.category_tag.name} Tag"
+
+    def get_absolute_url(self):
+        return self.category_tag.get_absolute_url(
+            category=self.parent_nav_item.primary_category
+        )
 
 
 class TaggedWithCategoryTags(GenericTaggedItemBase):
