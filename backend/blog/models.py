@@ -112,10 +112,7 @@ class CategoryTag(TagBase):
         related_name="children_tags",
         limit_choices_to={"is_sub_category": True},
     )
-    is_sub_category = models.BooleanField(
-        default=False,
-        help_text="⚠ Toggling this will remove this tag from related posts.",
-    )
+    is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
         max_length=250, blank=True, help_text="250 characters long"
@@ -135,23 +132,6 @@ class CategoryTag(TagBase):
         verbose_name = gettext_lazy("Tag with categories")
         verbose_name_plural = gettext_lazy("Tags with categories")
         ordering = ["-is_sub_category", "name"]
-
-    def save(self, *args, **kwargs):
-        if self.pk:
-            previous_is_sub_category = CategoryTag.objects.get(
-                pk=self.pk
-            ).is_sub_category
-
-            if not previous_is_sub_category and self.is_sub_category:
-                self.parent_sub_categories.clear()
-                for post in Post.objects.filter(tags=self):
-                    post.tags.remove(self)
-
-            elif previous_is_sub_category and not self.is_sub_category:
-                for post in Post.objects.filter(sub_categories=self):
-                    post.sub_categories.remove(self)
-
-        return super().save(*args, **kwargs)
 
     def get_absolute_url(self, **kwargs):
         category = (
@@ -183,6 +163,30 @@ class CategoryTag(TagBase):
         if not self.is_sub_category:
             raise ValueError("This method should only be called on sub categories.")
         return CategoryTag.non_empty.filter(parent_sub_categories=self)
+
+    def fix_all_tag_relationships(self) -> None:
+        if self.is_sub_category:
+            tagged_posts = self.get_tagged_posts(force_get_tagged=True)
+            for post in tagged_posts:
+                post.sub_categories.add(self)
+                post.tags.remove(self)
+            return
+
+        tagged_posts = self.get_tagged_posts(force_get_category=True)
+        for post in tagged_posts:
+            post.tags.add(self)
+            post.sub_categories.remove(self)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            previous_is_sub_category = CategoryTag.objects.get(
+                pk=self.pk
+            ).is_sub_category
+            
+            if previous_is_sub_category != self.is_sub_category:
+                self.fix_all_tag_relationships()
+
+        return super().save(*args, **kwargs)
 
 
 class NavItem(models.Model):

@@ -12,6 +12,7 @@ from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
+from django.template.defaultfilters import pluralize
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
@@ -257,7 +258,11 @@ class CategoryTagAdmin(admin.ModelAdmin):
         ("preview_image", admin.EmptyFieldListFilter),
     ]
     readonly_fields = ["get_tagged_posts"]
-    actions = ["remove_tags_from_posts", "remove_sub_categories_from_posts"]
+    actions = [
+        "remove_tags_from_posts",
+        "remove_sub_categories_from_posts",
+        "fix_all_tags_and_sub_categories",
+    ]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         qs = super().get_queryset(request).prefetch_related("categories")
@@ -393,9 +398,13 @@ class CategoryTagAdmin(admin.ModelAdmin):
             context,
         )
 
-
-# @admin.register(Comment)
-# class CommentAdmin(admin.ModelAdmin):
-#     list_display = ["name", "email", "post", "created", "updated", "active"]
-#     list_filter = ["active", "created", "updated"]
-#     search_fields = ["name", "email", "body"]
+    @admin.action(description="Fix relationships for selected items (⚠ may be slow)")
+    def fix_all_tags_and_sub_categories(self, request, queryset):
+        queryset = queryset.prefetch_related("subcat_posts")
+        for tag in queryset:
+            tag.fix_all_tag_relationships()
+        self.message_user(
+            request,
+            f"Relationships fixed for {queryset.count()} tag{pluralize(queryset.count())}.",
+            messages.SUCCESS,
+        )
