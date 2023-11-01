@@ -35,7 +35,7 @@ class Category(models.Model):
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique.",
     )
     description = models.CharField(
-        max_length=250, blank=True, help_text="250 characters long"
+        max_length=250, blank=True, help_text="250 characters long, will also be used in SEO description for the page"
     )
     group = models.IntegerField(
         default=0,
@@ -108,7 +108,7 @@ class CategoryTag(TagBase):
     is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
-        max_length=250, blank=True, help_text="250 characters long"
+        max_length=250, blank=True, help_text="250 characters long, can also be used in SEO description for the page"
     )
     thumbnail = ImageSpecField(
         source="preview_image",
@@ -192,6 +192,7 @@ class Post(models.Model):
         db_index=True,
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique, auto-insrements if duplicates are found.",
     )
+    description = models.CharField(max_length=250, blank=True, help_text="Used for SEO")
     preview_image = models.ImageField(upload_to="blog_previews/", blank=True)
     prevew_image_credit = models.CharField(
         max_length=500,

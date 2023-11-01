@@ -1,5 +1,7 @@
 {% if site_identity.logo %}
-<img src="{{ site_identity.logo.url }}" alt="Tiffilosophy" class="site-title">
+    <img src="{{ site_identity.logo.url }}"
+         alt="{{ site_identity.title }}"
+         class="site-title">
 {% else %}
-<h1 class="site-title title is-1 has-text-black">{{ site_identity.title }}</h1>
+    <h1 class="site-title title is-1 has-text-black">{{ site_identity.title }}</h1>
 {% endif %}
