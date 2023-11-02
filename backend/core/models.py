@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from meta.models import ModelMeta
 
 
 # Create your models here.
@@ -14,14 +15,15 @@ class SingletonManager(models.Manager):
         return instance
 
 
-class SiteIdentity(models.Model):
+class SiteIdentity(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
     seo_description = models.TextField(
         blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long"
     )
-    seo_keywords = models.TextField(
+    seo_keywords = models.CharField(
+        max_length=250,
         blank=True,
-        help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes",
+        help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
     )
     logo_title = models.ImageField(
         upload_to="site_identity/", blank=True, help_text="Used for the main top logo"
@@ -59,8 +61,30 @@ class SiteIdentity(models.Model):
         format="png",
         options={"quality": 60},
     )
+    _metadata = {
+        "title": "title",
+        "description": "seo_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_logo_square_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
 
     objects = SingletonManager()
+
+    def get_logo_square_url(self):
+        return self.logo_square.url if self.logo_square else None
+
+    def get_seo_keywords(self):
+        return (
+            [
+                stripped_word
+                for word in self.seo_keywords.split(",")
+                if (stripped_word := word.strip())
+            ]
+            if self.seo_keywords
+            else None
+        )
 
     class Meta:
         verbose_name_plural = gettext_lazy("Site Identity")
@@ -76,14 +100,24 @@ class SiteIdentity(models.Model):
         return f"Site Identity - {self.title}"
 
 
-class AboutPage(models.Model):
+class AboutPage(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
     content = RichTextField()
 
     objects = SingletonManager()
 
+    _metadata = {
+        "title": "title",
+        "description": "seo_description",
+        "keywords": "seo_keywords",
+        "image": "get_logo_square_url",
+    }
+
     class Meta:
         verbose_name_plural = gettext_lazy("About Page")
+
+    def get_logo_square_url(self):
+        return SiteIdentity.objects.get(pk=1).get_logo_square_url()
 
     def save(self, *args, **kwargs):
         self.pk = 1
