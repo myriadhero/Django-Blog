@@ -45,10 +45,10 @@ class DropdownNavItemInline(admin.TabularInline):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
+        "name",
+        "slug",
         "group",
         "order",
-        "slug",
-        "name",
         "show_on_front_page",
         "show_in_menu",
         "is_tag_list",

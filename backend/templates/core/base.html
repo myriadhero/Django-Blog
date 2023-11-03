@@ -3,6 +3,9 @@
 {% load meta %}
 {% load static %}
 {% get_site_identity as site_identity %}
+{% if not meta %}
+  {% get_default_meta as meta %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
   <head {% meta_namespaces %}>
@@ -56,13 +59,13 @@
         <div class="columns">
           <div class="column is-hidden-mobile"></div>
           <div class="column is-6">
-            <iframe id='kofiframe'
-                    src='https://ko-fi.com/{{ sub_options.kofi_account_name }}/?hidefeed=true&widget=true&embed=true&preview=true'
-                    style='border:none;
+            <iframe id="kofiframe"
+                    src="https://ko-fi.com/{{ sub_options.kofi_account_name }}/?hidefeed=true&widget=true&embed=true&preview=true"
+                    style="border:none;
                            padding:4px;
-                           width:100%'
-                    height='740'
-                    title='{{ sub_options.kofi_account_name }}'>
+                           width:100%"
+                    height="740"
+                    title="{{ sub_options.kofi_account_name }}">
             </iframe>
           </div>
           <div class="column is-hidden-mobile"></div>

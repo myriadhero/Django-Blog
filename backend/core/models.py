@@ -100,6 +100,10 @@ class SiteIdentity(ModelMeta, models.Model):
         return f"Site Identity - {self.title}"
 
 
+def get_site_identity() -> SiteIdentity:
+    return SiteIdentity.objects.get_instance()
+
+
 class AboutPage(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
     content = RichTextField()
@@ -107,17 +111,28 @@ class AboutPage(ModelMeta, models.Model):
     objects = SingletonManager()
 
     _metadata = {
-        "title": "title",
-        "description": "seo_description",
-        "keywords": "seo_keywords",
+        "title": "get_title",
+        "description": "get_seo_description",
+        "keywords": "get_seo_keywords",
         "image": "get_logo_square_url",
+        "og_type": "Website",
+        "object_type": "Website",
     }
 
     class Meta:
         verbose_name_plural = gettext_lazy("About Page")
 
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.title}"
+
     def get_logo_square_url(self):
-        return SiteIdentity.objects.get(pk=1).get_logo_square_url()
+        return get_site_identity().get_logo_square_url()
+
+    def get_seo_keywords(self):
+        return get_site_identity().get_seo_keywords()
+
+    def get_seo_description(self):
+        return get_site_identity().seo_description
 
     def save(self, *args, **kwargs):
         self.pk = 1

@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextField
+from core.models import get_site_identity
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
@@ -12,6 +13,7 @@ from django.utils.translation import gettext_lazy
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from lxml import html
+from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
 
@@ -26,7 +28,7 @@ class MenuCatsManager(models.Manager):
         return super().get_queryset().filter(show_in_menu=True)
 
 
-class Category(models.Model):
+class Category(ModelMeta, models.Model):
     name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
     slug = models.SlugField(
         max_length=50,
@@ -35,7 +37,9 @@ class Category(models.Model):
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique.",
     )
     description = models.CharField(
-        max_length=250, blank=True, help_text="250 characters long, will also be used in SEO description for the page"
+        max_length=250,
+        blank=True,
+        help_text="250 characters long, will also be used in SEO description for the page",
     )
     group = models.IntegerField(
         default=0,
@@ -60,6 +64,15 @@ class Category(models.Model):
         options={"quality": 60},
     )
 
+    _metadata = {
+        "title": "get_title",
+        "description": "get_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_preview_image_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
+
     objects = models.Manager()
     on_front_page = FrontPageCatsManager()
     in_menu = MenuCatsManager()
@@ -83,6 +96,21 @@ class Category(models.Model):
             )
         return self.categorytag_set.filter(Exists(tag_relations))
 
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.name}"
+
+    def get_description(self):
+        return (
+            self.description
+            or f"{'Tags from' if self.is_tag_list else 'Posts about'} {self.name}."
+        )
+
+    def get_seo_keywords(self):
+        return [self.name.lower()] + get_site_identity().get_seo_keywords()
+
+    def get_preview_image_url(self):
+        return self.thumbnail.url if self.preview_image else None
+
     def __str__(self) -> str:
         return self.name
 
@@ -103,12 +131,14 @@ class SubCatTagsManager(models.Manager):
         return super().get_queryset().filter(is_sub_category=True)
 
 
-class CategoryTag(TagBase):
+class CategoryTag(ModelMeta, TagBase):
     categories = models.ManyToManyField(Category, blank=True)
     is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
-        max_length=250, blank=True, help_text="250 characters long, can also be used in SEO description for the page"
+        max_length=250,
+        blank=True,
+        help_text="250 characters long, can also be used in SEO description for the page",
     )
     thumbnail = ImageSpecField(
         source="preview_image",
@@ -116,6 +146,15 @@ class CategoryTag(TagBase):
         format="jpeg",
         options={"quality": 60},
     )
+
+    _metadata = {
+        "title": "get_title",
+        "description": "get_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_preview_image_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
 
     objects = models.Manager()
     non_empty = NonEmptyTagsManager()
@@ -125,6 +164,22 @@ class CategoryTag(TagBase):
         verbose_name = gettext_lazy("Tag with categories")
         verbose_name_plural = gettext_lazy("Tags with categories")
         ordering = ["-is_sub_category", "name"]
+
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.name}"
+
+    def get_description(self):
+        return self.description or f"Posts by {self.name} tag."
+
+    def get_seo_keywords(self):
+        return (
+            [self.name.lower()]
+            + [cat.name.lower() for cat in self.categories.all()]
+            + get_site_identity().get_seo_keywords()
+        )
+
+    def get_preview_image_url(self):
+        return self.thumbnail.url if self.preview_image else None
 
     def get_absolute_url(self):
         return reverse("blog:posts_by_tag", args=[self.slug])
@@ -180,7 +235,7 @@ class PublishedManager(models.Manager):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
-class Post(models.Model):
+class Post(ModelMeta, models.Model):
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
         PUBLISHED = "PB", "Published"
@@ -192,7 +247,11 @@ class Post(models.Model):
         db_index=True,
         help_text="Please use only letters, numbers, underscores or hyphens; must be unique, auto-insrements if duplicates are found.",
     )
-    description = models.CharField(max_length=250, blank=True, help_text="Used for SEO")
+    description = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text="Used for SEO, typically 60-150 chars long but up to 250 is fine. Title is used if left blank.",
+    )
     preview_image = models.ImageField(upload_to="blog_previews/", blank=True)
     prevew_image_credit = models.CharField(
         max_length=500,
@@ -215,6 +274,14 @@ class Post(models.Model):
         verbose_name="Tags with categories",
         help_text="Tags, comma separated",
     )
+    _metadata = {
+        "title": "get_title",
+        "description": "get_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_preview_image_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
 
     objects = models.Manager()
     published = PublishedManager()
@@ -304,6 +371,22 @@ class Post(models.Model):
                 tag.drop_tree()
 
         self.body = html.tostring(root, encoding="unicode")
+
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.title}"
+
+    def get_description(self):
+        return self.description or self.title
+
+    def get_seo_keywords(self):
+        return (
+            [cat.name.lower() for cat in self.categories.all()]
+            + [tag.name.lower() for tag in self.tags.all()]
+            + get_site_identity().get_seo_keywords()
+        )
+
+    def get_preview_image_url(self):
+        return self.thumbnail.url if self.preview_image else None
 
     def get_absolute_url(self):
         return reverse("blog:post_detail", args=[self.slug])
