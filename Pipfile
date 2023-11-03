@@ -17,6 +17,7 @@ django-crispy-forms = "*"
 crispy-bulma = "*"
 gunicorn = "*"
 django-select2 = "*"
+django-meta = "*"
 
 [dev-packages]
 black = "*"

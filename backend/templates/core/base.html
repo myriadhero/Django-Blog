@@ -1,83 +1,102 @@
 {% load blog_tags %}
 {% load core_tags %}
+{% load meta %}
 {% load static %}
 {% get_site_identity as site_identity %}
+{% if not meta %}
+  {% get_default_meta as meta %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head {% meta_namespaces %}>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    {% comment %} SEO and title {% endcomment %}
+    <title>
+      {% block title %}
+        {{ site_identity.title }}
+      {% endblock title %}
+    </title>
+    {% include "meta/meta.html" %}
+    {% comment %} end SEO {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/site_styles_with_bulma.css' %}">
     <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Inter:wght@400;500;600&family=Mallanna&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Inter:wght@400;500;600&family=Mallanna&display=swap"
+          rel="stylesheet">
     {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mallanna|Inter|Open+Sans|Dawning+of+a+New+Day"> {% endcomment %}
-    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}"
+          rel="stylesheet"
+          type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}"
+          rel="stylesheet"
+          type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}"
+          rel="stylesheet"
+          type="text/css">
     <script src="https://unpkg.com/htmx.org@1.8.6"></script>
-
     {% if site_identity.favicon %}
-      <link rel="icon" type="image/x-icon" href="{{ site_identity.favicon.url }}"/>
-      <link rel="shortcut icon" type="image/png" href="{{ site_identity.favicon.url }}"/>
+      <link rel="icon" type="image/x-icon" href="{{ site_identity.favicon.url }}" />
+      <link rel="shortcut icon"
+            type="image/png"
+            href="{{ site_identity.favicon.url }}" />
     {% endif %}
     <meta name="theme-color" content="#ffffff">
     {% block head_links %}
-    {% endblock %}
-</head>
-<body>
+    {% endblock head_links %}
+  </head>
+  <body>
     {% include "core/base_includes/header.html" %}
     <div class="container">
-        {% block content %}
-        {% endblock %}
-
-      </div>
-      {% get_subscription_options as sub_options %}
-      {% if sub_options.show_kofi_form_in_footer %}
+      {% block content %}
+      {% endblock content %}
+    </div>
+    {% get_subscription_options as sub_options %}
+    {% if sub_options.show_kofi_form_in_footer %}
       <div class="container section is-desktop has-text-centered">
         <div class="columns">
           <div class="column is-hidden-mobile"></div>
           <div class="column is-6">
-            <iframe id='kofiframe' 
-            src='https://ko-fi.com/{{ sub_options.kofi_account_name }}/?hidefeed=true&widget=true&embed=true&preview=true' 
-            style='border:none;padding:4px;width:100%;' height='740' title='{{ sub_options.kofi_account_name }}'>
+            <iframe id="kofiframe"
+                    src="https://ko-fi.com/{{ sub_options.kofi_account_name }}/?hidefeed=true&widget=true&embed=true&preview=true"
+                    style="border:none;
+                           padding:4px;
+                           width:100%"
+                    height="740"
+                    title="{{ sub_options.kofi_account_name }}">
             </iframe>
           </div>
           <div class="column is-hidden-mobile"></div>
         </div>
       </div>
-      {% endif %}
+    {% endif %}
     <footer class="footer has-text-centered">
       <div class="content">
-        {% if site_identity.footer %}
-        {{ site_identity.footer|safe }}
-        {% endif %}
+        {% if site_identity.footer %}{{ site_identity.footer|safe }}{% endif %}
       </div>
       <div>
-          <strong>
-            <i class="fa-solid fa-copyright"></i> {{ site_identity.title }} {% now "Y" %}.
-          </strong>
+        <strong>
+          <i class="fa-solid fa-copyright"></i> {{ site_identity.title }} {% now "Y" %}.
+        </strong>
       </div>
     </footer>
-
     {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
-</body>
-{% block scripts %}
-{% endblock %}
-<script src="{% static 'js/header.js' %}"></script>
-<script src="{% static 'js/post_helpers.js' %}"></script>
-{% if sub_options.show_kofi_overlay_button %}
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-  <script>
+  </body>
+  {% block scripts %}
+  {% endblock scripts %}
+  <script src="{% static 'js/header.js' %}"></script>
+  <script src="{% static 'js/post_helpers.js' %}"></script>
+  {% if sub_options.show_kofi_overlay_button %}
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
     kofiWidgetOverlay.draw('{{ sub_options.kofi_account_name }}', {
       'type': 'floating-chat',
       'floating-chat.donateButton.text': 'Support me',
       'floating-chat.donateButton.background-color': '#00b9fe',
       'floating-chat.donateButton.text-color': '#fff'
     });
-  </script>
-{% endif %}
+    </script>
+  {% endif %}
 </html>

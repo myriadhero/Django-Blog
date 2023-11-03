@@ -3,6 +3,9 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+from meta.models import ModelMeta
 
 
 # Create your models here.
@@ -12,9 +15,24 @@ class SingletonManager(models.Manager):
         return instance
 
 
-class SiteIdentity(models.Model):
+class SiteIdentity(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to="site_identity/", blank=True)
+    seo_description = models.TextField(
+        blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long"
+    )
+    seo_keywords = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
+    )
+    logo_title = models.ImageField(
+        upload_to="site_identity/", blank=True, help_text="Used for the main top logo"
+    )
+    logo_square = models.ImageField(
+        upload_to="site_identity/",
+        blank=True,
+        help_text="Used for seo and other places where a square logo is needed",
+    )
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     # TODO: validate svg/images
     carousel_logo = models.FileField(
@@ -31,7 +49,42 @@ class SiteIdentity(models.Model):
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
     )
 
+    thumbnail_title = ImageSpecField(
+        source="logo_title",
+        processors=[ResizeToFill(200, 100)],
+        format="png",
+        options={"quality": 60},
+    )
+    thumbnail_square = ImageSpecField(
+        source="logo_square",
+        processors=[ResizeToFill(200, 200)],
+        format="png",
+        options={"quality": 60},
+    )
+    _metadata = {
+        "title": "title",
+        "description": "seo_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_logo_square_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
+
     objects = SingletonManager()
+
+    def get_logo_square_url(self):
+        return self.logo_square.url if self.logo_square else None
+
+    def get_seo_keywords(self):
+        return (
+            [
+                stripped_word
+                for word in self.seo_keywords.split(",")
+                if (stripped_word := word.strip())
+            ]
+            if self.seo_keywords
+            else None
+        )
 
     class Meta:
         verbose_name_plural = gettext_lazy("Site Identity")
@@ -47,14 +100,39 @@ class SiteIdentity(models.Model):
         return f"Site Identity - {self.title}"
 
 
-class AboutPage(models.Model):
+def get_site_identity() -> SiteIdentity:
+    return SiteIdentity.objects.get_instance()
+
+
+class AboutPage(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
     content = RichTextField()
 
     objects = SingletonManager()
 
+    _metadata = {
+        "title": "get_title",
+        "description": "get_seo_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_logo_square_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
+
     class Meta:
         verbose_name_plural = gettext_lazy("About Page")
+
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.title}"
+
+    def get_logo_square_url(self):
+        return get_site_identity().get_logo_square_url()
+
+    def get_seo_keywords(self):
+        return get_site_identity().get_seo_keywords()
+
+    def get_seo_description(self):
+        return get_site_identity().seo_description
 
     def save(self, *args, **kwargs):
         self.pk = 1

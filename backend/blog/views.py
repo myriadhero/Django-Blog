@@ -1,3 +1,4 @@
+from core.models import SiteIdentity
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
@@ -19,6 +20,13 @@ class PostListView(ListView):
     paginate_by = POSTS_PER_PAGE
     template_name = "blog/post/list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        meta = SiteIdentity.objects.get_instance().as_meta(self.request)
+        meta.title = f"{meta.title} - All Posts"
+        context["meta"] = meta
+        return context
+
 
 class HTMXPostListView(PostListView):
     template_name = "blog/post/includes/post_list.html"
@@ -34,6 +42,7 @@ class TagPostListView(PostListView):
         context["tag"] = get_object_or_404(
             CategoryTag, slug=self.kwargs.get("tag_slug")
         )
+        context["meta"] = context["tag"].as_meta(self.request)
         return context
 
 
@@ -72,6 +81,7 @@ class CategoryDetailView(ListView):
         context = super().get_context_data(**kwargs)
         category = self.get_category()
         context["category"] = category
+        context["meta"] = category.as_meta(self.request)
         context["tags"] = category.get_tags_that_have_at_least_one_post()
 
         tag_slug = self.request.GET.get("tag", None)
@@ -100,9 +110,9 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["similar_posts"] = self.get_object().get_similar_posts(
-            RECOMMENDED_POSTS_NUM
-        )
+        post = self.get_object()
+        context["similar_posts"] = post.get_similar_posts(RECOMMENDED_POSTS_NUM)
+        context["meta"] = post.as_meta(self.request)
         return context
 
 
@@ -121,6 +131,11 @@ class FrontPageView(ListView):
             prefetch_featured_posts
         ).all()
         return categories
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["meta"] = SiteIdentity.objects.get_instance().as_meta(self.request)
+        return context
 
 
 class PostSearchListView(PostListView):
@@ -172,6 +187,10 @@ class PostSearchListView(PostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = self.form_class(self.request.GET)
+        site_identity = SiteIdentity.objects.get_instance()
+        meta = site_identity.as_meta(self.request)
+        meta.title = f"Search {site_identity.title}"
+        context["meta"] = meta
         return context
 
 

@@ -55,12 +55,15 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.postgres",
+    # packages
     "ckeditor",
     "ckeditor_uploader",
     "fontawesomefree",
     "django_select2",
     "crispy_forms",
     "crispy_bulma",
+    "meta",
+    # local
     "core.apps.CoreConfig",
     "blog.apps.BlogConfig",
 ]
@@ -258,6 +261,12 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.environ.get("MEDIAFILES_DIR", BASE_DIR / "media")
 
+META_USE_SITES = True
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_SITE_PROTOCOL = "http" if DEBUG else "https"
+META_IMAGE_URL = MEDIA_URL
+META_SITE_TYPE = "Website"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"

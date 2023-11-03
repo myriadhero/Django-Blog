@@ -11,7 +11,9 @@ class AboutPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["about"] = AboutPage.objects.get_instance()
+        about = AboutPage.objects.get_instance()
+        context["about"] = about
+        context["meta"] = about.as_meta(self.request)
         return context
 
 
