@@ -16,6 +16,7 @@ raw-data*.json
 /nginx/*.conf
 *.save
 *.log
+*.sql
 /backend/staticfiles/
 
 # sample env file
