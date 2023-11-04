@@ -38,18 +38,27 @@ def convert_subcat_tag_to_subcategories_forward_func(apps, schema_editor):
             item.save()
 
 
+def convert_subcat_tag_to_subcategories_backward_func(apps, schema_editor):
+    # simply mark tags as subcategories
+    CategoryTag = apps.get_model("blog", "CategoryTag")
+    Subcategory = apps.get_model("blog", "Subcategory")
+
+    for tag in CategoryTag.objects.filter(
+        slug__in=Subcategory.objects.all().values_list("slug", flat=True)
+    ):
+        tag.is_sub_category = True
+        tag.save()
+
+
 def add_default_tags_to_dropdownnavitems_backward_func(apps, schema_editor):
     # add default tags to dropdownnavitems
     CategoryTag = apps.get_model("blog", "CategoryTag")
     DropdownNavItem = apps.get_model("blog", "DropdownNavItem")
 
     for item in DropdownNavItem.objects.all():
-        if item.category_tag:
-            continue
-
         if item.subcategory:
             item.category_tag = (
-                CategoryTag.objects.filter(name=item.subcategory.name).first()
+                CategoryTag.objects.filter(slug=item.subcategory.slug).first()
                 or CategoryTag.objects.first()
             )
             item.save()
@@ -133,7 +142,8 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(blank=True, to="blog.subcategory"),
         ),
         migrations.RunPython(
-            convert_subcat_tag_to_subcategories_forward_func, migrations.RunPython.noop
+            convert_subcat_tag_to_subcategories_forward_func,
+            convert_subcat_tag_to_subcategories_backward_func,
         ),
         migrations.AlterModelOptions(
             name="category",
@@ -163,10 +173,6 @@ class Migration(migrations.Migration):
             model_name="category",
             name="show_in_menu",
         ),
-        migrations.RemoveField(
-            model_name="categorytag",
-            name="is_sub_category",
-        ),
         migrations.AlterField(
             model_name="dropdownnavitem",
             name="category_tag",
@@ -180,6 +186,10 @@ class Migration(migrations.Migration):
         migrations.RunPython(
             migrations.RunPython.noop,
             add_default_tags_to_dropdownnavitems_backward_func,
+        ),
+        migrations.RemoveField(
+            model_name="categorytag",
+            name="is_sub_category",
         ),
         migrations.RemoveField(
             model_name="dropdownnavitem",

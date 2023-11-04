@@ -47,7 +47,7 @@ def markdown_format(text):
 def get_nav_items():
     return (
         NavItem.objects.select_related("primary_category")
-        .prefetch_related("sub_items__category_tag")
+        .prefetch_related("sub_items__subcategory")
         .all()
     )
 
