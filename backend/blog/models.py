@@ -112,6 +112,89 @@ class Category(ModelMeta, models.Model):
         return reverse("blog:category", args=[self.slug])
 
 
+class Subcategory(models.Model):
+    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
+    slug = models.SlugField(
+        max_length=50,
+        validators=[MinLengthValidator(1)],
+        unique=True,
+        help_text="Please use only letters, numbers, underscores or hyphens; must be unique.",
+    )
+    description = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text="250 characters long, will also be used in SEO description for the page",
+    )
+    preview_image = models.ImageField(upload_to="category_previews/", blank=True)
+    categories = models.ManyToManyField(Category, related_name="subcategories")
+
+    thumbnail = ImageSpecField(
+        source="preview_image",
+        processors=[ResizeToFill(200, 200)],
+        format="jpeg",
+        options={"quality": 60},
+    )
+
+    _metadata = {
+        "title": "get_title",
+        "description": "get_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_preview_image_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
+
+    class Meta:
+        verbose_name = gettext_lazy("Subcategory")
+        verbose_name_plural = gettext_lazy("Subcategories")
+
+    def get_tags_that_have_at_least_one_post(self):
+        if self.is_tag_list:
+            tag_relations = TaggedWithCategoryTags.objects.filter(
+                tag=OuterRef("pk"),
+            )
+        else:
+            post_content_type = ContentType.objects.get_for_model(Post)
+            tag_relations = TaggedWithCategoryTags.objects.filter(
+                tag=OuterRef("pk"),
+                content_type=post_content_type,
+                object_id__in=self.post_set.all(),
+            )
+        return self.categorytag_set.filter(Exists(tag_relations))
+
+    def get_title(self):
+        return f"{get_site_identity().title} - {self.name}"
+
+    def get_description(self):
+        return self.description or f"Posts about {self.name}."
+
+    def get_seo_keywords(self):
+        return (
+            [self.name.lower()]
+            + [cat.name.lower() for cat in self.categories.all()]
+            + get_site_identity().get_seo_keywords()
+        )
+
+    def get_preview_image_url(self):
+        return self.thumbnail.url if self.preview_image else None
+
+    def __str__(self) -> str:
+        return self.name
+
+    def get_absolute_url(self, **kwargs):
+        category = (
+            kwargs.get("category")
+            or Category.objects.filter(slug=kwargs.get("category_slug")).first()
+        )
+
+        if category:
+            return reverse(
+                "blog:category_subcategory",
+                args=[category.slug, self.slug],
+            )
+        return reverse("blog:subcategory", args=[self.slug])
+
+
 class NonEmptyTagsManager(models.Manager):
     def get_queryset(self):
         tag_relations = TaggedWithCategoryTags.objects.filter(
@@ -120,27 +203,16 @@ class NonEmptyTagsManager(models.Manager):
         return super().get_queryset().filter(Exists(tag_relations))
 
 
-class SubCatTagsManager(models.Manager):
-    def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(is_sub_category=True)
-
-
 class CategoryTag(ModelMeta, TagBase):
-    categories = models.ManyToManyField(Category, blank=True)
-    parent_sub_categories = models.ManyToManyField(
-        "self",
-        symmetrical=False,
-        blank=True,
-        related_name="children_tags",
-        limit_choices_to={"is_sub_category": True},
-    )
-    is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
         max_length=250,
         blank=True,
         help_text="250 characters long, can also be used in SEO description for the page",
     )
+    categories = models.ManyToManyField(Category, blank=True)
+    subcategories = models.ManyToManyField(Subcategory, blank=True)
+
     thumbnail = ImageSpecField(
         source="preview_image",
         processors=[ResizeToFill(200, 200)],
@@ -159,12 +231,11 @@ class CategoryTag(ModelMeta, TagBase):
 
     objects = models.Manager()
     non_empty = NonEmptyTagsManager()
-    sub_categories = SubCatTagsManager()
 
     class Meta:
-        verbose_name = gettext_lazy("Tag with categories")
-        verbose_name_plural = gettext_lazy("Tags with categories")
-        ordering = ["-is_sub_category", "name"]
+        verbose_name = gettext_lazy("Tag")
+        verbose_name_plural = gettext_lazy("Tags")
+        ordering = ["name"]
 
     def get_title(self):
         return f"{get_site_identity().title} - {self.name}"
@@ -176,83 +247,24 @@ class CategoryTag(ModelMeta, TagBase):
         return (
             [self.name.lower()]
             + [cat.name.lower() for cat in self.categories.all()]
+            + [subcat.name.lower() for subcat in self.subcategories.all()]
             + get_site_identity().get_seo_keywords()
         )
 
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            previous_is_sub_category = CategoryTag.objects.get(
-                pk=self.pk
-            ).is_sub_category
-
-            if not previous_is_sub_category and self.is_sub_category:
-                self.parent_sub_categories.clear()
-                for post in Post.objects.filter(tags=self):
-                    post.tags.remove(self)
-
-            elif previous_is_sub_category and not self.is_sub_category:
-                for post in Post.objects.filter(sub_categories=self):
-                    post.sub_categories.remove(self)
-
-        return super().save(*args, **kwargs)
-
     def get_absolute_url(self, **kwargs):
         category = (
             kwargs.get("category")
             or Category.objects.filter(slug=kwargs.get("category_slug")).first()
         )
-
-        if not self.is_sub_category:
-            if category:
-                return category.get_absolute_url() + f"?tag={self.slug}"
-            return reverse("blog:posts_by_tag", args=[self.slug])
-
         if category:
-            return reverse(
-                "blog:category_sub_category",
-                args=[category.slug, self.slug],
-            )
-        return reverse("blog:sub_category", args=[self.slug])
+            return category.get_absolute_url() + f"?tag={self.slug}"
+        return reverse("blog:posts_by_tag", args=[self.slug])
 
-    def get_tagged_posts(self, force_get_category=False, force_get_tagged=False):
-        if not force_get_tagged and (self.is_sub_category or force_get_category):
-            return self.subcat_posts.all()
+    def get_tagged_posts(self):
         return Post.objects.filter(tags=self)
-
-    def get_all_related_posts(self):
-        return Post.objects.filter(models.Q(tags=self) | models.Q(sub_categories=self))
-
-    def get_non_empty_children_tags(self):
-        if not self.is_sub_category:
-            raise ValueError("This method should only be called on sub categories.")
-        return CategoryTag.non_empty.filter(parent_sub_categories=self)
-
-    def fix_all_tag_relationships(self) -> None:
-        if self.is_sub_category:
-            tagged_posts = self.get_tagged_posts(force_get_tagged=True)
-            for post in tagged_posts:
-                post.sub_categories.add(self)
-                post.tags.remove(self)
-            return
-
-        tagged_posts = self.get_tagged_posts(force_get_category=True)
-        for post in tagged_posts:
-            post.tags.add(self)
-            post.sub_categories.remove(self)
-
-    def save(self, *args, **kwargs):
-        if self.pk:
-            previous_is_sub_category = CategoryTag.objects.get(
-                pk=self.pk
-            ).is_sub_category
-
-            if previous_is_sub_category != self.is_sub_category:
-                self.fix_all_tag_relationships()
-
-        return super().save(*args, **kwargs)
 
 
 class NavItem(models.Model):
@@ -276,23 +288,17 @@ class DropdownNavItem(models.Model):
     parent_nav_item = models.ForeignKey(
         NavItem, on_delete=models.CASCADE, related_name="sub_items"
     )
-    category_tag = models.ForeignKey(
-        CategoryTag,
-        on_delete=models.CASCADE,
-        limit_choices_to={"is_sub_category": True},
-    )
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
 
     class Meta:
         ordering = ["order"]
-        verbose_name = gettext_lazy("Dropdown Item")
-        verbose_name_plural = gettext_lazy("Dropdown Items")
 
     def __str__(self) -> str:
-        return f"{self.parent_nav_item.primary_category.name} Nav Dropdown - {self.category_tag.name} Tag"
+        return f"{self.parent_nav_item.primary_category.name} Nav Dropdown - {self.subcategory.name} subcategory"
 
     def get_absolute_url(self):
-        return self.category_tag.get_absolute_url(
+        return self.subcategory.get_absolute_url(
             category=self.parent_nav_item.primary_category
         )
 
@@ -344,12 +350,7 @@ class Post(ModelMeta, models.Model):
         User, on_delete=models.CASCADE, related_name="blog_posts"
     )
     categories = models.ManyToManyField(Category)
-    sub_categories = models.ManyToManyField(
-        CategoryTag,
-        blank=True,
-        limit_choices_to={"is_sub_category": True},
-        related_name="subcat_posts",
-    )
+    subcategories = models.ManyToManyField(Subcategory, blank=True)
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
         verbose_name="Tags with categories",
