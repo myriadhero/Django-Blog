@@ -52,9 +52,8 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "slug",
-        "group",
-        "order",
         "show_on_front_page",
+        "order",
         "show_in_menu",
         "is_tag_list",
     ]

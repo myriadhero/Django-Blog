@@ -41,17 +41,12 @@ class Category(ModelMeta, models.Model):
         blank=True,
         help_text="250 characters long, will also be used in SEO description for the page",
     )
-    group = models.IntegerField(
-        default=0,
-        help_text="Enter an integer value to define the display group order. Categories are sorted and divided by group first, then order within group.",
-    )
-    order = models.IntegerField(
-        default=0,
-        help_text="Enter an integer value to define the display order within a group.",
-    )
     preview_image = models.ImageField(upload_to="category_previews/", blank=True)
     show_on_front_page = models.BooleanField(default=False)
-    show_in_menu = models.BooleanField(default=False)
+    order = models.IntegerField(
+        default=0,
+        help_text="Enter an integer value to define the front page carousel section order.",
+    )
     is_tag_list = models.BooleanField(
         default=False,
         help_text="If enabled, this category will show a list of tags first instead of posts+tag filters.",
@@ -75,10 +70,9 @@ class Category(ModelMeta, models.Model):
 
     objects = models.Manager()
     on_front_page = FrontPageCatsManager()
-    in_menu = MenuCatsManager()
 
     class Meta:
-        ordering = ["group", "order"]
+        ordering = ["order"]
         verbose_name = gettext_lazy("Category")
         verbose_name_plural = gettext_lazy("Categories")
 
