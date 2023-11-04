@@ -1,44 +1,23 @@
 {% load blog_tags %}
-
 {% comment %} htmx post pagination - fetches post/includes/post_list using htmx {% endcomment %}
-
 <div class="pagination section">
   <span class="step-links">
-    
-      {% if category %}
-        {% url 'blog:htmx_category_list' category.slug as htmx_url %}
-      {% elif form %}
-        {% url 'blog:htmx_search' as htmx_url %}
-      {% elif tag %}
-        {% url 'blog:htmx_tag_post_list' tag.slug as htmx_url %}
-      {% else %}
-        {% url 'blog:htmx_post_list' as htmx_url %}
-      {% endif %}
-
-      {% if page_obj.has_previous %}
+    {% if page_obj.has_previous %}
       {% get_page_url page=page_obj.previous_page_number as prev_page_url %}
-        
-          <a href="?{{ prev_page_url }}"
-          hx-target="#list-items"
-          hx-get="{{ htmx_url }}?{{ prev_page_url }}"
-          hx-push-url="?{{ prev_page_url }}"
-          hx-swap="outerHTML show:top"
-          >&lt&lt</a>
-      {% endif %}
-
-      <span class="current">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-      </span>
-
-      {% if page_obj.has_next %}
+      <a href="{{ prev_page_url }}"
+         hx-target="#list-items"
+         hx-get="{{ prev_page_url }}"
+         hx-push-url="{{ prev_page_url }}"
+         hx-swap="outerHTML show:top">&lt&lt</a>
+    {% endif %}
+    <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
       {% get_page_url page=page_obj.next_page_number as next_page_url %}
-          <a href="?{{ next_page_url }}"
-          hx-target="#list-items"
-          hx-get="{{ htmx_url }}?{{ next_page_url }}"
-          hx-push-url="?{{ next_page_url }}"
-          hx-swap="outerHTML show:top"
-          >&gt&gt</a>
-      {% endif %}
-      
+      <a href="{{ next_page_url }}"
+         hx-target="#list-items"
+         hx-get="{{ next_page_url }}"
+         hx-push-url="{{ next_page_url }}"
+         hx-swap="outerHTML show:top">&gt&gt</a>
+    {% endif %}
   </span>
 </div>

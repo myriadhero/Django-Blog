@@ -15,16 +15,16 @@ urlpatterns = [
         views.CategoryDetailView.as_view(),
         name="category",
     ),
+    path(
+        "category/<slug:category_slug>/<slug:tag_slug>/",
+        views.SubcategoryPostListView.as_view(),
+        name="category_sub_category",
+    ),
+    path(
+        "sub-category/<slug:tag_slug>/",
+        views.SubcategoryPostListView.as_view(),
+        name="sub_category",
+    ),
     path("feed/", LatestPostsFeed(), name="post_feed"),
     path("search/", views.PostSearchListView.as_view(), name="post_search"),
-    path("htmx/post_list/", views.HTMXPostListView.as_view(), name="htmx_post_list"),
-    path("htmx/tag/<slug:tag_slug>/", views.HTMXTagPostListView.as_view(), name="htmx_tag_post_list"),
-    path("htmx/search/", views.HTMXPostSearchListView.as_view(), name="htmx_search"),
-    path(
-        "htmx/category/<slug:category_slug>/",
-        views.HTMXCategoryDetailView.as_view(),
-        name="htmx_category_list",
-    ),
-    # path("post/<slug:post_slug>/share/", views.post_share, name="post_share"),
-    # path("post/<slug:post_slug>/comment/", views.post_comment, name="post_comment"),
 ]

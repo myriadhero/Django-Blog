@@ -133,6 +133,13 @@ class SubCatTagsManager(models.Manager):
 
 class CategoryTag(ModelMeta, TagBase):
     categories = models.ManyToManyField(Category, blank=True)
+    parent_sub_categories = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        blank=True,
+        related_name="children_tags",
+        limit_choices_to={"is_sub_category": True},
+    )
     is_sub_category = models.BooleanField(default=False)
     preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
@@ -181,11 +188,61 @@ class CategoryTag(ModelMeta, TagBase):
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
 
-    def get_absolute_url(self):
-        return reverse("blog:posts_by_tag", args=[self.slug])
 
-    def get_tagged_posts(self):
-        return Post.objects.filter(tags=self).all()
+    def get_absolute_url(self, **kwargs):
+        category = (
+            kwargs.get("category")
+            or Category.objects.filter(slug=kwargs.get("category_slug")).first()
+        )
+
+        if not self.is_sub_category:
+            if category:
+                return category.get_absolute_url() + f"?tag={self.slug}"
+            return reverse("blog:posts_by_tag", args=[self.slug])
+
+        if category:
+            return reverse(
+                "blog:category_sub_category",
+                args=[category.slug, self.slug],
+            )
+        return reverse("blog:sub_category", args=[self.slug])
+
+    def get_tagged_posts(self, force_get_category=False, force_get_tagged=False):
+        if not force_get_tagged and (self.is_sub_category or force_get_category):
+            return self.subcat_posts.all()
+        return Post.objects.filter(tags=self)
+
+    def get_all_related_posts(self):
+        return Post.objects.filter(models.Q(tags=self) | models.Q(sub_categories=self))
+
+    def get_non_empty_children_tags(self):
+        if not self.is_sub_category:
+            raise ValueError("This method should only be called on sub categories.")
+        return CategoryTag.non_empty.filter(parent_sub_categories=self)
+
+    def fix_all_tag_relationships(self) -> None:
+        if self.is_sub_category:
+            tagged_posts = self.get_tagged_posts(force_get_tagged=True)
+            for post in tagged_posts:
+                post.sub_categories.add(self)
+                post.tags.remove(self)
+            return
+
+        tagged_posts = self.get_tagged_posts(force_get_category=True)
+        for post in tagged_posts:
+            post.tags.add(self)
+            post.sub_categories.remove(self)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            previous_is_sub_category = CategoryTag.objects.get(
+                pk=self.pk
+            ).is_sub_category
+            
+            if previous_is_sub_category != self.is_sub_category:
+                self.fix_all_tag_relationships()
+
+        return super().save(*args, **kwargs)
 
 
 class NavItem(models.Model):
@@ -200,6 +257,9 @@ class NavItem(models.Model):
 
     def __str__(self) -> str:
         return f"{self.primary_category.name} Nav"
+
+    def get_absolute_url(self):
+        return self.primary_category.get_absolute_url()
 
 
 class DropdownNavItem(models.Model):
@@ -220,6 +280,11 @@ class DropdownNavItem(models.Model):
 
     def __str__(self) -> str:
         return f"{self.parent_nav_item.primary_category.name} Nav Dropdown - {self.category_tag.name} Tag"
+
+    def get_absolute_url(self):
+        return self.category_tag.get_absolute_url(
+            category=self.parent_nav_item.primary_category
+        )
 
 
 class TaggedWithCategoryTags(GenericTaggedItemBase):
@@ -269,10 +334,17 @@ class Post(ModelMeta, models.Model):
         User, on_delete=models.CASCADE, related_name="blog_posts"
     )
     categories = models.ManyToManyField(Category)
+    sub_categories = models.ManyToManyField(
+        CategoryTag,
+        blank=True,
+        limit_choices_to={"is_sub_category": True},
+        related_name="subcat_posts",
+    )
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
         verbose_name="Tags with categories",
         help_text="Tags, comma separated",
+        related_name="tag_posts",
     )
     _metadata = {
         "title": "get_title",
@@ -418,26 +490,3 @@ class FeaturedPost(models.Model):
 
     def __str__(self):
         return f"{self.category} - {self.post} (Order: {self.order}, Published: {self.post.publish.strftime('%a %d %b %Y, %I:%M%p')})"
-
-
-# class Comment(models.Model):
-#     text = models.TextField()
-#     created = models.DateTimeField(auto_now_add=True)
-#     updated = models.DateTimeField(auto_now=True)
-#     name = models.CharField(max_length=80)
-#     email = models.EmailField()
-#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-#     # parent_comment = models.ForeignKey("self", null=True)
-#     active = models.BooleanField(default=True)
-
-#     class Meta:
-#         ordering = ["created"]
-#         indexes = [
-#             models.Index(fields=["created"]),
-#         ]
-
-#     def is_updated(self):
-#         return self.updated - self.created > timezone.timedelta(minutes=1)
-
-#     def __str__(self) -> str:
-#         return f"Comment by {self.name} on {self.post}"
