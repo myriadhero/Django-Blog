@@ -16,14 +16,14 @@ urlpatterns = [
         name="category",
     ),
     path(
-        "category/<slug:category_slug>/<slug:tag_slug>/",
+        "category/<slug:category_slug>/<slug:subcategory_slug>/",
         views.SubcategoryPostListView.as_view(),
-        name="category_sub_category",
+        name="category_subcategory",
     ),
     path(
-        "sub-category/<slug:tag_slug>/",
+        "sub-category/<slug:subcategory_slug>/",
         views.SubcategoryPostListView.as_view(),
-        name="sub_category",
+        name="subcategory",
     ),
     path("feed/", LatestPostsFeed(), name="post_feed"),
     path("search/", views.PostSearchListView.as_view(), name="post_search"),

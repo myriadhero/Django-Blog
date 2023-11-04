@@ -5,7 +5,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
-from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -149,17 +148,12 @@ class Subcategory(models.Model):
         verbose_name_plural = gettext_lazy("Subcategories")
 
     def get_tags_that_have_at_least_one_post(self):
-        if self.is_tag_list:
-            tag_relations = TaggedWithCategoryTags.objects.filter(
-                tag=OuterRef("pk"),
-            )
-        else:
-            post_content_type = ContentType.objects.get_for_model(Post)
-            tag_relations = TaggedWithCategoryTags.objects.filter(
-                tag=OuterRef("pk"),
-                content_type=post_content_type,
-                object_id__in=self.post_set.all(),
-            )
+        post_content_type = ContentType.objects.get_for_model(Post)
+        tag_relations = TaggedWithCategoryTags.objects.filter(
+            tag=OuterRef("pk"),
+            content_type=post_content_type,
+            object_id__in=self.post_set.all(),
+        )
         return self.categorytag_set.filter(Exists(tag_relations))
 
     def get_title(self):
@@ -182,17 +176,18 @@ class Subcategory(models.Model):
         return self.name
 
     def get_absolute_url(self, **kwargs):
-        category = (
-            kwargs.get("category")
-            or Category.objects.filter(slug=kwargs.get("category_slug")).first()
-        )
+        if not (
+            (category := kwargs.get("category"))
+            or (category_slug := kwargs.get("category_slug"))
+        ):
+            return reverse("blog:subcategory", args=[self.slug])
 
-        if category:
-            return reverse(
-                "blog:category_subcategory",
-                args=[category.slug, self.slug],
-            )
-        return reverse("blog:subcategory", args=[self.slug])
+        category = category or Category.objects.filter(slug=category_slug).first()
+
+        return reverse(
+            "blog:category_subcategory",
+            args=[category.slug, self.slug],
+        )
 
 
 class NonEmptyTagsManager(models.Manager):
@@ -204,12 +199,12 @@ class NonEmptyTagsManager(models.Manager):
 
 
 class CategoryTag(ModelMeta, TagBase):
-    preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     description = models.CharField(
         max_length=250,
         blank=True,
         help_text="250 characters long, can also be used in SEO description for the page",
     )
+    preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
     categories = models.ManyToManyField(Category, blank=True)
     subcategories = models.ManyToManyField(Subcategory, blank=True)
 
@@ -254,13 +249,7 @@ class CategoryTag(ModelMeta, TagBase):
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
 
-    def get_absolute_url(self, **kwargs):
-        category = (
-            kwargs.get("category")
-            or Category.objects.filter(slug=kwargs.get("category_slug")).first()
-        )
-        if category:
-            return category.get_absolute_url() + f"?tag={self.slug}"
+    def get_absolute_url(self):
         return reverse("blog:posts_by_tag", args=[self.slug])
 
     def get_tagged_posts(self):

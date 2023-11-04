@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
 from .forms import AdvancedSearchForm
-from .models import Category, CategoryTag, FeaturedPost, Post
+from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
 
 POSTS_PER_PAGE = 10
 RECOMMENDED_POSTS_NUM = 5
@@ -15,7 +15,7 @@ RECOMMENDED_POSTS_NUM = 5
 class PostListView(ListView):
     queryset = (
         Post.published.select_related("author")
-        .prefetch_related("categories", "tags", "sub_categories")
+        .prefetch_related("categories", "tags", "subcategories")
         .distinct()
     )
     context_object_name = "posts"
@@ -57,14 +57,16 @@ class SubcategoryPostListView(PostListView):
             category = get_object_or_404(Category, slug=cat_slug)
             qs = qs.filter(categories=category)
 
-        subcategory = get_object_or_404(CategoryTag, slug=self.kwargs.get("tag_slug"))
+        subcategory = get_object_or_404(
+            Subcategory, slug=self.kwargs.get("subcategory_slug")
+        )
 
         if (tag_slug := self.request.GET.get("tag")) and (
-            tag := CategoryTag.objects.get(slug=tag_slug)
+            tag := CategoryTag.objects.filter(slug=tag_slug).first()
         ):
             qs = qs.filter(tags=tag)
 
-        return qs.filter(sub_categories=subcategory)
+        return qs.filter(subcategories=subcategory)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,14 +76,14 @@ class SubcategoryPostListView(PostListView):
             context["category"] = category
 
         if (tag_slug := self.request.GET.get("tag")) and (
-            tag := CategoryTag.objects.get(slug=tag_slug)
+            tag := CategoryTag.objects.filter(slug=tag_slug).first()
         ):
             context["selected_tag"] = tag
 
         context["subcategory"] = get_object_or_404(
-            CategoryTag, slug=self.kwargs.get("tag_slug")
+            Subcategory, slug=self.kwargs.get("subcategory_slug")
         )
-        context["tags"] = context["subcategory"].get_non_empty_children_tags()
+        context["tags"] = context["subcategory"].get_tags_that_have_at_least_one_post()
 
         return context
 
@@ -185,12 +187,12 @@ class PostSearchListView(PostListView):
         if form.is_valid():
             query = form.cleaned_data["query"]
             categories = form.cleaned_data["categories"]
-            sub_categories = form.cleaned_data["sub_categories"]
+            subcategories = form.cleaned_data["subcategories"]
             tags = form.cleaned_data["tags"]
             before = form.cleaned_data["before"]
             after = form.cleaned_data["after"]
 
-            if not any((query, categories, sub_categories, tags, before, after)):
+            if not any((query, categories, subcategories, tags, before, after)):
                 return qs.none()
 
             if query:
@@ -208,8 +210,8 @@ class PostSearchListView(PostListView):
             if categories:
                 qs = qs.filter(categories__in=categories)
 
-            if sub_categories:
-                qs = qs.filter(sub_categories__in=sub_categories)
+            if subcategories:
+                qs = qs.filter(subcategories__in=subcategories)
 
             if tags:
                 qs = qs.filter(tags__in=tags)

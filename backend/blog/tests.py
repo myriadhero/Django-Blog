@@ -2,16 +2,17 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Category, CategoryTag, Post
+from .models import Category, CategoryTag, Post, Subcategory
 
 # Create your tests here.
 # front page
-# category pages, tag list and blog list
+# category pages, filter by subcategories and tags
+# subcategory pages, filter by tags
 # tag page
-# all posts page?
-# search page
-# pagination for all above (except front)
+# all posts page
 # post detail page
+# search page
+# pagination for all above (except front and detail)
 # about page
 # admin pages - queries?
 
@@ -42,13 +43,13 @@ class CategorySetUpMixin:
         )
 
         self.cat = Category.objects.create(name="DoggoCategory", slug="doggocat")
-        self.subcat = CategoryTag.objects.create(
-            name="DoggoSubcategory", slug="doggo-subcat", is_sub_category=True
+        self.subcat = Subcategory.objects.create(
+            name="DoggoSubcategory", slug="doggo-subcat"
         )
         self.subcat.categories.add(self.cat)
-        self.cat_tag = CategoryTag.objects.create(name="DoggoTag", slug="doggo-cat-tag")
-        self.cat_tag.categories.add(self.cat)
-        self.cat_tag.parent_sub_categories.add(self.subcat)
+        self.tag = CategoryTag.objects.create(name="DoggoTag", slug="doggo-cat-tag")
+        self.tag.categories.add(self.cat)
+        self.tag.subcategories.add(self.subcat)
 
         self.post = Post.objects.create(
             title="doggo post",
@@ -58,7 +59,7 @@ class CategorySetUpMixin:
             author=self.user,
         )
         self.post.categories.add(self.cat)
-        self.post.tags.add(self.cat_tag)
+        self.post.tags.add(self.tag)
 
 
 class CategoryTests(CategorySetUpMixin, TestCase):
@@ -91,7 +92,7 @@ class SubategoryTests(CategorySetUpMixin, TestCase):
 
 class TagTests(CategorySetUpMixin, TestCase):
     def test_template_used(self):
-        url = self.cat_tag.get_absolute_url()
+        url = self.tag.get_absolute_url()
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/list.html")

@@ -1,4 +1,3 @@
-from collections.abc import Callable, Sequence
 from itertools import chain
 from typing import Any
 
@@ -10,16 +9,22 @@ from django.core.validators import validate_slug
 from django.db import models
 from django.db.models import Count
 from django.db.models.query import QuerySet
-from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
-from django.template.defaultfilters import pluralize
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 from django_select2 import forms as s2forms
 
-from .models import Category, CategoryTag, DropdownNavItem, FeaturedPost, NavItem, Post
+from .models import (
+    Category,
+    CategoryTag,
+    DropdownNavItem,
+    FeaturedPost,
+    NavItem,
+    Post,
+    Subcategory,
+)
 
 
 # Register your models here.
@@ -54,7 +59,6 @@ class CategoryAdmin(admin.ModelAdmin):
         "slug",
         "show_on_front_page",
         "order",
-        "show_in_menu",
         "is_tag_list",
     ]
     prepopulated_fields = {"slug": ("name",)}
@@ -80,6 +84,41 @@ class CategoryAdmin(admin.ModelAdmin):
     get_posts_in_category.short_description = "Posts in category"
 
 
+@admin.register(Subcategory)
+class SubcategoryAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "slug",
+        "get_categories",
+    ]
+    prepopulated_fields = {"slug": ("name",)}
+    readonly_fields = ["get_posts_in_category"]
+
+    def get_posts_in_category(self, obj: Subcategory):
+        posts = obj.post_set.all()[:20]
+        html_links = format_html_join(
+            "\n",
+            '<div><a href="{}">{}</a></div>',
+            (
+                (reverse("admin:blog_post_change", args=[post.pk]), post.title)
+                for post in posts
+            ),
+        )
+        html_see_all = format_html(
+            '<div><a href="{}">Show all</a></div>',
+            reverse("admin:blog_post_changelist")
+            + f"?sub_categories__id__exact={obj.pk}",
+        )
+        return format_html("{}<br>{}", html_links, html_see_all)
+
+    get_posts_in_category.short_description = "Posts in category"
+
+    def get_categories(self, obj: CategoryTag):
+        return ", ".join(obj.categories.values_list("name", flat=True))
+
+    get_categories.short_description = "Categories"
+
+
 @admin.register(NavItem)
 class NavItemAdmin(admin.ModelAdmin):
     list_display = ["__str__", "order", "is_dropdown"]
@@ -89,29 +128,29 @@ class NavItemAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related("primary_category")
 
 
-class SubCategoryTagsFilter(admin.SimpleListFilter):
-    title = _("Filter by sub category")
+# class SubCategoryTagsFilter(admin.SimpleListFilter):
+#     title = _("Filter by sub category")
 
-    parameter_name = "subcat"
+#     parameter_name = "subcat"
 
-    def lookups(self, request, model_admin):
-        return [
-            ("yes", "With sub category"),
-            *(
-                (subcat.slug, subcat.name)
-                for subcat in CategoryTag.sub_categories.all()
-            ),
-            ("no", "Without sub category"),
-        ]
+#     def lookups(self, request, model_admin):
+#         return [
+#             ("yes", "With sub category"),
+#             *(
+#                 (subcat.slug, subcat.name)
+#                 for subcat in CategoryTag.sub_categories.all()
+#             ),
+#             ("no", "Without sub category"),
+#         ]
 
-    def queryset(self, request, queryset):
-        if not (lookup := self.value()):
-            return queryset
-        if lookup == "yes":
-            return queryset.filter(tags__is_sub_category=True)
-        if lookup == "no":
-            return queryset.filter(tags__is_sub_category=False)
-        return queryset.filter(tags__slug=lookup)
+#     def queryset(self, request, queryset):
+#         if not (lookup := self.value()):
+#             return queryset
+#         if lookup == "yes":
+#             return queryset.filter(tags__is_sub_category=True)
+#         if lookup == "no":
+#             return queryset.filter(tags__is_sub_category=False)
+#         return queryset.filter(tags__slug=lookup)
 
 
 class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
@@ -119,16 +158,16 @@ class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
         "name__icontains",
     ]
 
-    queryset = CategoryTag.objects.filter(is_sub_category=False)
+    queryset = CategoryTag.objects.all()
 
     def value_from_datadict(self, data, files, name):
         """Create objects for given non-pimary-key values. Return list of all primary keys."""
         values = set(super().value_from_datadict(data, files, name))
-        # This may only work for MyModel, if MyModel has title field.
-        # You need to implement this method yourself, to ensure proper object creation.
+
         pks = self.queryset.filter(
             **{"pk__in": list(filter(lambda x: x.isdigit(), values))}
         ).values_list("pk", flat=True)
+
         pks = set(map(str, pks))
 
         cleaned_values = list(pks)
@@ -143,7 +182,7 @@ class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
 
 class PostAdminForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
-        queryset=CategoryTag.objects.filter(is_sub_category=False),
+        queryset=CategoryTag.objects.all(),
         required=False,
         widget=TagsAutoMultiSelectWidget(
             attrs={"data-token-separators": [","], "data-tags": "true"}
@@ -157,9 +196,7 @@ class PostAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields["tags"].initial = self.instance.tags.filter(
-                is_sub_category=False
-            )
+            self.fields["tags"].initial = self.instance.tags.all()
 
 
 @admin.register(Post)
@@ -172,7 +209,7 @@ class PostAdmin(admin.ModelAdmin):
         "publish",
         "author",
         "categories",
-        SubCategoryTagsFilter,
+        # SubCategoryTagsFilter,
         "tags",
     ]
     search_fields = ["title", "body"]
@@ -190,17 +227,16 @@ class PostAdmin(admin.ModelAdmin):
             .prefetch_related(
                 "tags",
                 "categories",
-                "sub_categories",
+                "subcategories",
             )
         )
         return qs
 
-    def get_categories(self, obj: CategoryTag):
+    def get_categories(self, obj: Post):
         return ", ".join(
-            cat.name
-            for cat in chain(
-                obj.categories.all(),
-                obj.sub_categories.all(),
+            chain(
+                obj.categories.values_list("name", flat=True),
+                obj.subcategories.values_list("name", flat=True),
             )
         )
 
@@ -212,9 +248,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        obj.tags.set(
-            (tag for tag in form.cleaned_data["tags"] if not tag.is_sub_category)
-        )
+        obj.tags.set(form.cleaned_data["tags"])
 
 
 class TagsWithNoPostsFilter(admin.SimpleListFilter):
@@ -246,11 +280,10 @@ class CategoryTagAdminForm(forms.ModelForm):
 @admin.register(CategoryTag)
 class CategoryTagAdmin(admin.ModelAdmin):
     form = CategoryTagAdminForm
-    list_display = ["name", "slug", "description", "get_categories", "is_sub_category"]
+    list_display = ["name", "slug", "description", "get_categories"]
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
     list_filter = [
-        "is_sub_category",
         "categories",
         TagsWithNoPostsFilter,
         ("description", admin.EmptyFieldListFilter),
@@ -259,25 +292,19 @@ class CategoryTagAdmin(admin.ModelAdmin):
     readonly_fields = ["get_tagged_posts"]
     actions = [
         "remove_tags_from_posts",
-        "remove_sub_categories_from_posts",
-        "fix_all_tags_and_sub_categories",
     ]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         qs = super().get_queryset(request).prefetch_related("categories")
         return qs
 
-    def get_fields(
-        self, request: HttpRequest, obj: Any | None = ...
-    ) -> Sequence[Callable[..., Any] | str]:
-        fields = super().get_fields(request, obj)
-        if obj and obj.is_sub_category:
-            fields.remove("parent_sub_categories")
-
-        return fields
-
     def get_categories(self, obj: CategoryTag):
-        return ", ".join(cat.name for cat in obj.categories.all())
+        return ", ".join(
+            chain(
+                obj.categories.values_list("name", flat=True),
+                obj.subcategories.values_list("name", flat=True),
+            )
+        )
 
     get_categories.short_description = "Categories"
 
@@ -348,62 +375,62 @@ class CategoryTagAdmin(admin.ModelAdmin):
             context,
         )
 
-    @admin.action(description="Remove selected items as sub categories from all posts")
-    def remove_sub_categories_from_posts(self, request, queryset):
-        tags_and_posts = {
-            tag: list(tag.get_tagged_posts(force_get_category=True).all())
-            for tag in queryset
-        }
+    # @admin.action(description="Remove selected items as sub categories from all posts")
+    # def remove_sub_categories_from_posts(self, request, queryset):
+    #     tags_and_posts = {
+    #         tag: list(tag.get_tagged_posts(force_get_category=True).all())
+    #         for tag in queryset
+    #     }
 
-        if not any(tags_and_posts.values()):
-            self.message_user(
-                request,
-                "No posts found with selected sub categories.",
-                messages.INFO,
-            )
-            return None
+    #     if not any(tags_and_posts.values()):
+    #         self.message_user(
+    #             request,
+    #             "No posts found with selected sub categories.",
+    #             messages.INFO,
+    #         )
+    #         return None
 
-        # if POST, action the removal
-        if request.POST.get("post"):
-            all_tags = tags_and_posts.keys()
-            for post in set(chain(*tags_and_posts.values())):
-                post.sub_categories.remove(*all_tags)
+    #     # if POST, action the removal
+    #     if request.POST.get("post"):
+    #         all_tags = tags_and_posts.keys()
+    #         for post in set(chain(*tags_and_posts.values())):
+    #             post.sub_categories.remove(*all_tags)
 
-            self.message_user(
-                request,
-                "Selected sub categories removed from all posts.",
-                messages.SUCCESS,
-            )
-            return None
+    #         self.message_user(
+    #             request,
+    #             "Selected sub categories removed from all posts.",
+    #             messages.SUCCESS,
+    #         )
+    #         return None
 
-        context = {
-            **self.admin_site.each_context(request),
-            "title": _("Are you sure?"),
-            "subtitle": None,
-            "objects_name": model_ngettext(queryset),
-            "queryset": queryset,
-            "affected_posts_by_tag": tags_and_posts,
-            "media": self.media,
-            "opts": self.model._meta,
-            "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
-        }
+    #     context = {
+    #         **self.admin_site.each_context(request),
+    #         "title": _("Are you sure?"),
+    #         "subtitle": None,
+    #         "objects_name": model_ngettext(queryset),
+    #         "queryset": queryset,
+    #         "affected_posts_by_tag": tags_and_posts,
+    #         "media": self.media,
+    #         "opts": self.model._meta,
+    #         "action_checkbox_name": admin.helpers.ACTION_CHECKBOX_NAME,
+    #     }
 
-        request.current_app = self.admin_site.name
+    #     request.current_app = self.admin_site.name
 
-        # Display the confirmation page
-        return TemplateResponse(
-            request,
-            "admin/blog/categorytag/remove_sub_categories_from_posts.html",
-            context,
-        )
+    #     # Display the confirmation page
+    #     return TemplateResponse(
+    #         request,
+    #         "admin/blog/categorytag/remove_sub_categories_from_posts.html",
+    #         context,
+    #     )
 
-    @admin.action(description="Fix relationships for selected items (⚠ may be slow)")
-    def fix_all_tags_and_sub_categories(self, request, queryset):
-        queryset = queryset.prefetch_related("subcat_posts")
-        for tag in queryset:
-            tag.fix_all_tag_relationships()
-        self.message_user(
-            request,
-            f"Relationships fixed for {queryset.count()} tag{pluralize(queryset.count())}.",
-            messages.SUCCESS,
-        )
+    # @admin.action(description="Fix relationships for selected items (⚠ may be slow)")
+    # def fix_all_tags_and_sub_categories(self, request, queryset):
+    #     queryset = queryset.prefetch_related("subcat_posts")
+    #     for tag in queryset:
+    #         tag.fix_all_tag_relationships()
+    #     self.message_user(
+    #         request,
+    #         f"Relationships fixed for {queryset.count()} tag{pluralize(queryset.count())}.",
+    #         messages.SUCCESS,
+    #     )

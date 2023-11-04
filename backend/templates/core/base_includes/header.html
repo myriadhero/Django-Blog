@@ -100,7 +100,7 @@
                             <a class="navbar-item" href="{{ nav_item.get_absolute_url }}">All {{ nav_item.primary_category.name }}</a>
                             <hr class="navbar-divider">
                             {% for subitem in nav_item.sub_items.all %}
-                                <a class="navbar-item" href="{{ subitem.get_absolute_url }}">{{ subitem.category_tag.name }}</a>
+                                <a class="navbar-item" href="{{ subitem.get_absolute_url }}">{{ subitem.subcategory.name }}</a>
                             {% endfor %}
                         </div>
                     </div>

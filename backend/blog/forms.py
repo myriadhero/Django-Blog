@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category, CategoryTag, Post
+from .models import Category, CategoryTag, Post, Subcategory
 
 
 class AdvancedSearchForm(forms.Form):
@@ -8,8 +8,8 @@ class AdvancedSearchForm(forms.Form):
     categories = forms.ModelMultipleChoiceField(
         Category.objects.all(), required=False, to_field_name="slug"
     )
-    sub_categories = forms.ModelMultipleChoiceField(
-        CategoryTag.sub_categories.all(), required=False, to_field_name="slug"
+    subcategories = forms.ModelMultipleChoiceField(
+        Subcategory.objects.all(), required=False, to_field_name="slug"
     )
     tags = forms.ModelMultipleChoiceField(
         CategoryTag.non_empty.all(), required=False, to_field_name="slug"
