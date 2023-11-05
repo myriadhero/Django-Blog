@@ -304,7 +304,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
     @admin.action(description="Remove selected items as tags from all posts")
     def remove_tags_from_posts(self, request, queryset):
         tags_and_posts = {
-            tag: list(tag.get_tagged_posts(force_get_tagged=True).all())
+            tag: list(tag.get_tagged_posts().all())
             for tag in queryset
         }
 
