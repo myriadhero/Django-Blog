@@ -2,7 +2,7 @@
     <a href="{{ cat.get_absolute_url }}"
        class="tag is-primary has-text-black has-text-weight-semibold">{{ cat }}</a>
 {% endfor %}
-{% for subcat in tpost.sub_categories.all %}
+{% for subcat in tpost.subcategories.all %}
     <a href="{{ subcat.get_absolute_url }}"
        class="tag is-primary has-text-black has-text-weight-semibold">{{ subcat }}</a>
 {% endfor %}
