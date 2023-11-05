@@ -16,11 +16,14 @@ def convert_subcat_tag_to_subcategories_forward_func(apps, schema_editor):
     DropdownNavItem = apps.get_model("blog", "DropdownNavItem")
 
     for tag in CategoryTag.objects.filter(is_sub_category=True):
-        subcategory = Subcategory.objects.create(
-            name=tag.name,
+        subcategory, created = Subcategory.objects.get_or_create(
             slug=tag.slug,
-            description=tag.description,
-            preview_image=tag.preview_image,
+            defaults={
+                "name": tag.name,
+                "slug": tag.slug,
+                "description": tag.description,
+                "preview_image": tag.preview_image,
+            },
         )
 
         subcategory.categories.set(tag.categories.all())
@@ -34,7 +37,9 @@ def convert_subcat_tag_to_subcategories_forward_func(apps, schema_editor):
 
         for item in DropdownNavItem.objects.filter(category_tag=tag):
             item.subcategory = subcategory
-            subcategory.categories.add(item.parent_nav_item.primary_category)
+            parent_cat = item.parent_nav_item.primary_category
+            if parent_cat not in subcategory.categories.all():
+                subcategory.categories.add(parent_cat)
             item.save()
 
 
