@@ -342,7 +342,6 @@ class Post(ModelMeta, models.Model):
     subcategories = models.ManyToManyField(Subcategory, blank=True)
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
-        verbose_name="Tags with categories",
         help_text="Tags, comma separated",
         related_name="tag_posts",
     )

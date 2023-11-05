@@ -93,6 +93,7 @@ class SubcategoryAdmin(admin.ModelAdmin):
     ]
     prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ["get_posts_in_category"]
+    ordering = ["name"]
 
     def get_posts_in_category(self, obj: Subcategory):
         posts = obj.post_set.all()[:20]
@@ -113,8 +114,11 @@ class SubcategoryAdmin(admin.ModelAdmin):
 
     get_posts_in_category.short_description = "Posts in category"
 
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).prefetch_related("categories")
+
     def get_categories(self, obj: CategoryTag):
-        return ", ".join(obj.categories.values_list("name", flat=True))
+        return ", ".join(cat.name for cat in obj.categories.all())
 
     get_categories.short_description = "Categories"
 
@@ -126,31 +130,6 @@ class NavItemAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return super().get_queryset(request).select_related("primary_category")
-
-
-# class SubCategoryTagsFilter(admin.SimpleListFilter):
-#     title = _("Filter by sub category")
-
-#     parameter_name = "subcat"
-
-#     def lookups(self, request, model_admin):
-#         return [
-#             ("yes", "With sub category"),
-#             *(
-#                 (subcat.slug, subcat.name)
-#                 for subcat in CategoryTag.sub_categories.all()
-#             ),
-#             ("no", "Without sub category"),
-#         ]
-
-#     def queryset(self, request, queryset):
-#         if not (lookup := self.value()):
-#             return queryset
-#         if lookup == "yes":
-#             return queryset.filter(tags__is_sub_category=True)
-#         if lookup == "no":
-#             return queryset.filter(tags__is_sub_category=False)
-#         return queryset.filter(tags__slug=lookup)
 
 
 class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
@@ -209,23 +188,21 @@ class PostAdmin(admin.ModelAdmin):
         "publish",
         "author",
         "categories",
-        # SubCategoryTagsFilter,
+        "subcategories",
         "tags",
     ]
     search_fields = ["title", "body"]
     prepopulated_fields = {"slug": ("title",)}
-    ordering = ["status", "publish"]
     formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
     autocomplete_fields = ["tags"]
-    ordering = ["-publish"]
+    ordering = ["status", "-publish"]
 
-    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Post]:
         qs = (
             super()
             .get_queryset(request)
             .select_related("author")
             .prefetch_related(
-                "tags",
                 "categories",
                 "subcategories",
             )
@@ -234,10 +211,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def get_categories(self, obj: Post):
         return ", ".join(
-            chain(
-                obj.categories.values_list("name", flat=True),
-                obj.subcategories.values_list("name", flat=True),
-            )
+            cat.name for cat in chain(obj.categories.all(), obj.subcategories.all())
         )
 
     get_categories.short_description = "Categories"
@@ -295,15 +269,16 @@ class CategoryTagAdmin(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
-        qs = super().get_queryset(request).prefetch_related("categories")
+        qs = (
+            super()
+            .get_queryset(request)
+            .prefetch_related("categories", "subcategories")
+        )
         return qs
 
     def get_categories(self, obj: CategoryTag):
         return ", ".join(
-            chain(
-                obj.categories.values_list("name", flat=True),
-                obj.subcategories.values_list("name", flat=True),
-            )
+            cat.name for cat in chain(obj.categories.all(), obj.subcategories.all())
         )
 
     get_categories.short_description = "Categories"
