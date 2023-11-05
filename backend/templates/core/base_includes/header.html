@@ -1,179 +1,180 @@
 {% load blog_tags %}
 {% load core_tags %}
 <header class="section container mt-0 pt-0">
-
     {% if site_identity.header_message %}
-    <div class="p-2 m-2 box has-text-centered has-background-warning">
-        <button class="delete" style="float:right;margin-top:2px;" onclick="this.parentElement.style.display='none';"></button>
-        <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
-    </div>
+        <div class="p-2 m-2 box has-text-centered has-background-warning">
+            <button class="delete"
+                    style="float:right;
+                           margin-top:2px"
+                    onclick="this.parentElement.style.display='none';"></button>
+            <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
+        </div>
     {% endif %}
-
     <div class="navbar-menu has-text-weight-medium is-justify-content-flex-end">
         {% get_social_media_links as sm_links %}
         <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
-        
         {% if sm_links.twitter_url %}
-        <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
-            <span class="icon-text">
-                <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
-                <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
-            </span>
-        </a>
-        {% endif %}
-        {% if sm_links.youtube_url %}
-        <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
-            <span class="icon-text">
-                <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
-                <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
-            </span>
-        </a>
-        {% endif %}
-
-        <a class="navbar-item" href="/feed" target="_blank">
-            <span class="icon-text">
-                <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
-                <span class="is-hidden-desktop">Subscribe to RSS feed</span>
-            </span>
-        </a>
-
-        {% get_subscription_options as sub_options %}
-        {% if sub_options.show_kofi_link_in_head_menu %}
-        <a class="navbar-item" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
-        data-filter="ko-fi" target="_blank">
-            <span class="icon-text">
-                {% load static %}
-                <img src="{% static 'kofi/kofi_logo_s.png' %}" class="icon">
-                <span>Ko-fi</span>
-            </span>
-        </a>
-        {% endif %}
-
-        <span class="navbar-item m-2" style="cursor:default;">|</span>
-
-        <span class="icon-text navbar-item is-clickable title-search">
-
-            <span class="icon-text title-search-icon">
-                <span class="icon">🔎</span>
-                <span class="">Search</span>
-            </span>
-
-            <form action="{% url 'blog:post_search' %}" method="get"
-            class="control has-icons-left is-hidden title-search-form">
-                <input type="text" class="input title-search-input" placeholder="Search..." name="query">
-                <span class="icon is-left">
-                    🔎
-                </span>
-            </form>
-
-        </span>
-    </div>
-
-    <div id="desktop-title" class="is-hidden-touch has-text-centered m-4">
-        <a href="{% url 'blog:front_page' %}">
-            {% include "core/base_includes/logo_or_text_title.html" %}
-        </a>
-    </div>
-    <nav class="navbar has-text-weight-medium is-justify-content-center" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand is-align-items-center">
-            <a class="navbar-item is-hidden-desktop" id="mobile-title" href="{% url 'blog:front_page' %}">
-                {% include "core/base_includes/logo_or_text_title.html" %}
-            </a>
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-                data-target="navbarMainMenu">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-
-        <div id="navbarMainMenu" class="navbar-menu is-justify-content-center">
-
-            {% get_nav_items as all_nav_items %}
-            {% for nav_item in all_nav_items %}
-                {% if nav_item.is_dropdown %}
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="{{ nav_item.primary_category.get_absolute_url }}">
-                        {{ nav_item.primary_category.name }}
-                    </a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="{{ nav_item.primary_category.get_absolute_url }}">
-                            All {{ nav_item.primary_category.name }}
-                        </a>
-                        <hr class="navbar-divider">
-                        {% for subitem in nav_item.sub_items.all %}
-                        <a class="navbar-item" href="{{ subitem.category_tag.get_absolute_url }}">
-                            {{ subitem.category_tag.name }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% else %}
-                <a class="navbar-item" href="{{ nav_item.primary_category.get_absolute_url }}">
-                    {{ nav_item.primary_category.name }}
-                </a>
-                {% endif %}
-            {% endfor %}
-            
-            
-            {% get_social_media_links as sm_links %}
-            <hr class="is-hidden-desktop m-2" style="display:block;margin:0.2rem 0.5rem;">
-            
-            <a class="navbar-item is-hidden-desktop" href="{% url 'about' %}" data-filter="about">About</a>
-            
-            {% if sm_links.twitter_url %}
-            <a class="navbar-item is-hidden-desktop" href="{{ sm_links.twitter_url }}" target="_blank">
+            <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
                 <span class="icon-text">
                     <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
                     <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
                 </span>
             </a>
-            {% endif %}
-            {% if sm_links.youtube_url %}
-            <a class="navbar-item is-hidden-desktop" href="{{ sm_links.youtube_url }}" target="_blank">
+        {% endif %}
+        {% if sm_links.youtube_url %}
+            <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
                 <span class="icon-text">
                     <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
                     <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
                 </span>
             </a>
+        {% endif %}
+        <a class="navbar-item" href="{% url "blog:post_feed" %}" target="_blank">
+            <span class="icon-text">
+                <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
+                <span class="is-hidden-desktop">Subscribe to RSS feed</span>
+            </span>
+        </a>
+        {% get_subscription_options as sub_options %}
+        {% if sub_options.show_kofi_link_in_head_menu %}
+            <a class="navbar-item"
+               href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
+               data-filter="ko-fi"
+               target="_blank">
+                <span class="icon-text">
+                    {% load static %}
+                    <img src="{% static 'kofi/kofi_logo_s.png' %}"
+                         class="icon"
+                         alt="kofi icon">
+                    <span>Ko-fi</span>
+                </span>
+            </a>
+        {% endif %}
+        <span class="navbar-item m-2" style="cursor:default;">|</span>
+        <span class="icon-text navbar-item is-clickable title-search">
+            <span class="icon-text title-search-icon">
+                <span class="icon">🔎</span>
+                <span>Search</span>
+            </span>
+            <form action="{% url 'blog:post_search' %}"
+                  method="get"
+                  class="control has-icons-left is-hidden title-search-form">
+                <input type="text"
+                       class="input title-search-input"
+                       placeholder="Search..."
+                       name="query">
+                <span class="icon is-left">🔎</span>
+            </form>
+        </span>
+    </div>
+    <div id="desktop-title" class="is-hidden-touch has-text-centered m-4">
+        <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+    </div>
+    <nav class="navbar has-text-weight-medium is-justify-content-center"
+         role="navigation"
+         aria-label="main navigation">
+        <div class="navbar-brand is-align-items-center">
+            <a class="navbar-item is-hidden-desktop"
+               id="mobile-title"
+               href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+            <a role="button"
+               class="navbar-burger"
+               aria-label="menu"
+               aria-expanded="false"
+               data-target="navbarMainMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbarMainMenu" class="navbar-menu is-justify-content-center">
+            {% get_nav_items as all_nav_items %}
+            {% for nav_item in all_nav_items %}
+                {% if nav_item.is_dropdown %}
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link"
+                           href="{{ nav_item.primary_category.get_absolute_url }}">
+                            {{ nav_item.primary_category.name }}
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{{ nav_item.get_absolute_url }}">All {{ nav_item.primary_category.name }}</a>
+                            <hr class="navbar-divider">
+                            {% for subitem in nav_item.sub_items.all %}
+                                <a class="navbar-item" href="{{ subitem.get_absolute_url }}">{{ subitem.subcategory.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="navbar-item"
+                       href="{{ nav_item.primary_category.get_absolute_url }}">{{ nav_item.primary_category.name }}</a>
+                {% endif %}
+            {% endfor %}
+            {% get_social_media_links as sm_links %}
+            <hr class="is-hidden-desktop m-2"
+                style="display:block;
+                       margin:0.2rem 0.5rem">
+            <a class="navbar-item is-hidden-desktop"
+               href="{% url 'about' %}"
+               data-filter="about">About</a>
+            {% if sm_links.twitter_url %}
+                <a class="navbar-item is-hidden-desktop"
+                   href="{{ sm_links.twitter_url }}"
+                   target="_blank">
+                    <span class="icon-text">
+                        <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
+                        <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
+                    </span>
+                </a>
             {% endif %}
-
-            <a class="navbar-item is-hidden-desktop" href="/feed" target="_blank">
+            {% if sm_links.youtube_url %}
+                <a class="navbar-item is-hidden-desktop"
+                   href="{{ sm_links.youtube_url }}"
+                   target="_blank">
+                    <span class="icon-text">
+                        <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+                        <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
+                    </span>
+                </a>
+            {% endif %}
+            <a class="navbar-item is-hidden-desktop"
+               href="{% url "blog:post_feed" %}"
+               target="_blank">
                 <span class="icon-text">
                     <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
                     <span class="is-hidden-desktop">Subscribe to RSS feed</span>
                 </span>
             </a>
-
             {% get_subscription_options as sub_options %}
             {% if sub_options.show_kofi_link_in_head_menu %}
-            <a class="navbar-item is-hidden-desktop" href="https://ko-fi.com/{{ sub_options.kofi_account_name }}" 
-            data-filter="ko-fi" target="_blank">
-                <span class="icon-text">
-                    {% load static %}
-                    <img src="{% static 'kofi/kofi_logo_s.png' %}" class="icon">
-                    <span>Ko-fi</span>
-                </span>
-            </a>
+                <a class="navbar-item is-hidden-desktop"
+                   href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
+                   data-filter="ko-fi"
+                   target="_blank">
+                    <span class="icon-text">
+                        {% load static %}
+                        <img src="{% static 'kofi/kofi_logo_s.png' %}"
+                             class="icon"
+                             alt="kofi icon">
+                        <span>Ko-fi</span>
+                    </span>
+                </a>
             {% endif %}
-
-            <span class="navbar-item m-2 is-hidden-touch is-hidden-desktop" style="cursor:default;">|</span>
-
+            <span class="navbar-item m-2 is-hidden-touch is-hidden-desktop"
+                  style="cursor:default">|</span>
             <span class="icon-text navbar-item is-clickable is-hidden-desktop title-search">
-
                 <span class="icon-text title-search-icon">
                     <span class="icon">🔎</span>
-                    <span class="">Search</span>
+                    <span>Search</span>
                 </span>
-
-                <form action="{% url 'blog:post_search' %}" method="get"
-                class="control has-icons-left is-hidden title-search-form">
-                    <input type="text" class="input title-search-input" placeholder="Search..." name="query">
-                    <span class="icon is-left">
-                        🔎
-                    </span>
+                <form action="{% url 'blog:post_search' %}"
+                      method="get"
+                      class="control has-icons-left is-hidden title-search-form">
+                    <input type="text"
+                           class="input title-search-input"
+                           placeholder="Search..."
+                           name="query">
+                    <span class="icon is-left">🔎</span>
                 </form>
-
             </span>
         </div>
     </nav>

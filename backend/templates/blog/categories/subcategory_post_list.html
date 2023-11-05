@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ site_identity.title }} - {{ subcategory.name }}
+{% endblock title %}
+{% block content %}
+    <div class="section">
+        <h3 class="title is-3 is-uppercase">
+            {% if category %}
+                {{ category.name }} <i class="fa-solid fa-chevron-right is-size-5 has-text-primary mx-2"></i>
+            {% endif %}
+            {{ subcategory.name }}
+        </h3>
+        <div class="level is-mobile">
+            <div class="level-left">
+                <label for="cat_tag_select" class="level-item">Filter by:</label>
+                <div class="select level-item">
+                    <select name="tag"
+                            id="cat_tag_select"
+                            hx-get="{{ subcategory.get_absolute_url }}"
+                            hx-target="#list-items"
+                            data-url="{{ subcategory.get_absolute_url }}"
+                            hx-swap="outerHTML">
+                        <option value="">All</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.slug }}"
+                                    {% if selected_tag and tag == selected_tag %}selected{% endif %}>
+                                {{ tag.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% include "blog/post/includes/post_list.html" %}
+    </div>
+{% endblock content %}
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'js/htmx_helpers.js' %}"></script>
+{% endblock scripts %}

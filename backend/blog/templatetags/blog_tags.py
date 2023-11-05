@@ -47,7 +47,7 @@ def markdown_format(text):
 def get_nav_items():
     return (
         NavItem.objects.select_related("primary_category")
-        .prefetch_related("sub_items__category_tag")
+        .prefetch_related("sub_items__subcategory")
         .all()
     )
 
@@ -56,7 +56,7 @@ def get_nav_items():
 def get_page_url(context, page):
     query = context["request"].GET.copy()
     query["page"] = page
-    return query.urlencode()
+    return f"?{query.urlencode()}"
 
 
 @register.filter(name="html_preview")

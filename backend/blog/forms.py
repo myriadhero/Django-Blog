@@ -1,12 +1,15 @@
 from django import forms
 
-from .models import Category, CategoryTag, Post
+from .models import Category, CategoryTag, Post, Subcategory
 
 
 class AdvancedSearchForm(forms.Form):
     query = forms.CharField(required=False, strip=True, max_length=200)
     categories = forms.ModelMultipleChoiceField(
         Category.objects.all(), required=False, to_field_name="slug"
+    )
+    subcategories = forms.ModelMultipleChoiceField(
+        Subcategory.objects.all(), required=False, to_field_name="slug"
     )
     tags = forms.ModelMultipleChoiceField(
         CategoryTag.non_empty.all(), required=False, to_field_name="slug"
@@ -30,16 +33,3 @@ class AdvancedSearchForm(forms.Form):
             self.fields["before"].widget.attrs["max"] = max_date
             self.fields["after"].widget.attrs["min"] = min_date
             self.fields["after"].widget.attrs["max"] = max_date
-
-
-# class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = Comment
-#         fields = ["name", "email", "text"]
-
-
-# class EmailPostForm(forms.Form):
-#     name = forms.CharField(max_length=25)
-#     email = forms.EmailField()
-#     to = forms.EmailField()
-#     comments = forms.CharField(required=False, widget=forms.Textarea)
