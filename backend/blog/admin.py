@@ -108,7 +108,7 @@ class SubcategoryAdmin(admin.ModelAdmin):
         html_see_all = format_html(
             '<div><a href="{}">Show all</a></div>',
             reverse("admin:blog_post_changelist")
-            + f"?sub_categories__id__exact={obj.pk}",
+            + f"?subcategories__id__exact={obj.pk}",
         )
         return format_html("{}<br>{}", html_links, html_see_all)
 
