@@ -9,7 +9,7 @@ def set_default_navdropdownitem_subcategory_forward_func(apps, schema_editor):
     Subcategory = apps.get_model("blog", "Subcategory")
     default_subcat = Subcategory.objects.first()
 
-    for item in DropdownNavItem.objects.filter(subcategory=None):
+    for item in DropdownNavItem.objects.filter(subcategory__isnull=True):
         if not default_subcat:
             item.delete()
             continue
