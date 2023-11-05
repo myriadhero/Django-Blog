@@ -259,6 +259,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_filter = [
         "categories",
+        "subcategories",
         TagsWithNoPostsFilter,
         ("description", admin.EmptyFieldListFilter),
         ("preview_image", admin.EmptyFieldListFilter),
@@ -303,10 +304,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
 
     @admin.action(description="Remove selected items as tags from all posts")
     def remove_tags_from_posts(self, request, queryset):
-        tags_and_posts = {
-            tag: list(tag.get_tagged_posts().all())
-            for tag in queryset
-        }
+        tags_and_posts = {tag: list(tag.get_tagged_posts().all()) for tag in queryset}
 
         if not any(tags_and_posts.values()):
             self.message_user(
