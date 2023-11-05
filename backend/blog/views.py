@@ -80,9 +80,11 @@ class SubcategoryPostListView(PostListView):
         ):
             context["selected_tag"] = tag
 
-        context["subcategory"] = get_object_or_404(
+        subcat = get_object_or_404(
             Subcategory, slug=self.kwargs.get("subcategory_slug")
         )
+        context["subcategory"] = subcat
+        context["meta"] = subcat.as_meta(self.request)
         context["tags"] = context["subcategory"].get_tags_that_have_at_least_one_post()
 
         return context
@@ -120,7 +122,7 @@ class CategoryDetailView(ListView):
             return ["blog/categories/tag_list.html"]
         if self.request.headers.get("HX-Request"):
             return ["blog/post/includes/post_list.html"]
-        return ["blog/categories/post_tag_list.html"]
+        return ["blog/categories/category_post_list.html"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

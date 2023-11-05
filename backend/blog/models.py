@@ -99,7 +99,7 @@ class Category(ModelMeta, models.Model):
         )
 
     def get_seo_keywords(self):
-        return [self.name.lower()] + get_site_identity().get_seo_keywords()
+        return [self.name.lower()] + (get_site_identity().get_seo_keywords() or [])
 
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
@@ -111,7 +111,7 @@ class Category(ModelMeta, models.Model):
         return reverse("blog:category", args=[self.slug])
 
 
-class Subcategory(models.Model):
+class Subcategory(ModelMeta, models.Model):
     name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
     slug = models.SlugField(
         max_length=50,
@@ -166,7 +166,7 @@ class Subcategory(models.Model):
         return (
             [self.name.lower()]
             + [cat.name.lower() for cat in self.categories.all()]
-            + get_site_identity().get_seo_keywords()
+            + (get_site_identity().get_seo_keywords() or [])
         )
 
     def get_preview_image_url(self):
@@ -243,7 +243,7 @@ class CategoryTag(ModelMeta, TagBase):
             [self.name.lower()]
             + [cat.name.lower() for cat in self.categories.all()]
             + [subcat.name.lower() for subcat in self.subcategories.all()]
-            + get_site_identity().get_seo_keywords()
+            + (get_site_identity().get_seo_keywords() or [])
         )
 
     def get_preview_image_url(self):
@@ -351,8 +351,8 @@ class Post(ModelMeta, models.Model):
         "description": "get_description",
         "keywords": "get_seo_keywords",
         "image": "get_preview_image_url",
-        "og_type": "Website",
-        "object_type": "Website",
+        "og_type": "Article",
+        "object_type": "Article",
     }
 
     objects = models.Manager()
@@ -454,7 +454,7 @@ class Post(ModelMeta, models.Model):
         return (
             [cat.name.lower() for cat in self.categories.all()]
             + [tag.name.lower() for tag in self.tags.all()]
-            + get_site_identity().get_seo_keywords()
+            + (get_site_identity().get_seo_keywords() or [])
         )
 
     def get_preview_image_url(self):

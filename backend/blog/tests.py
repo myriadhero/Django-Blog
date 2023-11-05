@@ -67,7 +67,7 @@ class CategoryTests(CategorySetUpMixin, TestCase):
         url = self.cat.get_absolute_url()
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "blog/categories/post_tag_list.html")
+        self.assertTemplateUsed(response, "blog/categories/category_post_list.html")
 
         self.cat.is_tag_list = True
         self.cat.save()
@@ -101,6 +101,11 @@ class TagTests(CategorySetUpMixin, TestCase):
 class SearchTests(CategorySetUpMixin, TestCase):
     def test_template_used(self):
         url = reverse("blog:post_search")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post/search.html")
+
+        url += f"?query={self.post.title}"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/search.html")
