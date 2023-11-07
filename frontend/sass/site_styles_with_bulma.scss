@@ -14,6 +14,8 @@
 
 $font-family-inter: 'Inter', sans-serif;
 $font-family-mallanna: 'Mallanna', sans-serif;
+$font-family-karla: 'Karla', sans-serif;
+$font-family-overpass: 'Overpass', sans-serif;
 $font-family-opensans: 'Open Sans';
 $family-sans-serif: $font-family-inter;
 // $family-primary: 
@@ -97,19 +99,55 @@ $navbar-dropdown-arrow: $accentcolour;
 $footer-background-color: $accentcolour;
 
 :root {
+    --secondary-theme-color: #{$highlightcolour};
     --swiper-theme-color: #{$accentcolour} !important;
+
+    .navbar{
+        position: sticky;
+    }
+}
+
+/* touch devices */
+@media (min-width: 769px) {
+}
+
+/* desktop */
+@media (min-width: 1024px) {
+}
+
+/* widescreen */
+@media (min-width: 1216px) {
+}
+
+/* full hd */
+@media (min-width: 1408px) {
 }
 
 #desktop-title h1 {
     font-size: 5rem;
 }
 
-h1.site-title {
-    font-family: 'Dawning of a New Day' !important;
+#desktop-title {
+    transition: padding-bottom 0.5s ease-in-out;
+}
+
+#desktop-title.small-title {
+    margin-bottom: 0px !important;
+    padding-bottom: 0px;
+}
+
+#desktop-title.small-title img {
+    max-height: 50px;
 }
 
 img.site-title {
     max-width: 400px;
+    max-height: 100px;
+    transition: max-height 0.5s ease-in-out;
+}
+
+h1.site-title {
+    font-family: 'Dawning of a New Day' !important;
 }
 
 .title,
@@ -119,7 +157,7 @@ img.site-title {
 .navbar-item,
 .subtitle,
 .footer {
-    font-family: $font-family-mallanna;
+    font-family: $font-family-overpass;
 }
 
 .navbar-menu>.navbar-item {

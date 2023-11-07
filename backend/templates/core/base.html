@@ -24,9 +24,8 @@
     <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Inter:wght@400;500;600&family=Mallanna&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Inter:wght@400;500;600&family=Mallanna&family=Karla:wght@400;500;600;700&family=Overpass:wght@400;500;600;700&display=swap"
           rel="stylesheet">
-    {% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mallanna|Inter|Open+Sans|Dawning+of+a+New+Day"> {% endcomment %}
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}"
           rel="stylesheet"
           type="text/css">
@@ -48,8 +47,8 @@
     {% endblock head_links %}
   </head>
   <body>
-    {% include "core/base_includes/header.html" %}
     <div class="container">
+      {% include "core/base_includes/header.html" %}
       {% block content %}
       {% endblock content %}
     </div>

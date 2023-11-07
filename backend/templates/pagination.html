@@ -8,7 +8,8 @@
          hx-target="#list-items"
          hx-get="{{ prev_page_url }}"
          hx-push-url="{{ prev_page_url }}"
-         hx-swap="outerHTML show:top">&lt&lt</a>
+         hx-swap="outerHTML show:top"
+         class="has-text-primary">&lt&lt</a>
     {% endif %}
     <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
     {% if page_obj.has_next %}
@@ -17,7 +18,8 @@
          hx-target="#list-items"
          hx-get="{{ next_page_url }}"
          hx-push-url="{{ next_page_url }}"
-         hx-swap="outerHTML show:top">&gt&gt</a>
+         hx-swap="outerHTML show:top"
+         class="has-text-primary">&gt&gt</a>
     {% endif %}
   </span>
 </div>

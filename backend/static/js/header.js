@@ -1,88 +1,128 @@
 (function () {
-    function makeMobileMenuBurgerInteractive() {
-        // Bulma mobile navbar
-        // Get all "navbar-burger" elements
-        const navbarBurgers = document.querySelectorAll('.navbar-burger');
+  function makeMobileMenuBurgerInteractive() {
+    // Bulma mobile navbar
+    // Get all "navbar-burger" elements
+    const navbarBurgers = document.querySelectorAll(".navbar-burger");
 
-        // Add a click event on each of them
-        navbarBurgers.forEach(el => {
-            el.addEventListener('click', () => {
-                // Get the target from the "data-target" attribute
-                const targetId = el.dataset.target;
-                const $target = document.getElementById(targetId);
+    // Add a click event on each of them
+    navbarBurgers.forEach((el) => {
+      el.addEventListener("click", () => {
+        // Get the target from the "data-target" attribute
+        const targetId = el.dataset.target;
+        const $target = document.getElementById(targetId);
 
-                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-            });
-        });
-    }
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle("is-active");
+        $target.classList.toggle("is-active");
+      });
+    });
+  }
 
-    function makeSearchIconsInteractive() {
-        // Search icon in the navbar
-        const FOCUSOUTDELAY = 5000;
+  function makeSearchIconsInteractive() {
+    // Search icon in the navbar
+    const FOCUSOUTDELAY = 5000;
 
-        const searchNavParentEls = document.querySelectorAll(".title-search");
-        for (let searchNav of searchNavParentEls) {
-            const searchInput = searchNav.querySelector(".title-search-input");
-            const searchForm = searchNav.querySelector(".title-search-form");
-            const searchIcon = searchNav.querySelector(".title-search-icon");
+    const searchNavParentEls = document.querySelectorAll(".title-search");
+    for (let searchNav of searchNavParentEls) {
+      const searchInput = searchNav.querySelector(".title-search-input");
+      const searchForm = searchNav.querySelector(".title-search-form");
+      const searchIcon = searchNav.querySelector(".title-search-icon");
 
-            let focusOutTimeout = null;
+      let focusOutTimeout = null;
 
-            function isActive(elem) {
-                return (document.activeElement == elem);
-            }
+      function isActive(elem) {
+        return document.activeElement == elem;
+      }
 
-            function toggleSearchElemVisibility() {
-                searchIcon.classList.toggle("is-hidden");
-                searchForm.classList.toggle("is-hidden");
-            }
+      function toggleSearchElemVisibility() {
+        searchIcon.classList.toggle("is-hidden");
+        searchForm.classList.toggle("is-hidden");
+      }
 
-            function revealFormOnClick() {
-                toggleSearchElemVisibility();
-                searchInput.focus();
-                searchNav.removeEventListener("click", revealFormOnClick);
-            }
+      function revealFormOnClick() {
+        toggleSearchElemVisibility();
+        searchInput.focus();
+        searchNav.removeEventListener("click", revealFormOnClick);
+      }
 
-            function hideFormOnFocusOut() {
-                if (!isActive(searchInput)) {
-                    toggleSearchElemVisibility();
-                    focusOutTimeout = null;
-                    searchNav.addEventListener("click", revealFormOnClick);
-                }
-            }
-
-            function resetFocusOutTimeoutOnFocus() {
-                if (focusOutTimeout != null) {
-                    clearTimeout(focusOutTimeout);
-                    focusOutTimeout = null;
-                }
-            }
-
-            searchNav.addEventListener("click", revealFormOnClick);
-            searchInput.addEventListener("focusout", () => {
-                focusOutTimeout = setTimeout(hideFormOnFocusOut, FOCUSOUTDELAY);
-            });
-            searchInput.addEventListener("focus", resetFocusOutTimeoutOnFocus);
+      function hideFormOnFocusOut() {
+        if (!isActive(searchInput)) {
+          toggleSearchElemVisibility();
+          focusOutTimeout = null;
+          searchNav.addEventListener("click", revealFormOnClick);
         }
+      }
+
+      function resetFocusOutTimeoutOnFocus() {
+        if (focusOutTimeout != null) {
+          clearTimeout(focusOutTimeout);
+          focusOutTimeout = null;
+        }
+      }
+
+      searchNav.addEventListener("click", revealFormOnClick);
+      searchInput.addEventListener("focusout", () => {
+        focusOutTimeout = setTimeout(hideFormOnFocusOut, FOCUSOUTDELAY);
+      });
+      searchInput.addEventListener("focus", resetFocusOutTimeoutOnFocus);
     }
+  }
 
-    // place all eventListeners here
-    const eventListenersToPlace = [
-        makeMobileMenuBurgerInteractive,
-        makeSearchIconsInteractive,
-    ];
+  // place all eventListeners here
+  const eventListenersToPlace = [
+    makeMobileMenuBurgerInteractive,
+    makeSearchIconsInteractive,
+  ];
 
-    function runEventListenerPlacements() {
-        eventListenersToPlace.forEach(fn => fn());
+  function runEventListenerPlacements() {
+    eventListenersToPlace.forEach((fn) => fn());
+  }
+
+  function addListenersOnPageLoadAndAttachToHtmx() {
+    runEventListenerPlacements();
+    document.body.addEventListener(
+      "htmx:historyRestore",
+      runEventListenerPlacements
+    );
+  }
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    addListenersOnPageLoadAndAttachToHtmx
+  );
+
+  // minimise desktop logo on scroll
+  const desktopTitle = document.getElementById("desktop-title");
+  let logoMinimised = false;
+  //   let ticking = false;
+  let lastKnownScrollPosition = 0;
+  let tickingTime = Date.now();
+  const debounceTime = 200;
+  const positionThreshold = 250;
+
+  function minimiseDesktopTitleLogo(scrollPosition) {
+    if (!logoMinimised) {
+      if (scrollPosition > positionThreshold) {
+        desktopTitle.classList.add("small-title");
+        logoMinimised = true;
+      }
+    } else if (scrollPosition < positionThreshold) {
+      desktopTitle.classList.remove("small-title");
+      logoMinimised = false;
     }
+  }
 
-    function addListenersOnPageLoadAndAttachToHtmx() {
-        runEventListenerPlacements();
-        document.body.addEventListener("htmx:historyRestore", runEventListenerPlacements);
+  document.addEventListener("scroll", function (e) {
+    if (Date.now() - tickingTime > debounceTime) {
+      lastKnownScrollPosition = window.scrollY;
+      // !ticking &&
+      window.requestAnimationFrame(() => {
+        minimiseDesktopTitleLogo(lastKnownScrollPosition);
+        // ticking = false;
+        tickingTime = Date.now();
+      });
+
+      //   ticking = true;
     }
-
-
-    document.addEventListener("DOMContentLoaded", addListenersOnPageLoadAndAttachToHtmx);
+  });
 })();

@@ -1,14 +1,33 @@
 :root {
+  --secondary-theme-color: #FEDD90;
   --swiper-theme-color: #D6A496 !important; }
+  :root .navbar {
+    position: sticky; }
 
+/* touch devices */
+/* desktop */
+/* widescreen */
+/* full hd */
 #desktop-title h1 {
   font-size: 5rem; }
 
-h1.site-title {
-  font-family: 'Dawning of a New Day' !important; }
+#desktop-title {
+  transition: padding-bottom 0.5s ease-in-out; }
+
+#desktop-title.small-title {
+  margin-bottom: 0px !important;
+  padding-bottom: 0px; }
+
+#desktop-title.small-title img {
+  max-height: 50px; }
 
 img.site-title {
-  max-width: 400px; }
+  max-width: 400px;
+  max-height: 100px;
+  transition: max-height 0.5s ease-in-out; }
+
+h1.site-title {
+  font-family: 'Dawning of a New Day' !important; }
 
 .title,
 .navbar,
@@ -17,7 +36,7 @@ img.site-title {
 .navbar-item,
 .subtitle,
 .footer {
-  font-family: "Mallanna", sans-serif; }
+  font-family: "Overpass", sans-serif; }
 
 .navbar-menu > .navbar-item {
   text-transform: uppercase;
