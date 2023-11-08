@@ -128,12 +128,12 @@ $footer-background-color: $accentcolour;
 }
 
 #desktop-title {
-    transition: padding-bottom 0.5s ease-in-out;
+    transition: margin-bottom 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
 }
 
 #desktop-title.small-title {
     margin-bottom: 0px !important;
-    padding-bottom: 0px;
+    padding-bottom: 0px !important;
 }
 
 #desktop-title.small-title img {
@@ -226,7 +226,7 @@ i.fa-square-rss {
 }
 
 #mobile-title img {
-    max-height: 2.5rem;
+    max-height: 3rem;
 }
 
 // @import "../node_modules/bulma/bulma.sass";

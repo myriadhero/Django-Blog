@@ -68,14 +68,14 @@
     </span>
 </div>
 <div class="sticky has-background-white">
-    <div id="desktop-title" class="is-hidden-touch has-text-centered m-4">
+    <div id="desktop-title" class="is-hidden-touch has-text-centered p-4">
         <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
     </div>
     <nav class="navbar is-justify-content-center"
          role="navigation"
          aria-label="main navigation">
         <div class="navbar-brand is-align-items-center">
-            <a class="navbar-item is-hidden-desktop"
+            <a class="navbar-item is-hidden-desktop my-1"
                id="mobile-title"
                href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
             <a role="button"

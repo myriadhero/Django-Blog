@@ -12,11 +12,11 @@
   font-size: 5rem; }
 
 #desktop-title {
-  transition: padding-bottom 0.5s ease-in-out; }
+  transition: margin-bottom 0.5s ease-in-out, padding-bottom 0.5s ease-in-out; }
 
 #desktop-title.small-title {
   margin-bottom: 0px !important;
-  padding-bottom: 0px; }
+  padding-bottom: 0px !important; }
 
 #desktop-title.small-title img {
   max-height: 50px; }
@@ -87,7 +87,7 @@ i.fa-square-rss {
   font-size: 28px; }
 
 #mobile-title img {
-  max-height: 2.5rem; }
+  max-height: 3rem; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,

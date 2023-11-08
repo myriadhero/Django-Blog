@@ -94,11 +94,11 @@
   // minimise desktop logo on scroll
   const desktopTitle = document.getElementById("desktop-title");
   let logoMinimised = false;
-  //   let ticking = false;
   let lastKnownScrollPosition = 0;
-  let tickingTime = Date.now();
+  let tickingTime = 0;
   const debounceTime = 200;
-  const positionThreshold = 250;
+  const positionThreshold = 200;
+  const positionBuffer = 30;
 
   function minimiseDesktopTitleLogo(scrollPosition) {
     if (!logoMinimised) {
@@ -106,23 +106,25 @@
         desktopTitle.classList.add("small-title");
         logoMinimised = true;
       }
-    } else if (scrollPosition < positionThreshold) {
-      desktopTitle.classList.remove("small-title");
-      logoMinimised = false;
+    } else {
+      // minimised - we expect a little shrinkage
+      // so the scroll position after could actually be less than the threshold
+      if (scrollPosition + positionBuffer < positionThreshold) {
+        desktopTitle.classList.remove("small-title");
+        logoMinimised = false;
+      }
     }
   }
 
-  document.addEventListener("scroll", function (e) {
-    if (Date.now() - tickingTime > debounceTime) {
-      lastKnownScrollPosition = window.scrollY;
-      // !ticking &&
-      window.requestAnimationFrame(() => {
+  document.addEventListener(
+    "onscrollend" in document ? "scrollend" : "scroll",
+    function (e) {
+      // act immediately, then debounce
+      if (Date.now() > tickingTime) {
+        lastKnownScrollPosition = window.scrollY;
         minimiseDesktopTitleLogo(lastKnownScrollPosition);
-        // ticking = false;
-        tickingTime = Date.now();
-      });
-
-      //   ticking = true;
+        tickingTime = Date.now() + debounceTime;
+      }
     }
-  });
+  );
 })();
