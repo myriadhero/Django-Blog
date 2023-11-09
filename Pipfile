@@ -7,7 +7,6 @@ name = "pypi"
 django = "*"
 django-taggit = "*"
 markdown = "*"
-psycopg2-binary = "*"
 django-ckeditor = "*"
 django-imagekit = "*"
 pillow = "*"
@@ -18,6 +17,7 @@ crispy-bulma = "*"
 gunicorn = "*"
 django-select2 = "*"
 django-meta = "*"
+psycopg = {extras = ["binary"], version = "*"}
 
 [dev-packages]
 black = "*"
