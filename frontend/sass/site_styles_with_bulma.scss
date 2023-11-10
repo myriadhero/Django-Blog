@@ -124,6 +124,10 @@ $footer-background-color: $accentcolour;
   font-size: 1.25rem;
 }
 
+.desktop-spacer {
+  display: none;
+}
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header {
@@ -135,10 +139,13 @@ $footer-background-color: $accentcolour;
   }
 
   .carousel-header .carousel-view-all {
-    font-size: 1.5rem;
     position: absolute;
     right: 0.5rem;
     bottom: 0.25rem;
+  }
+
+  .desktop-spacer {
+    display: block;
   }
 }
 
