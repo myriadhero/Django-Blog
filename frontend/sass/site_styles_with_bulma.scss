@@ -12,21 +12,21 @@
 // $taglisttitlefont:
 // $taglistnamefont:
 
-$font-family-inter: 'Inter', sans-serif;
-$font-family-mallanna: 'Mallanna', sans-serif;
-$font-family-karla: 'Karla', sans-serif;
-$font-family-overpass: 'Overpass', sans-serif;
-$font-family-opensans: 'Open Sans';
+$font-family-inter: "Inter", sans-serif;
+$font-family-mallanna: "Mallanna", sans-serif;
+$font-family-karla: "Karla", sans-serif;
+$font-family-overpass: "Overpass", sans-serif;
+$font-family-opensans: "Open Sans";
 $family-sans-serif: $font-family-inter;
-// $family-primary: 
-// $family-secondary: 
-// $body-family: 
+// $family-primary:
+// $family-secondary:
+// $body-family:
 
 $bgcolour: #ffffff;
 $textcolour: #000000;
-$accentcolour: #D6A496;
-$highlightcolour: #FEDD90;
-$accentdisabled: #D9CFCC;
+$accentcolour: #d6a496;
+$highlightcolour: #fedd90;
+$accentdisabled: #d9cfcc;
 $highlightedtext: $accentcolour;
 
 // $sitetitletext: $textcolour;
@@ -41,9 +41,6 @@ $highlightedtext: $accentcolour;
 // $topiconsbg: $bgcolour;
 // $readmorebubblebg: $highlightcolour;
 // $taglistnamecolor: $accentcolour;
-
-
-
 
 $black: #000000;
 $black-bis: #151d28;
@@ -65,7 +62,6 @@ $cyan: #81cfe4;
 $blue: #4f8cb5;
 $purple: #6a536e;
 $red: #c6596b;
-
 
 $primary: $accentcolour;
 
@@ -99,16 +95,51 @@ $navbar-dropdown-arrow: $accentcolour;
 $footer-background-color: $accentcolour;
 
 :root {
-    --secondary-theme-color: #{$highlightcolour};
-    --swiper-theme-color: #{$accentcolour} !important;
+  --secondary-theme-color: #{$highlightcolour};
+  --swiper-theme-color: #{$accentcolour} !important;
 
-    .navbar{
-        position: sticky;
-    }
+  .navbar {
+    position: sticky;
+  }
+}
+
+.carousel-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.carousel-header .category-name {
+  font-size: 2rem;
+  margin-bottom: 0px !important;
+}
+
+.carousel-header .carousel-view-all {
+  font-size: 1.25rem;
 }
 
 /* touch devices */
 @media (min-width: 769px) {
+  .carousel-header {
+    justify-content: center;
+  }
+
+  .carousel-header .category-name {
+    font-size: 2.5rem;
+  }
+
+  .carousel-header .carousel-view-all {
+    font-size: 1.5rem;
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.25rem;
+  }
 }
 
 /* desktop */
@@ -124,30 +155,30 @@ $footer-background-color: $accentcolour;
 }
 
 #desktop-title h1 {
-    font-size: 5rem;
+  font-size: 5rem;
 }
 
 #desktop-title {
-    transition: margin-bottom 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
+  transition: margin-bottom 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
 }
 
 #desktop-title.small-title {
-    margin-bottom: 0px !important;
-    padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
 }
 
 #desktop-title.small-title img {
-    max-height: 50px;
+  max-height: 50px;
 }
 
 img.site-title {
-    max-width: 400px;
-    max-height: 100px;
-    transition: max-height 0.5s ease-in-out;
+  max-width: 400px;
+  max-height: 100px;
+  transition: max-height 0.5s ease-in-out;
 }
 
 h1.site-title {
-    font-family: 'Dawning of a New Day' !important;
+  font-family: "Dawning of a New Day" !important;
 }
 
 .title,
@@ -157,17 +188,17 @@ h1.site-title {
 .navbar-item,
 .subtitle,
 .footer {
-    font-family: $font-family-overpass;
+  font-family: $font-family-overpass;
 }
 
-.navbar-menu>.navbar-item {
-    text-transform: uppercase;
-    font-size: 20px;
+.navbar-menu > .navbar-item {
+  text-transform: uppercase;
+  font-size: 20px;
 }
 
 .navbar-dropdown {
-    text-transform: none;
-    font-size: 18px !important;
+  text-transform: none;
+  font-size: 18px !important;
 }
 
 // .content {
@@ -176,57 +207,53 @@ h1.site-title {
 
 #alpha-links,
 .sticky {
-    position: sticky;
-    top: 0;
-    z-index: 5;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .letter-link {
-    padding: 1.2px;
+  padding: 1.2px;
 }
 
 .letter-link:hover {
-    font-weight: bold;
-    padding-left: 3px;
-    padding-right: 3px;
+  font-weight: bold;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 .post-preview-image {
-    border-radius: 3%;
-    overflow: hidden;
+  border-radius: 3%;
+  overflow: hidden;
 }
 
 .post-detail-header-image {
-    border-radius: 10px;
-    overflow: hidden;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 a.tag-expander {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 i.fa-square-rss {
-    color: #f69537;
+  color: #f69537;
 }
 
 .text-pink-on-hover {
-    color: black !important;
+  color: black !important;
 }
 
 .text-pink-on-hover:hover {
-    color: $primary !important;
+  color: $primary !important;
 }
 
 .content iframe {
-    border-radius: 10px;
-}
-
-.category-name {
-    font-size: 28px;
+  border-radius: 10px;
 }
 
 #mobile-title img {
-    max-height: 3rem;
+  max-height: 3rem;
 }
 
 // @import "../node_modules/bulma/bulma.sass";

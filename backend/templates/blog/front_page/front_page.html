@@ -8,15 +8,13 @@
 {% block content %}
     {% for category in categories %}
         <div class="section">
-            <div class="is-flex is-flex-direction-row is-justify-content-center is-align-items-flex-end pb-5"
-                 style="position:relative">
-                <a class="title m-2 category-name has-text-weight-normal is-size-2"
+            <div class="carousel-header">
+                <a class="title category-name has-text-weight-normal"
                    href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                 <a href="{{ category.get_absolute_url }}"
-                   class="is-size-5 has-text-primary m-2"
-                   style="position:absolute;
-                          right:0">View All</a>
+                   class="has-text-primary carousel-view-all">View All</a>
             </div>
+            <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
             <!-- Slider main container -->
             <div class="swiper">
                 <!-- If we need pagination -->
