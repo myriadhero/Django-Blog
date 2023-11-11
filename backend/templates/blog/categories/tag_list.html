@@ -6,19 +6,18 @@
     <div class="section">
         <h3 class="title is-3 is-uppercase">{{ category.name }}</h3>
         <div id="list-items">
-            {% regroup tags by name.0 as alpha_tags %}
-            <div id="alpha-links" class="level">
+            {% regroup tags by slug.0 as alpha_tags %}
+            <div id="alpha-links" class="level sticky">
                 <div class="level-item">
-                    <a href="#"
-                       class="letter-link subtitle is-5 has-text-primary has-background-white">🏡</a>
+                    <a href="#" class="letter-link subtitle is-5 has-text-primary">🏡</a>
                     {% for letter, letter_tags in alpha_tags %}
-                        <a href="#starts-with-{{ letter }}"
-                           class="letter-link subtitle is-5 has-text-primary has-background-white">{{ letter }}</a>
+                        <a href="#starts-with-{{ letter|upper }}"
+                           class="letter-link subtitle is-5 has-text-primary">{{ letter|upper }}</a>
                     {% endfor %}
                 </div>
             </div>
             {% for letter, letter_tags in alpha_tags %}
-                <p class="title is-3 pl-5" id="starts-with-{{ letter }}">{{ letter }}</p>
+                <p class="title is-3 pl-5" id="starts-with-{{ letter|upper }}">{{ letter|upper }}</p>
                 {% for tag in letter_tags %}
                     <div class="columns is-mobile">
                         <div class="column is-narrow">

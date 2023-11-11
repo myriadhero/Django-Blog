@@ -211,7 +211,12 @@ h1.site-title {
 //     font-family: 'Open Sans';
 // }
 
-#alpha-links,
+#alpha-links {
+  top: 122px;
+  padding: 0.5rem;
+  background: white;
+}
+
 .sticky {
   position: sticky;
   top: 0;

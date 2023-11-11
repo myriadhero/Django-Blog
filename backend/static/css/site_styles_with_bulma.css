@@ -78,7 +78,11 @@ h1.site-title {
   text-transform: none;
   font-size: 18px !important; }
 
-#alpha-links,
+#alpha-links {
+  top: 122px;
+  padding: 0.5rem;
+  background: white; }
+
 .sticky {
   position: sticky;
   top: 0;
