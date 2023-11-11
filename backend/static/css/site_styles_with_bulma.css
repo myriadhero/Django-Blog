@@ -66,8 +66,7 @@ h1.site-title {
 .navbar,
 .navbar-menu,
 .navbar-item,
-.subtitle,
-.footer {
+.subtitle {
   font-family: "Overpass", sans-serif; }
 
 .navbar-menu > .navbar-item {
