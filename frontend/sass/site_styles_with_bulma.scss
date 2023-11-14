@@ -266,6 +266,18 @@ i.fa-square-rss {
   max-height: 3rem;
 }
 
+#adv-search.collapsed {
+  display: none;
+}
+
+#adv-search-expand {
+  cursor: pointer;
+}
+
+#adv-search-expand i {
+  color: $primary;
+}
+
 // @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";

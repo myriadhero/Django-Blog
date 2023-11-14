@@ -1,16 +1,14 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 {% load blog_tags %}
 {% load crispy_forms_tags %}
-{% block title %}{{ site_identity.title }} - Search{% endblock %}
+{% block title %}
+    {{ site_identity.title }} - Search
+{% endblock title %}
 {% block content %}
-    
     <div class="section">
         <div class="block">
             <div class="title is-4">Search</div>
-            <form action="{% url 'blog:post_search' %}" method="GET">
-                {{ form|crispy }}
-                <input type="submit" value="Search" class="button is-info">
-            </form>
+            {% crispy form %}
         </div>
         <div class="block">
             <div class="title is-4">Results</div>
@@ -21,5 +19,21 @@
             {% endif %}
         </div>
     </div>
+    <script>
+        const advSearchDiv = document.getElementById("adv-search");
+        const searchExpandEl = document.getElementById("adv-search-expand");
+        
+        function toggleAdvSearchExpand(){
+            advSearchDiv.classList.toggle("collapsed");
+            if (advSearchDiv.classList.contains("collapsed")){
+                searchExpandEl.innerHTML = 'Advanced search options <span class="icon"><i class="fa-solid fa-angle-up"></i></span></div>';
+                // clear form elements in the advanced search div
+                advSearchDiv.querySelectorAll("input, select").forEach(el=>{el.value=null;});
+            } else {
+                searchExpandEl.innerHTML = 'Advanced search options <span class="icon"><i class="fa-solid fa-angle-down"></i></span></div>';
+            }
+        }
 
-{% endblock %}
+        searchExpandEl.addEventListener("click", toggleAdvSearchExpand);
+    </script>
+{% endblock content %}

@@ -121,6 +121,15 @@ i.fa-square-rss {
 #mobile-title img {
   max-height: 3rem; }
 
+#adv-search.collapsed {
+  display: none; }
+
+#adv-search-expand {
+  cursor: pointer; }
+
+#adv-search-expand i {
+  color: #d6a496; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {
