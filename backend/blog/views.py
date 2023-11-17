@@ -195,6 +195,8 @@ class PostSearchListView(PostListView):
             tags = form.cleaned_data["tags"]
             before = form.cleaned_data["before"]
             after = form.cleaned_data["after"]
+            order_by = form.cleaned_data["order_by"]
+            is_ascending = "" if form.cleaned_data["is_ascending"] else "-"
 
             if not any((query, categories, subcategories, tags, before, after)):
                 return qs.none()
@@ -202,14 +204,10 @@ class PostSearchListView(PostListView):
             if query:
                 search_vector = SearchVector("title", "body")
                 search_query = SearchQuery(query)
-                qs = (
-                    qs.annotate(
-                        search=search_vector,
-                        rank=SearchRank(search_vector, search_query),
-                    )
-                    .filter(search=search_query)
-                    .order_by("-rank")
-                )
+                qs = qs.annotate(
+                    search=search_vector,
+                    rank=SearchRank(search_vector, search_query),
+                ).filter(search=search_query)
 
             if categories:
                 qs = qs.filter(categories__in=categories)
@@ -225,6 +223,10 @@ class PostSearchListView(PostListView):
 
             if after:
                 qs = qs.filter(publish__gt=after)
+
+            qs = qs.order_by(
+                f"{is_ascending}{'publish' if order_by=='date' else 'rank'}"
+            )
 
         return qs
 

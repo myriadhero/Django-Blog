@@ -29,6 +29,12 @@ class AdvancedSearchForm(forms.Form):
         required=False,
         widget=forms.DateInput(attrs={"type": "date"}),
     )
+    order_by = forms.ChoiceField(
+        choices=(("relevance", "Relevance"), ("date", "Date")),
+        initial="relevance",
+        required=False,
+    )
+    is_ascending = forms.BooleanField(required=False, initial=False, label="Ascending")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,6 +57,7 @@ class AdvancedSearchForm(forms.Form):
                 css_class="collapsed block",
                 css_id="adv-search",
             ),
+            Div(Field("order_by", "is_ascending", title=""), css_class="block"),
             Submit("submit", "Search", css_class="button is-primary block"),
         )
 
