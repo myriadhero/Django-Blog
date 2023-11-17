@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 django = "*"
 django-taggit = "*"
-markdown = "*"
 psycopg2-binary = "*"
 django-ckeditor = "*"
 django-imagekit = "*"
