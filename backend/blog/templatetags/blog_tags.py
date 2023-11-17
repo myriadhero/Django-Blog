@@ -2,11 +2,9 @@ import re
 
 from django import template
 from django.template.defaultfilters import truncatewords_html
-from django.utils.safestring import mark_safe
 from lxml import html
-from markdown import markdown
 
-from ..models import Category, NavItem, Post
+from ..models import NavItem, Post
 from ..views import RECOMMENDED_POSTS_NUM
 
 TWEET_RE = re.compile(
@@ -36,11 +34,6 @@ def get_latest_posts(count=RECOMMENDED_POSTS_NUM):
 # @register.simple_tag
 # def get_most_commented_posts(count=RECOMMENDED_POSTS_NUM):
 #     return Post.published.annotate(total_comments=Count("comments"))[:count]
-
-
-@register.filter(name="markdown")
-def markdown_format(text):
-    return mark_safe(markdown(text))
 
 
 @register.simple_tag
