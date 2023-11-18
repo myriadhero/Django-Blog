@@ -1,6 +1,7 @@
 {% extends "core/base.html" %}
 {% load blog_tags %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %}
     {{ site_identity.title }} - Search
 {% endblock title %}
@@ -19,21 +20,5 @@
             {% endif %}
         </div>
     </div>
-    <script>
-        const advSearchDiv = document.getElementById("adv-search");
-        const searchExpandEl = document.getElementById("adv-search-expand");
-        
-        function toggleAdvSearchExpand(){
-            advSearchDiv.classList.toggle("collapsed");
-            if (advSearchDiv.classList.contains("collapsed")){
-                searchExpandEl.innerHTML = 'Advanced search options <span class="icon"><i class="fa-solid fa-angle-up"></i></span></div>';
-                // clear form elements in the advanced search div
-                advSearchDiv.querySelectorAll("input, select").forEach(el=>{el.value=null;});
-            } else {
-                searchExpandEl.innerHTML = 'Advanced search options <span class="icon"><i class="fa-solid fa-angle-down"></i></span></div>';
-            }
-        }
-
-        searchExpandEl.addEventListener("click", toggleAdvSearchExpand);
-    </script>
+    <script src="{% static "js\search_page_helpers.js" %}"></script>
 {% endblock content %}

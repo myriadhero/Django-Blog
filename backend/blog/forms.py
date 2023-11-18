@@ -41,6 +41,7 @@ class AdvancedSearchForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_action = "blog:post_search"
         self.helper.form_method = "get"
+
         self.helper.layout = Layout(
             Field("query", title=""),
             HTML(
@@ -57,7 +58,25 @@ class AdvancedSearchForm(forms.Form):
                 css_class="collapsed block",
                 css_id="adv-search",
             ),
-            Div(Field("order_by", "is_ascending", title=""), css_class="block"),
+            Div(
+                Field(
+                    "order_by",
+                    wrapper_class="is-horizontal is-flex is-align-items-flex-end is-flex-direction-row",
+                ),
+                Field(
+                    "is_ascending",
+                    type="hidden",
+                    id="search-is-ascending",
+                ),
+                HTML(
+                    f"""
+                    <span id="search-is-ascending-indicator" class="icon is-medium is-clickable has-text-primary">
+                        <i class="fa-solid fa-lg fa-arrow-{"up" if self.data.get("is_ascending") == "true" else"down"}-long"></i>
+                    </span>
+                    """
+                ),
+                css_class="is-flex search-order-by is-align-items-baseline",
+            ),
             Submit("submit", "Search", css_class="button is-primary block"),
         )
 

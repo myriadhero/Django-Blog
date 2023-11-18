@@ -92,6 +92,8 @@ $navbar-dropdown-item-active-background-color: $highlightcolour;
 $navbar-divider-background-color: $accentcolour;
 $navbar-dropdown-arrow: $accentcolour;
 
+$input-arrow: $accentcolour;
+
 $footer-background-color: $accentcolour;
 
 :root {
@@ -276,6 +278,10 @@ i.fa-square-rss {
 
 #adv-search-expand i {
   color: $primary;
+}
+
+#div_id_order_by {
+  gap: 0.5rem;
 }
 
 // @import "../node_modules/bulma/bulma.sass";

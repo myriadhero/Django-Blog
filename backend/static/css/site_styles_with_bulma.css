@@ -130,6 +130,9 @@ i.fa-square-rss {
 #adv-search-expand i {
   color: #d6a496; }
 
+#div_id_order_by {
+  gap: 0.5rem; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {
@@ -4679,7 +4682,7 @@ a.tag:hover {
   .select:not(.is-multiple) {
     height: 2.5em; }
   .select:not(.is-multiple):not(.is-loading)::after {
-    border-color: #4f8cb5;
+    border-color: #d6a496;
     right: 1.125em;
     z-index: 4; }
   .select.is-rounded select {
