@@ -1,16 +1,15 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 {% load blog_tags %}
 {% load crispy_forms_tags %}
-{% block title %}{{ site_identity.title }} - Search{% endblock %}
+{% load static %}
+{% block title %}
+    {{ site_identity.title }} - Search
+{% endblock title %}
 {% block content %}
-    
     <div class="section">
         <div class="block">
             <div class="title is-4">Search</div>
-            <form action="{% url 'blog:post_search' %}" method="GET">
-                {{ form|crispy }}
-                <input type="submit" value="Search" class="button is-info">
-            </form>
+            {% crispy form %}
         </div>
         <div class="block">
             <div class="title is-4">Results</div>
@@ -21,5 +20,5 @@
             {% endif %}
         </div>
     </div>
-
-{% endblock %}
+    <script src="{% static "js\search_page_helpers.js" %}"></script>
+{% endblock content %}

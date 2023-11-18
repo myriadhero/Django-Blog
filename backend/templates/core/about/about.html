@@ -1,5 +1,7 @@
-{% extends 'core/base.html' %}
-{% block title %}{{ site_identity.title }} - {{ about.title }}{% endblock %}
+{% extends "core/base.html" %}
+{% block title %}
+    {{ site_identity.title }} - {{ about.title }}
+{% endblock title %}
 {% block content %}
     <div class="section">
         <div class="block">
@@ -7,5 +9,5 @@
         </div>
         <div class="content py-5">{{ about.content|safe }}</div>
     </div>
-{% endblock %}
+{% endblock content %}
 {% block scripts %}<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>{% endblock %}

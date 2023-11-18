@@ -1,8 +1,6 @@
 :root {
   --secondary-theme-color: #fedd90;
   --swiper-theme-color: #d6a496 !important; }
-  :root .navbar {
-    position: sticky; }
 
 .carousel-header {
   position: relative;
@@ -25,6 +23,10 @@
 .desktop-spacer {
   display: none; }
 
+#navbarMainMenu {
+  max-height: calc(100dvh - 9.25rem);
+  overflow-y: scroll; }
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header {
@@ -39,6 +41,11 @@
     display: block; } }
 
 /* desktop */
+@media (min-width: 1024px) {
+  #navbarMainMenu {
+    max-height: unset;
+    overflow-y: unset; } }
+
 /* widescreen */
 /* full hd */
 #desktop-title h1 {
@@ -120,6 +127,18 @@ i.fa-square-rss {
 
 #mobile-title img {
   max-height: 3rem; }
+
+#adv-search.collapsed {
+  display: none; }
+
+#adv-search-expand {
+  cursor: pointer; }
+
+#adv-search-expand i {
+  color: #d6a496; }
+
+#div_id_order_by {
+  gap: 0.5rem; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -4670,7 +4689,7 @@ a.tag:hover {
   .select:not(.is-multiple) {
     height: 2.5em; }
   .select:not(.is-multiple):not(.is-loading)::after {
-    border-color: #4f8cb5;
+    border-color: #d6a496;
     right: 1.125em;
     z-index: 4; }
   .select.is-rounded select {

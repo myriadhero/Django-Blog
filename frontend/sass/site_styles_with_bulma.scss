@@ -92,15 +92,13 @@ $navbar-dropdown-item-active-background-color: $highlightcolour;
 $navbar-divider-background-color: $accentcolour;
 $navbar-dropdown-arrow: $accentcolour;
 
+$input-arrow: $accentcolour;
+
 $footer-background-color: $accentcolour;
 
 :root {
   --secondary-theme-color: #{$highlightcolour};
   --swiper-theme-color: #{$accentcolour} !important;
-
-  .navbar {
-    position: sticky;
-  }
 }
 
 .carousel-header {
@@ -128,6 +126,11 @@ $footer-background-color: $accentcolour;
   display: none;
 }
 
+#navbarMainMenu {
+  max-height: calc(100dvh - 9.25rem);
+  overflow-y: scroll;
+}
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header {
@@ -151,6 +154,10 @@ $footer-background-color: $accentcolour;
 
 /* desktop */
 @media (min-width: 1024px) {
+  #navbarMainMenu {
+    max-height: unset;
+    overflow-y: unset;
+  }
 }
 
 /* widescreen */
@@ -264,6 +271,22 @@ i.fa-square-rss {
 
 #mobile-title img {
   max-height: 3rem;
+}
+
+#adv-search.collapsed {
+  display: none;
+}
+
+#adv-search-expand {
+  cursor: pointer;
+}
+
+#adv-search-expand i {
+  color: $primary;
+}
+
+#div_id_order_by {
+  gap: 0.5rem;
 }
 
 // @import "../node_modules/bulma/bulma.sass";
