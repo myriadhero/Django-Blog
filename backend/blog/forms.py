@@ -33,6 +33,7 @@ class AdvancedSearchForm(forms.Form):
         choices=(("relevance", "Relevance"), ("date", "Date")),
         initial="relevance",
         required=False,
+        label="Sort by",
     )
     is_ascending = forms.BooleanField(required=False, initial=False, label="Ascending")
 
@@ -45,8 +46,8 @@ class AdvancedSearchForm(forms.Form):
         self.helper.layout = Layout(
             Field("query", title=""),
             HTML(
-                """<div id="adv-search-expand" class="block">
-                Advanced search options <span class="icon"><i class="fa-solid fa-angle-up"></i></span>
+                """<div id="adv-search-expand" class="block has-text-weight-medium">
+                Advanced Search Options <span class="icon"><i class="fa-solid fa-angle-up"></i></span>
                 </div>"""
             ),
             Div(
