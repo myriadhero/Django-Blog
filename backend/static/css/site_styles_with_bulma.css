@@ -1,8 +1,6 @@
 :root {
   --secondary-theme-color: #fedd90;
   --swiper-theme-color: #d6a496 !important; }
-  :root .navbar {
-    position: sticky; }
 
 .carousel-header {
   position: relative;
@@ -25,6 +23,10 @@
 .desktop-spacer {
   display: none; }
 
+#navbarMainMenu {
+  max-height: calc(100dvh - 9.25rem);
+  overflow-y: scroll; }
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header {
@@ -39,6 +41,11 @@
     display: block; } }
 
 /* desktop */
+@media (min-width: 1024px) {
+  #navbarMainMenu {
+    max-height: unset;
+    overflow-y: unset; } }
+
 /* widescreen */
 /* full hd */
 #desktop-title h1 {
