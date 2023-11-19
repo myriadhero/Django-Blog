@@ -4,11 +4,15 @@
 {% endblock title %}
 {% block content %}
     <div class="section">
-        <h3 class="title is-3 is-uppercase">
+        <h3 class="title is-3 is-uppercase is-flex is-flex-direction-row is-flex-wrap-wrap is-align-items-baseline">
             {% if category %}
-                {{ category.name }} <i class="fa-solid fa-chevron-right is-size-5 has-text-primary mx-2"></i>
+                <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
+                <i class="fa-solid fa-chevron-right is-size-5 has-text-primary mx-2"></i>
+                <a href="{% url "blog:category_subcategory" category.slug subcategory.slug %}"
+                   class="title">{{ subcategory.name }}</a>
+            {% else %}
+                <a href="{{ subcategory.get_absolute_url }}" class="title">{{ subcategory.name }}</a>
             {% endif %}
-            {{ subcategory.name }}
         </h3>
         <div class="level is-mobile">
             <div class="level-left">
