@@ -289,6 +289,10 @@ i.fa-square-rss {
   gap: 0.5rem;
 }
 
+#related-posts {
+  z-index: 3;
+}
+
 // @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";

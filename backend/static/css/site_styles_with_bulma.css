@@ -140,6 +140,9 @@ i.fa-square-rss {
 #div_id_order_by {
   gap: 0.5rem; }
 
+#related-posts {
+  z-index: 3; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {
