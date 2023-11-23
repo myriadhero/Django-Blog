@@ -343,7 +343,6 @@ class Post(ModelMeta, models.Model):
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
         help_text="Tags, comma separated",
-        related_name="tag_posts",
     )
     _metadata = {
         "title": "get_title",
