@@ -3,6 +3,7 @@
 {% load meta %}
 {% load static %}
 {% get_site_identity as site_identity %}
+{% get_adsense_settings as adsense %}
 {% if not meta %}
   {% get_default_meta as meta %}
 {% endif %}
@@ -20,6 +21,14 @@
     </title>
     {% include "meta/meta.html" %}
     {% comment %} end SEO {% endcomment %}
+    {% if adsense.enable_ads %}
+      <meta name="google-adsense-account" content="{{ adsense.client_id }}">
+      {% if adsense.enable_google_smart_ads %}
+        <script async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense.client_id }}"
+                crossorigin="anonymous"></script>
+      {% endif %}
+    {% endif %}
     <link rel="stylesheet" href="{% static 'css/site_styles_with_bulma.css' %}">
     <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">

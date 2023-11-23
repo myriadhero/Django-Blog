@@ -219,3 +219,38 @@ class SocialMedia(models.Model):
 
     def __str__(self):
         return "Social Media"
+
+
+class GoogleAdsense(models.Model):
+    enable_ads = models.BooleanField(
+        default=False,
+        help_text="Enable AdSense ads on the site. Initial verification can be done by meta tag.",
+    )
+    client_id = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="The ID string from the meta tag or script snippet that starts with 'ca-pub-', include 'ca-pub-' in the field",
+    )
+    enable_google_smart_ads = models.BooleanField(
+        default=False,
+        help_text="Enable google smart ads on the site",
+    )
+
+    objects = SingletonManager()
+
+    class Meta:
+        verbose_name_plural = gettext_lazy("Google Adsense")
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(enable_ads=False)
+                | (
+                    models.Q(client_id__isnull=False)
+                    & models.Q(client_id__startswith="ca-pub-")
+                ),
+                name="adsense_client_id_required_if_enable_ads",
+                violation_error_message="Client ID is required if ads are enabled and should start with 'ca-pub-'",
+            )
+        ]
+
+    def __str__(self):
+        return "Google Adsense"

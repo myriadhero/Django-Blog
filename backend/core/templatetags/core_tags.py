@@ -1,4 +1,4 @@
-from core.models import SiteIdentity, SocialMedia, SubscriptionOptions
+from core.models import GoogleAdsense, SiteIdentity, SocialMedia, SubscriptionOptions
 from django import template
 
 register = template.Library()
@@ -22,3 +22,8 @@ def get_social_media_links():
 @register.simple_tag(takes_context=True)
 def get_default_meta(context):
     return SiteIdentity.objects.get_instance().as_meta(context["request"])
+
+
+@register.simple_tag()
+def get_adsense_settings():
+    return GoogleAdsense.objects.get_instance()

@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from .models import AboutPage, SiteIdentity, SocialMedia, SubscriptionOptions
+from .models import (
+    AboutPage,
+    GoogleAdsense,
+    SiteIdentity,
+    SocialMedia,
+    SubscriptionOptions,
+)
 
 
 # Register your models here.
@@ -40,4 +46,9 @@ class SubscriptionOptionsAdmin(SingletonModelAdmin):
 
 @admin.register(SocialMedia)
 class SocialMediaLinksAdmin(SingletonModelAdmin):
+    pass
+
+
+@admin.register(GoogleAdsense)
+class GoogleAdsenseAdmin(SingletonModelAdmin):
     pass
