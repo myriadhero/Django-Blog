@@ -129,9 +129,7 @@ class CategoryDetailView(ListView):
         category = self.get_category()
         context["category"] = category
         context["meta"] = category.as_meta(self.request)
-        context["tags"] = category.get_tags_that_have_at_least_one_post().order_by(
-            "slug"
-        )
+        context["tags"] = category.get_tags_that_have_at_least_one_post()
 
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:

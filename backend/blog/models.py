@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Count, Exists, OuterRef
+from django.db.models.functions import Collate
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -230,7 +231,7 @@ class CategoryTag(ModelMeta, TagBase):
     class Meta:
         verbose_name = gettext_lazy("Tag")
         verbose_name_plural = gettext_lazy("Tags")
-        ordering = ["name"]
+        ordering = [Collate("slug", "C")]
 
     def get_title(self):
         return f"{get_site_identity().title} - {self.name}"
