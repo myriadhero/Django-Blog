@@ -7,7 +7,7 @@ from django.views.generic import DetailView, ListView
 from .forms import AdvancedSearchForm
 from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
 
-POSTS_PER_PAGE = 10
+POSTS_PER_PAGE = 20
 RECOMMENDED_POSTS_NUM = 5
 
 
