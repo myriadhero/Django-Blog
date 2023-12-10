@@ -36,9 +36,10 @@ rmtree(backup_dir)
 print(f"{datetime.now()}: Temp files cleaned up")
 
 # Step 5.1: Remove old backups
+parent_dir = os.path.dirname(backup_dir)
 cut_off_datetime = datetime.now() - td(days=DAYS_TO_KEEP)
 files_in_dir = sorted(
-    (os.path.join(backup_dir, f) for f in os.listdir(backup_dir) if f.endswith(".zip")),
+    (os.path.join(parent_dir, f) for f in os.listdir(parent_dir) if f.endswith(".zip")),
     key=lambda f: os.path.getmtime(f),
 )
 
