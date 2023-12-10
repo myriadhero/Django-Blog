@@ -46,7 +46,7 @@ files_to_delete = [
     f
     for f in files_in_dir[:-MOST_RECENT_TO_KEEP]
     if (file_modified := datetime.fromtimestamp(os.path.getmtime(f))) < cut_off_datetime
-    and file_modified.strftime("%Y%m%d_%H%MUTC") in f
+    and f"blog_backup_{file_modified.strftime('%Y%m%d')}" in f
 ]
 
 for f in files_to_delete:
