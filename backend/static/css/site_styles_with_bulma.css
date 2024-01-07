@@ -143,6 +143,9 @@ i.fa-square-rss {
 #related-posts {
   z-index: 3; }
 
+.menu-border-bottom {
+  border-bottom: 1px var(--secondary-theme-color); }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name {

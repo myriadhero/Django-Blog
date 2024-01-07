@@ -293,6 +293,10 @@ i.fa-square-rss {
   z-index: 3;
 }
 
+.menu-border-bottom {
+  border-bottom: 1px $highlightcolour;
+}
+
 // @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
