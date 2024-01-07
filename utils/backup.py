@@ -36,9 +36,10 @@ rmtree(backup_dir)
 print(f"{datetime.now()}: Temp files cleaned up")
 
 # Step 5.1: Remove old backups
+parent_dir = os.path.dirname(backup_dir)
 cut_off_datetime = datetime.now() - td(days=DAYS_TO_KEEP)
 files_in_dir = sorted(
-    (os.path.join(backup_dir, f) for f in os.listdir(backup_dir) if f.endswith(".zip")),
+    (os.path.join(parent_dir, f) for f in os.listdir(parent_dir) if f.endswith(".zip")),
     key=lambda f: os.path.getmtime(f),
 )
 
@@ -46,7 +47,7 @@ files_to_delete = [
     f
     for f in files_in_dir[:-MOST_RECENT_TO_KEEP]
     if (file_modified := datetime.fromtimestamp(os.path.getmtime(f))) < cut_off_datetime
-    and file_modified.strftime("%Y%m%d_%H%MUTC") in f
+    and f"blog_backup_{file_modified.strftime('%Y%m%d')}" in f
 ]
 
 for f in files_to_delete:
