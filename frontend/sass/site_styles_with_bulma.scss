@@ -22,6 +22,11 @@ $family-sans-serif: $font-family-inter;
 // $family-secondary:
 // $body-family:
 
+$yellow: #fedd90;
+$darkpink: #d6a496;
+$lightpink: #f2d7d0;
+$lightgrey: #f0f0f0;
+
 $bgcolour: #ffffff;
 $textcolour: #000000;
 $accentcolour: #d6a496;
@@ -213,10 +218,6 @@ h1.site-title {
   font-size: 18px !important;
 }
 
-// .content {
-//     font-family: 'Open Sans';
-// }
-
 #alpha-links {
   top: 122px;
   padding: 0.5rem;
@@ -251,10 +252,6 @@ h1.site-title {
 
 a.tag-expander {
   white-space: nowrap;
-}
-
-i.fa-square-rss {
-  color: #f69537;
 }
 
 .text-pink-on-hover {
@@ -317,3 +314,19 @@ i.fa-square-rss {
 @import "../node_modules/bulma/sass/components/card.sass";
 @import "../node_modules/bulma/sass/components/level.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
+
+// these rules will take precedence over Bulma's
+
+.title-search-input {
+  border: none;
+  background: none;
+  outline: none !important;
+  box-shadow: none !important;
+  &::placeholder {
+    color: black;
+  }
+  // &:focus {
+  //   border-bottom: black 1px solid !important;
+  //   text-decoration: underline;
+  // }
+}

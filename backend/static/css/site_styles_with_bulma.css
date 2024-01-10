@@ -113,9 +113,6 @@ h1.site-title {
 a.tag-expander {
   white-space: nowrap; }
 
-i.fa-square-rss {
-  color: #f69537; }
-
 .text-pink-on-hover {
   color: black !important; }
 
@@ -144,7 +141,7 @@ i.fa-square-rss {
   z-index: 3; }
 
 .menu-border-bottom {
-  border-bottom: 1px var(--secondary-theme-color); }
+  border-bottom: 1px #fedd90; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -6283,3 +6280,11 @@ a.navbar-item,
 
 .hero.is-fullheight-with-navbar {
   min-height: calc(100vh - 3.25rem); }
+
+.title-search-input {
+  border: none;
+  background: none;
+  outline: none !important;
+  box-shadow: none !important; }
+  .title-search-input::placeholder {
+    color: black; }
