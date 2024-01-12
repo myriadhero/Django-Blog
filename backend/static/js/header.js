@@ -91,28 +91,18 @@
     addListenersOnPageLoadAndAttachToHtmx
   );
 
-  // minimise desktop logo on scroll
-  const desktopTitle = document.getElementById("desktop-title");
-  let logoMinimised = false;
+  // reveal header bar logo on scroll
   let lastKnownScrollPosition = 0;
   let tickingTime = 0;
   const debounceTime = 200;
-  const positionThreshold = 200;
-  const positionBuffer = 30;
+  const positionThreshold = 120;
+  const headerBarLogo = document.getElementById("header-bar-logo");
 
-  function minimiseDesktopTitleLogo(scrollPosition) {
-    if (!logoMinimised) {
-      if (scrollPosition > positionThreshold) {
-        desktopTitle.classList.add("small-title");
-        logoMinimised = true;
-      }
+  function revealHeaderBarLogo(scrollPosition) {
+    if (scrollPosition > positionThreshold) {
+      headerBarLogo.classList.remove("is-transparent");
     } else {
-      // minimised - we expect a little shrinkage
-      // so the scroll position after could actually be less than the threshold
-      if (scrollPosition + positionBuffer < positionThreshold) {
-        desktopTitle.classList.remove("small-title");
-        logoMinimised = false;
-      }
+      headerBarLogo.classList.add("is-transparent");
     }
   }
 
@@ -122,7 +112,7 @@
       // act immediately, then debounce
       if (Date.now() > tickingTime) {
         lastKnownScrollPosition = window.scrollY;
-        minimiseDesktopTitleLogo(lastKnownScrollPosition);
+        revealHeaderBarLogo(lastKnownScrollPosition);
         tickingTime = Date.now() + debounceTime;
       }
     }
