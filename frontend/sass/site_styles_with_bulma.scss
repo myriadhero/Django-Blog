@@ -169,11 +169,54 @@ $footer-background-color: $accentcolour;
 }
 
 #navbar {
-  top: 40px;
+  top: 0px;
   position: sticky;
   z-index: 50;
   border-bottom: 1px solid $lightpink;
   border-top: 1px solid $lightpink;
+}
+
+#site-warning {
+  border-radius: 10px;
+  width: fit-content;
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+#site-warning-wrapper {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 75px;
+  z-index: 5;
+  width: 100%;
+}
+
+.navbar-item.has-dropdown.is-hoverable.mobile-collapsed > .navbar-dropdown {
+  display: none;
+}
+.navbar-item.has-dropdown.is-hoverable:not(.mobile-collapsed)
+  > .navbar-link::after {
+  transform: rotate(135deg);
+}
+
+.navbar-link:not(.is-arrowless)::after {
+  transition: 0.2s ease-in-out;
+}
+
+.navbar-item.has-dropdown.is-hoverable:hover,
+.navbar-item.has-dropdown.is-hoverable:active .navbar-link {
+  & > .navbar-link {
+    color: $white;
+    background: $accentcolour;
+    &::after {
+      border-color: $white;
+    }
+  }
+  & > .navbar-dropdown > .navbar-item:active,
+  & > .navbar-dropdown > .navbar-item:hover {
+    background: $lightpink;
+    color: $black;
+  }
 }
 
 /* touch devices */
@@ -202,6 +245,23 @@ $footer-background-color: $accentcolour;
   #navbarMainMenu {
     max-height: unset;
     overflow-y: unset;
+  }
+  #navbar {
+    top: 40px;
+  }
+
+  #site-warning-wrapper {
+    top: 40px;
+    width: unset;
+  }
+
+  .navbar-link:not(.is-arrowless)::after {
+    top: unset;
+  }
+
+  .navbar-item.has-dropdown.is-hoverable.mobile-collapsed:hover
+    > .navbar-dropdown {
+    display: revert !important;
   }
 }
 
@@ -235,7 +295,7 @@ h1.site-title {
 }
 
 .navbar-menu > .navbar-item {
-  text-transform: uppercase;
+  // text-transform: uppercase;
   font-size: 20px;
 }
 
@@ -320,16 +380,6 @@ a.tag-expander {
   border-bottom: 1px $highlightcolour;
 }
 
-#site-warning {
-  position: absolute;
-  top: 40px;
-  z-index: 5;
-  border-radius: 10px;
-  width: fit-content;
-  padding: 0.5rem;
-  margin: 0.5rem;
-}
-
 // @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
@@ -366,15 +416,8 @@ a.tag-expander {
   //   text-decoration: underline;
   // }
 }
-.navbar-item.has-dropdown.is-hoverable:hover .navbar-link {
-  color: $white;
-  &::after {
-    border-color: $white;
-  }
-}
 
 .navbar-link:not(.is-arrowless)::after {
   border-radius: 0 3px;
   border-width: 2px;
-  top: unset;
 }

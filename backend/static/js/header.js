@@ -18,6 +18,37 @@
     });
   }
 
+  function makeMobileMenuDropdownsInteractive() {
+    // function toggleChildDropdownVisibility(parentEl) {
+    //   // if viewwidth is less than 1024px, toggle the dropdown visibility, else do nothing
+    //   if (window.innerWidth >= 1024) {
+    //     return;
+    //   }
+    //   parentEl.classList.toggle("mobile-collapsed");
+    // }
+
+    function preventMobileMenuLink(parentEl) {
+      // if viewidth is more than 1024px, follow menu link, else do nothing
+      const menuLink = parentEl.querySelector("a.navbar-link");
+      menuLink.addEventListener("click", (e) => {
+        if (window.innerWidth < 1024) {
+          e.preventDefault();
+          parentEl.classList.toggle("mobile-collapsed");
+        }
+      });
+    }
+
+    const menuItems = document.querySelectorAll(
+      "#navbarMainMenu > .navbar-item.has-dropdown.is-hoverable"
+    );
+    for (let menuItem of menuItems) {
+      preventMobileMenuLink(menuItem);
+      // menuItem.addEventListener("click", () => {
+      //   toggleChildDropdownVisibility(menuItem);
+      // });
+    }
+  }
+
   function makeSearchIconsInteractive() {
     // Search icon in the navbar
     const FOCUSOUTDELAY = 5000;
@@ -72,6 +103,7 @@
   const eventListenersToPlace = [
     makeMobileMenuBurgerInteractive,
     makeSearchIconsInteractive,
+    makeMobileMenuDropdownsInteractive,
   ];
 
   function runEventListenerPlacements() {

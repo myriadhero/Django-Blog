@@ -56,11 +56,49 @@
   overflow-y: scroll; }
 
 #navbar {
-  top: 40px;
+  top: 0px;
   position: sticky;
   z-index: 50;
   border-bottom: 1px solid #f2d7d0;
   border-top: 1px solid #f2d7d0; }
+
+#site-warning {
+  border-radius: 10px;
+  width: fit-content;
+  padding: 0.5rem;
+  margin: 0.5rem; }
+
+#site-warning-wrapper {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 75px;
+  z-index: 5;
+  width: 100%; }
+
+.navbar-item.has-dropdown.is-hoverable.mobile-collapsed > .navbar-dropdown {
+  display: none; }
+
+.navbar-item.has-dropdown.is-hoverable:not(.mobile-collapsed) > .navbar-link::after {
+  transform: rotate(135deg); }
+
+.navbar-link:not(.is-arrowless)::after {
+  transition: 0.2s ease-in-out; }
+
+.navbar-item.has-dropdown.is-hoverable:hover > .navbar-link,
+.navbar-item.has-dropdown.is-hoverable:active .navbar-link > .navbar-link {
+  color: #ffffff;
+  background: #d6a496; }
+  .navbar-item.has-dropdown.is-hoverable:hover > .navbar-link::after,
+  .navbar-item.has-dropdown.is-hoverable:active .navbar-link > .navbar-link::after {
+    border-color: #ffffff; }
+
+.navbar-item.has-dropdown.is-hoverable:hover > .navbar-dropdown > .navbar-item:active,
+.navbar-item.has-dropdown.is-hoverable:hover > .navbar-dropdown > .navbar-item:hover,
+.navbar-item.has-dropdown.is-hoverable:active .navbar-link > .navbar-dropdown > .navbar-item:active,
+.navbar-item.has-dropdown.is-hoverable:active .navbar-link > .navbar-dropdown > .navbar-item:hover {
+  background: #f2d7d0;
+  color: #000000; }
 
 /* touch devices */
 @media (min-width: 769px) {
@@ -79,7 +117,16 @@
 @media (min-width: 1024px) {
   #navbarMainMenu {
     max-height: unset;
-    overflow-y: unset; } }
+    overflow-y: unset; }
+  #navbar {
+    top: 40px; }
+  #site-warning-wrapper {
+    top: 40px;
+    width: unset; }
+  .navbar-link:not(.is-arrowless)::after {
+    top: unset; }
+  .navbar-item.has-dropdown.is-hoverable.mobile-collapsed:hover > .navbar-dropdown {
+    display: revert !important; } }
 
 /* widescreen */
 /* full hd */
@@ -101,7 +148,6 @@ h1.site-title {
   font-family: "Overpass", sans-serif; }
 
 .navbar-menu > .navbar-item {
-  text-transform: uppercase;
   font-size: 20px; }
 
 .navbar-dropdown {
@@ -166,15 +212,6 @@ a.tag-expander {
 
 .menu-border-bottom {
   border-bottom: 1px #fedd90; }
-
-#site-warning {
-  position: absolute;
-  top: 40px;
-  z-index: 5;
-  border-radius: 10px;
-  width: fit-content;
-  padding: 0.5rem;
-  margin: 0.5rem; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -6322,12 +6359,6 @@ a.navbar-item,
   .title-search-input::placeholder {
     color: black; }
 
-.navbar-item.has-dropdown.is-hoverable:hover .navbar-link {
-  color: #ffffff; }
-  .navbar-item.has-dropdown.is-hoverable:hover .navbar-link::after {
-    border-color: #ffffff; }
-
 .navbar-link:not(.is-arrowless)::after {
   border-radius: 0 3px;
-  border-width: 2px;
-  top: unset; }
+  border-width: 2px; }
