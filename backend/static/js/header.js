@@ -19,14 +19,6 @@
   }
 
   function makeMobileMenuDropdownsInteractive() {
-    // function toggleChildDropdownVisibility(parentEl) {
-    //   // if viewwidth is less than 1024px, toggle the dropdown visibility, else do nothing
-    //   if (window.innerWidth >= 1024) {
-    //     return;
-    //   }
-    //   parentEl.classList.toggle("mobile-collapsed");
-    // }
-
     function preventMobileMenuLink(parentEl) {
       // if viewidth is more than 1024px, follow menu link, else do nothing
       const menuLink = parentEl.querySelector("a.navbar-link");
@@ -43,66 +35,12 @@
     );
     for (let menuItem of menuItems) {
       preventMobileMenuLink(menuItem);
-      // menuItem.addEventListener("click", () => {
-      //   toggleChildDropdownVisibility(menuItem);
-      // });
-    }
-  }
-
-  function makeSearchIconsInteractive() {
-    // Search icon in the navbar
-    const FOCUSOUTDELAY = 5000;
-
-    const searchNavParentEls = document.querySelectorAll(".title-search");
-    for (let searchNav of searchNavParentEls) {
-      const searchInput = searchNav.querySelector(".title-search-input");
-      const searchForm = searchNav.querySelector(".title-search-form");
-      const searchIcon = searchNav.querySelector(".title-search-icon");
-
-      let focusOutTimeout = null;
-
-      function isActive(elem) {
-        return document.activeElement == elem;
-      }
-
-      function toggleSearchElemVisibility() {
-        searchIcon.classList.toggle("is-hidden");
-        searchForm.classList.toggle("is-hidden");
-      }
-
-      function revealFormOnClick() {
-        toggleSearchElemVisibility();
-        searchInput.focus();
-        searchNav.removeEventListener("click", revealFormOnClick);
-      }
-
-      function hideFormOnFocusOut() {
-        if (!isActive(searchInput)) {
-          toggleSearchElemVisibility();
-          focusOutTimeout = null;
-          searchNav.addEventListener("click", revealFormOnClick);
-        }
-      }
-
-      function resetFocusOutTimeoutOnFocus() {
-        if (focusOutTimeout != null) {
-          clearTimeout(focusOutTimeout);
-          focusOutTimeout = null;
-        }
-      }
-
-      searchNav.addEventListener("click", revealFormOnClick);
-      searchInput.addEventListener("focusout", () => {
-        focusOutTimeout = setTimeout(hideFormOnFocusOut, FOCUSOUTDELAY);
-      });
-      searchInput.addEventListener("focus", resetFocusOutTimeoutOnFocus);
     }
   }
 
   // place all eventListeners here
   const eventListenersToPlace = [
     makeMobileMenuBurgerInteractive,
-    makeSearchIconsInteractive,
     makeMobileMenuDropdownsInteractive,
   ];
 

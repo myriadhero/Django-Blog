@@ -433,3 +433,55 @@ a.tag-expander {
   border-radius: 0 3px;
   border-width: 2px;
 }
+
+.navbar-burger {
+  margin-left: unset;
+  margin-right: 0.5em;
+  & > span {
+    left: calc(50% - 12px);
+    width: 24px;
+    height: 2px;
+
+    &:nth-child(1) {
+      top: calc(50% - 9px);
+    }
+    &:nth-child(3) {
+      top: calc(50% + 7px);
+    }
+  }
+  &.is-active > span {
+    &:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    &:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+}
+
+.navbar-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  height: 64px;
+  width: 40px;
+  &:has(input:focus) {
+    background: $yellow;
+    margin-left: 0;
+    margin-right: auto;
+    width: 85%;
+  }
+  &input {
+    width: 0;
+    &:focus {
+      width: 80vw;
+    }
+  }
+}
+
+.navbar-brand {
+  min-height: 64px;
+  &:has(.title-search-input:focus) #mobile-title {
+    display: none;
+  }
+}
