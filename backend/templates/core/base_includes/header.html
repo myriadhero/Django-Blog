@@ -78,11 +78,11 @@
     <nav class="navbar is-justify-content-center container"
          role="navigation"
          aria-label="main navigation">
-        <div class="navbar-brand is-align-items-center">
-            <a class="navbar-item is-hidden-desktop"
+        <div class="navbar-brand is-align-items-center is-hidden-desktop">
+            <a class="navbar-item"
                id="mobile-title"
                href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
-            <div class="navbar-search is-hidden-desktop">
+            <div class="navbar-search">
                 <form action="{% url 'blog:post_search' %}"
                       method="get"
                       class="control has-icons-left title-search-form">
@@ -186,14 +186,3 @@
         </div>
     </nav>
 </div>
-{% comment %} <div id="center-ruler"></div>
-<style>
-    #center-ruler{
-        position:absolute;
-        left:50%;
-        border:1px solid red;
-        width:1px;
-        height:100vh;
-        z-index: 300;
-    }
-</style> {% endcomment %}
