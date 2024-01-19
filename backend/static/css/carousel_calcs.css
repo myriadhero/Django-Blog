@@ -10,7 +10,7 @@
     --carousel-container-padding: 3rem;
     --swiper-pagination-top-fraction: 1.09;
     --carousel-card-height: calc(4 * (100vw - var(--scrollbar-width) - (var(--space-between-swiper-cards) * (var(--number-of-cards) - 1) + var(--carousel-container-padding)))) / (3 * var(--number-of-cards));
-    --swiper-pagination-top: calc(var(--swiper-pagination-top-fraction) * var(--carousel-card-height));
+    --swiper-pagination-top: 3rem;
 
     --swiper-navigation-arrows-top-fraction: 0.5;
     --swiper-navigation-arrows-padding: 40px;
@@ -55,8 +55,4 @@
     overflow: hidden;
 }
 
-.swiper .swiper-button-next,.swiper-button-prev {
-    padding: var(--swiper-navigation-arrows-padding);
-    --shadow-colour: rgb(137 137 137);
-    text-shadow: var(--shadow-colour) 0px 0px 8px,var(--shadow-colour) 0px 0px 8px,var(--shadow-colour) 0px 0px 8px; 
-}
+

@@ -18,7 +18,33 @@
             <!-- Slider main container -->
             <div class="swiper">
                 <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
+                <div class="pagination-wrapper">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+                <style>
+                    .pagination-wrapper {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 6rem;
+                    }
+                    .swiper-button-prev,
+                    .swiper-button-next,
+                    .swiper-pagination {
+                        position:unset;
+                        transform: translateX(0) !important;
+                    }
+                    .swiper-button-prev,
+                    .swiper-button-next{
+                        margin:0;
+                    }
+                    .swiper{
+                        top: -6rem;
+                    }
+
+                </style>
                 <!-- If we need scrollbar -->
                 {% comment %} <div class="swiper-scrollbar"></div> {% endcomment %}
                 <!-- Additional required wrapper -->
@@ -73,9 +99,6 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <!-- If we need navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         </div>
     {% endfor %}

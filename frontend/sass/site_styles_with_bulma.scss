@@ -229,19 +229,19 @@ $footer-background-color: $accentcolour;
 
 /* touch devices */
 @media (min-width: 769px) {
-  .carousel-header {
-    justify-content: center;
-  }
+  // .carousel-header {
+  //   justify-content: center;
+  // }
 
   .carousel-header .category-name {
     font-size: 2.5rem;
   }
 
-  .carousel-header .carousel-view-all {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.25rem;
-  }
+  // .carousel-header .carousel-view-all {
+  //   position: absolute;
+  //   right: 0.5rem;
+  //   bottom: 0.25rem;
+  // }
 
   .desktop-spacer {
     display: block;
