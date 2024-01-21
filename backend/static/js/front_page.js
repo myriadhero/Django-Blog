@@ -1,46 +1,52 @@
 (function () {
-  const swiper = new Swiper(".swiper", {
-    // Optional parameters
-    // Default parameters
-    slidesPerView: 2,
-    spaceBetween: 30,
-    // Responsive breakpoints
-    breakpoints: {
-      // touch devices
-      769: {
-        slidesPerView: 3,
+  const allCarousels = document.querySelectorAll(".swiper");
+
+  for (let carousel of allCarousels) {
+    const carouselSelector = "#" + carousel.id;
+
+    const swiper = new Swiper(carouselSelector, {
+      // Optional parameters
+      // Default parameters
+      slidesPerView: 2,
+      spaceBetween: 30,
+      // Responsive breakpoints
+      breakpoints: {
+        // touch devices
+        769: {
+          slidesPerView: 3,
+        },
+        // desktop
+        1024: {
+          slidesPerView: 4,
+        },
+        // widescreen
+        1216: {
+          slidesPerView: 5,
+        },
       },
-      // desktop
-      1024: {
-        slidesPerView: 4,
+
+      // If we need pagination
+      pagination: {
+        el: `${carouselSelector} .swiper-pagination`,
+        clickable: true,
+        dynamicBullets: true,
+        dynamicMainBullets: 3,
       },
-      // widescreen
-      1216: {
-        slidesPerView: 5,
+
+      // Navigation arrows
+      navigation: {
+        nextEl: `${carouselSelector} .swiper-button-next`,
+        prevEl: `${carouselSelector} .swiper-button-prev`,
       },
-    },
 
-    // If we need pagination
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-      dynamicBullets: true,
-      dynamicMainBullets: 3,
-    },
+      // And if we need scrollbar
+      // scrollbar: {
+      //   el: '.swiper-scrollbar',
+      // },
 
-    // Navigation arrows
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-
-    // And if we need scrollbar
-    // scrollbar: {
-    //   el: '.swiper-scrollbar',
-    // },
-
-    freemode: true,
-  });
+      freemode: true,
+    });
+  }
 })();
 
 (function get_scrollbar_width() {
