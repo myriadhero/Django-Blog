@@ -58,8 +58,10 @@
     <div>
       {% include "core/base_includes/header.html" %}
       <div class="py-4 desktop-spacer">{% comment %} spacer div {% endcomment %}</div>
-      {% block content %}
-      {% endblock content %}
+      <div class="container">
+        {% block content %}
+        {% endblock content %}
+      </div>
     </div>
     {% get_subscription_options as sub_options %}
     {% if sub_options.show_kofi_form_in_footer %}
@@ -107,11 +109,4 @@
     });
     </script>
   {% endif %}
-  {% comment %} <div style="position:absolute;
-              width:1px;
-              background:yellow;
-              z-index:500;
-              height:100vw;
-              top:0px;
-              left:50%"></div>
-</html> {% endcomment %}
+</html>

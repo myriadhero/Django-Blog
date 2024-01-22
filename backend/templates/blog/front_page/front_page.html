@@ -13,43 +13,10 @@
         <div class="section">
             <!-- Slider main container -->
             <div id="carousel-{{ forloop.counter0 }}" class="swiper">
-                <div class="carousel-header is-mobile">
+                <div class="carousel-header">
                     <a class="title category-name has-text-weight-normal "
                        href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                    <a href="{{ category.get_absolute_url }}"
-                       class="has-text-black carousel-view-all"><span class="plus-sign"></span><span class="ml-2">View All</span></a>
-                    <style>
-                        span.plus-sign{
-                            height: 16px;
-                            width: 16px;
-                            position: relative;
-                            display: inline-block;
-                        }
-                        span.plus-sign:before{
-                            content: "";
-                            position: absolute;
-                            height: 2px;
-                            width: 100%;
-                            background-color: black;
-                            top: 7px;
-                            border-radius:2px;
-                        }
-                        span.plus-sign:after{
-                            content: "";
-                            position: absolute;
-                            height: 100%;
-                            width: 2px;
-                            background-color: black;
-                            left: 7px;
-                            border-radius:2px;
-                        }
-                        .carousel-view-all:hover span{
-                            color: #394a50;
-                        }
-                        .carousel-view-all:hover span.plus-sign:before, .carousel-view-all:hover span.plus-sign:after{
-                            background: #394a50;
-                        }
-                    </style>
+                    <a href="{{ category.get_absolute_url }}" class="carousel-view-all"><span>&#xFF0B</span><span class="ml-2">View All</span></a>
                 </div>
                 <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
                 <!-- If we need scrollbar -->

@@ -36,24 +36,24 @@
 }
 
 .carousel-header {
-  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  margin-inline: 0.5rem;
 }
-
 .carousel-header .category-name {
   font-size: 2rem;
   margin-bottom: 0px !important;
 }
-
 .carousel-header .carousel-view-all {
   font-size: 1.25rem;
+  color: #000000;
+}
+.carousel-header .carousel-view-all:hover span {
+  color: #394a50;
 }
 
 .desktop-spacer {

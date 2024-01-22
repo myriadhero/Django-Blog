@@ -26,6 +26,7 @@
   justify-content: center;
   align-items: center;
   position: unset;
+  margin-top: 1rem;
 }
 
 .swiper-button-next,
@@ -69,7 +70,6 @@
 /* desktop */
 @media (min-width: 1024px) {
   :root {
-    --swiper-pagination-bullet-horizontal-gap: 20px;
     --number-of-cards: 4;
     --carousel-container-width: 864px;
     --swiper-pagination-top-fraction: 1.08;
@@ -86,12 +86,13 @@
     top: 2.5rem;
     left: 50%;
     transform: translateX(-50%);
+    margin: 0;
   }
 }
 /* widescreen */
 @media (min-width: 1216px) {
   :root {
-    --swiper-pagination-bullet-horizontal-gap: 25px;
+    --swiper-pagination-bullet-horizontal-gap: 20px;
     --number-of-cards: 5;
     --carousel-container-width: 1056px;
   }
@@ -99,7 +100,7 @@
 /* full hd */
 @media (min-width: 1408px) {
   :root {
-    --swiper-pagination-bullet-horizontal-gap: 30px;
+    --swiper-pagination-bullet-horizontal-gap: 25px;
     --carousel-container-width: 1248px;
   }
 }
