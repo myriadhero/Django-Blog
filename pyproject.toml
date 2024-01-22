@@ -1,0 +1,12 @@
+[tool.django-stubs]
+# Point this to your settings module, e.g. "myproject.settings"
+django_settings_module = "backend/blogsite.settings"
+
+[tool.djlint]
+indent = 2
+
+[tool.ruff]
+extend-exclude = ["migrations"]
+extend-select = ["A", "B", "C4", "C90", "COM", "DJ", "I", "LOG", "N", "PTH", "RUF", "SIM", "W"]
+line-length = 119
+target-version = "py312"
