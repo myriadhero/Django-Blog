@@ -18,7 +18,7 @@ class SingletonManager(models.Manager):
 class SiteIdentity(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
     seo_description = models.TextField(
-        blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long"
+        blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long",
     )
     seo_keywords = models.CharField(
         max_length=250,
@@ -26,7 +26,7 @@ class SiteIdentity(ModelMeta, models.Model):
         help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
     )
     logo_title = models.ImageField(
-        upload_to="site_identity/", blank=True, help_text="Used for the main top logo"
+        upload_to="site_identity/", blank=True, help_text="Used for the main top logo",
     )
     logo_square = models.ImageField(
         upload_to="site_identity/",
@@ -39,11 +39,12 @@ class SiteIdentity(ModelMeta, models.Model):
         upload_to="site_identity/",
         blank=True,
         validators=[
-            FileExtensionValidator(allowed_extensions=["jpg", "png", "svg", "gif"])
+            FileExtensionValidator(allowed_extensions=["jpg", "png", "svg", "gif"]),
         ],
         help_text="This logo is used as a placeholder pic for carousel cards. Can be jpg png svg gif, use .svg for best fit, do not upload untrusted files!",
     )
-    footer = RichTextField(blank=True)
+    footer = RichTextField(blank=True, help_text="Goes above the copyright message")
+    footer_copy_message = models.CharField(max_length=250, blank=True, help_text="Goes next to copyright eg \"© SiteName Year - Message\"")
     header_message = models.TextField(
         blank=True,
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
@@ -72,6 +73,19 @@ class SiteIdentity(ModelMeta, models.Model):
 
     objects = SingletonManager()
 
+    class Meta:
+        verbose_name_plural = gettext_lazy("Site Identity")
+
+    def __str__(self):
+        return f"Site Identity - {self.title}"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(SiteIdentity, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
     def get_logo_square_url(self):
         return self.logo_square.url if self.logo_square else None
 
@@ -86,18 +100,7 @@ class SiteIdentity(ModelMeta, models.Model):
             else None
         )
 
-    class Meta:
-        verbose_name_plural = gettext_lazy("Site Identity")
 
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super(SiteIdentity, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        pass
-
-    def __str__(self):
-        return f"Site Identity - {self.title}"
 
 
 def get_site_identity() -> SiteIdentity:
@@ -122,6 +125,16 @@ class AboutPage(ModelMeta, models.Model):
     class Meta:
         verbose_name_plural = gettext_lazy("About Page")
 
+    def __str__(self):
+        return f"About Page - {self.title}"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(AboutPage, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
     def get_title(self):
         return f"{get_site_identity().title} - {self.title}"
 
@@ -134,15 +147,7 @@ class AboutPage(ModelMeta, models.Model):
     def get_seo_description(self):
         return get_site_identity().seo_description
 
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super(AboutPage, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        pass
-
-    def __str__(self):
-        return f"About Page - {self.title}"
 
 
 class SubscriptionOptions(models.Model):
@@ -169,6 +174,9 @@ class SubscriptionOptions(models.Model):
     class Meta:
         verbose_name_plural = gettext_lazy("Subscription Options")
 
+    def __str__(self):
+        return "Subscription Options"
+
     def save(self, *args, **kwargs):
         self.pk = 1
         super(SubscriptionOptions, self).save(*args, **kwargs)
@@ -183,17 +191,13 @@ class SubscriptionOptions(models.Model):
             or self.show_kofi_link_in_head_menu
         ) and not self.kofi_account_name:
             raise ValidationError(
-                "Kofi account name is required to turn on kofi widgets"
+                "Kofi account name is required to turn on kofi widgets",
             )
         return super().clean()
 
-    def __str__(self):
-        return "Subscription Options"
-
 
 class SocialMedia(models.Model):
-    class Meta:
-        verbose_name_plural = gettext_lazy("Social Media")
+
 
     youtube_url = models.URLField(blank=True)
     youtube_name = models.CharField(
@@ -209,6 +213,11 @@ class SocialMedia(models.Model):
     )
 
     objects = SingletonManager()
+    class Meta:
+        verbose_name_plural = gettext_lazy("Social Media")
+
+    def __str__(self):
+        return "Social Media"
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -216,9 +225,6 @@ class SocialMedia(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
-
-    def __str__(self):
-        return "Social Media"
 
 
 class GoogleAdsense(models.Model):
@@ -240,7 +246,7 @@ class GoogleAdsense(models.Model):
 
     class Meta:
         verbose_name_plural = gettext_lazy("Google Adsense")
-        constraints = [
+        constraints = (
             models.CheckConstraint(
                 check=models.Q(enable_ads=False)
                 | (
@@ -249,8 +255,8 @@ class GoogleAdsense(models.Model):
                 ),
                 name="adsense_client_id_required_if_enable_ads",
                 violation_error_message="Client ID is required if ads are enabled and should start with 'ca-pub-'",
-            )
-        ]
+            ),
+        )
 
     def __str__(self):
         return "Google Adsense"

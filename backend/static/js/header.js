@@ -18,60 +18,30 @@
     });
   }
 
-  function makeSearchIconsInteractive() {
-    // Search icon in the navbar
-    const FOCUSOUTDELAY = 5000;
-
-    const searchNavParentEls = document.querySelectorAll(".title-search");
-    for (let searchNav of searchNavParentEls) {
-      const searchInput = searchNav.querySelector(".title-search-input");
-      const searchForm = searchNav.querySelector(".title-search-form");
-      const searchIcon = searchNav.querySelector(".title-search-icon");
-
-      let focusOutTimeout = null;
-
-      function isActive(elem) {
-        return document.activeElement == elem;
-      }
-
-      function toggleSearchElemVisibility() {
-        searchIcon.classList.toggle("is-hidden");
-        searchForm.classList.toggle("is-hidden");
-      }
-
-      function revealFormOnClick() {
-        toggleSearchElemVisibility();
-        searchInput.focus();
-        searchNav.removeEventListener("click", revealFormOnClick);
-      }
-
-      function hideFormOnFocusOut() {
-        if (!isActive(searchInput)) {
-          toggleSearchElemVisibility();
-          focusOutTimeout = null;
-          searchNav.addEventListener("click", revealFormOnClick);
+  function makeMobileMenuDropdownsInteractive() {
+    function preventMobileMenuLink(parentEl) {
+      // if viewidth is more than 1024px, follow menu link, else do nothing
+      const menuLink = parentEl.querySelector("a.navbar-link");
+      menuLink.addEventListener("click", (e) => {
+        if (window.innerWidth < 1024) {
+          e.preventDefault();
+          parentEl.classList.toggle("mobile-collapsed");
         }
-      }
-
-      function resetFocusOutTimeoutOnFocus() {
-        if (focusOutTimeout != null) {
-          clearTimeout(focusOutTimeout);
-          focusOutTimeout = null;
-        }
-      }
-
-      searchNav.addEventListener("click", revealFormOnClick);
-      searchInput.addEventListener("focusout", () => {
-        focusOutTimeout = setTimeout(hideFormOnFocusOut, FOCUSOUTDELAY);
       });
-      searchInput.addEventListener("focus", resetFocusOutTimeoutOnFocus);
+    }
+
+    const menuItems = document.querySelectorAll(
+      "#navbarMainMenu > .navbar-item.has-dropdown.is-hoverable"
+    );
+    for (let menuItem of menuItems) {
+      preventMobileMenuLink(menuItem);
     }
   }
 
   // place all eventListeners here
   const eventListenersToPlace = [
     makeMobileMenuBurgerInteractive,
-    makeSearchIconsInteractive,
+    makeMobileMenuDropdownsInteractive,
   ];
 
   function runEventListenerPlacements() {
@@ -91,28 +61,18 @@
     addListenersOnPageLoadAndAttachToHtmx
   );
 
-  // minimise desktop logo on scroll
-  const desktopTitle = document.getElementById("desktop-title");
-  let logoMinimised = false;
+  // reveal header bar logo on scroll
   let lastKnownScrollPosition = 0;
   let tickingTime = 0;
   const debounceTime = 200;
-  const positionThreshold = 200;
-  const positionBuffer = 30;
+  const positionThreshold = 120;
+  const headerBarLogo = document.getElementById("header-bar-logo");
 
-  function minimiseDesktopTitleLogo(scrollPosition) {
-    if (!logoMinimised) {
-      if (scrollPosition > positionThreshold) {
-        desktopTitle.classList.add("small-title");
-        logoMinimised = true;
-      }
+  function revealHeaderBarLogo(scrollPosition) {
+    if (scrollPosition > positionThreshold) {
+      headerBarLogo.classList.remove("is-transparent");
     } else {
-      // minimised - we expect a little shrinkage
-      // so the scroll position after could actually be less than the threshold
-      if (scrollPosition + positionBuffer < positionThreshold) {
-        desktopTitle.classList.remove("small-title");
-        logoMinimised = false;
-      }
+      headerBarLogo.classList.add("is-transparent");
     }
   }
 
@@ -122,7 +82,7 @@
       // act immediately, then debounce
       if (Date.now() > tickingTime) {
         lastKnownScrollPosition = window.scrollY;
-        minimiseDesktopTitleLogo(lastKnownScrollPosition);
+        revealHeaderBarLogo(lastKnownScrollPosition);
         tickingTime = Date.now() + debounceTime;
       }
     }

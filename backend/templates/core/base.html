@@ -30,7 +30,6 @@
       {% endif %}
     {% endif %}
     <link rel="stylesheet" href="{% static 'css/site_styles_with_bulma.css' %}">
-    <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=Inter:wght@400;500;600&family=Mallanna&family=Karla:wght@400;500;600;700&family=Overpass:wght@400;500;600;700&display=swap"
@@ -56,11 +55,13 @@
     {% endblock head_links %}
   </head>
   <body>
-    <div class="container">
+    <div>
       {% include "core/base_includes/header.html" %}
       <div class="py-4 desktop-spacer">{% comment %} spacer div {% endcomment %}</div>
-      {% block content %}
-      {% endblock content %}
+      <div class="container">
+        {% block content %}
+        {% endblock content %}
+      </div>
     </div>
     {% get_subscription_options as sub_options %}
     {% if sub_options.show_kofi_form_in_footer %}
@@ -86,9 +87,9 @@
         {% if site_identity.footer %}{{ site_identity.footer|safe }}{% endif %}
       </div>
       <div>
-        <strong>
-          <i class="fa-solid fa-copyright"></i> {{ site_identity.title }} {% now "Y" %}.
-        </strong>
+        <span>ⓒ {{ site_identity.title }} {% now "Y" %}
+          {% if site_identity.footer_copy_message %}- {{ site_identity.footer_copy_message }}{% endif %}
+        </span>
       </div>
     </footer>
     {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
@@ -103,8 +104,8 @@
     kofiWidgetOverlay.draw('{{ sub_options.kofi_account_name }}', {
       'type': 'floating-chat',
       'floating-chat.donateButton.text': 'Support me',
-      'floating-chat.donateButton.background-color': '#00b9fe',
-      'floating-chat.donateButton.text-color': '#fff'
+      'floating-chat.donateButton.background-color': '#f9f9f9',
+      'floating-chat.donateButton.text-color': '#00b9fe'
     });
     </script>
   {% endif %}

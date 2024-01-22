@@ -1,0 +1,18 @@
+<div class="cat-tag-filter is-flex is-align-items-baseline is-justify-content-flex-start mb-5">
+    <label for="cat_tag_select" class="pr-3">Filter by:</label>
+    <div class="select">
+        <select name="tag"
+                id="cat_tag_select"
+                hx-get="{{ request.path }}"
+                hx-target="#list-items"
+                data-url="{{ request.path }}"
+                hx-swap="outerHTML">
+            <option value="">All</option>
+            {% for tag in tags %}
+                <option value="{{ tag.slug }}"
+                        {% if selected_tag and tag == selected_tag %}selected{% endif %}>{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+{% comment %} {% if subcategory %}{% url 'blog:category_subcategory' category.slug subcategory.slug %}{% else %}{{ category.get_absolute_url }}{% endif %} {% endcomment %}

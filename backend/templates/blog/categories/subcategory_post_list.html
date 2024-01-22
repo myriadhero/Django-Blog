@@ -14,27 +14,7 @@
                 <a href="{{ subcategory.get_absolute_url }}" class="title">{{ subcategory.name }}</a>
             {% endif %}
         </h3>
-        <div class="level is-mobile">
-            <div class="level-left">
-                <label for="cat_tag_select" class="level-item">Filter by:</label>
-                <div class="select level-item">
-                    <select name="tag"
-                            id="cat_tag_select"
-                            hx-get="{{ subcategory.get_absolute_url }}"
-                            hx-target="#list-items"
-                            data-url="{{ subcategory.get_absolute_url }}"
-                            hx-swap="outerHTML">
-                        <option value="">All</option>
-                        {% for tag in tags %}
-                            <option value="{{ tag.slug }}"
-                                    {% if selected_tag and tag == selected_tag %}selected{% endif %}>
-                                {{ tag.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
+        {% include "blog/categories/includes/filter_by_tag.html" %}
         {% include "blog/post/includes/post_list.html" %}
     </div>
 {% endblock content %}

@@ -1,24 +1,24 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 {% load static %}
-{% block title %}{{ site_identity.title }}{% endblock %}
+{% block title %}
+    {{ site_identity.title }}
+{% endblock title %}
 {% block head_links %}
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-{% endblock %}
+          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
+{% endblock head_links %}
 {% block content %}
     {% for category in categories %}
         <div class="section">
-            <div class="carousel-header">
-                <a class="title category-name has-text-weight-normal"
-                   href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                <a href="{{ category.get_absolute_url }}"
-                   class="has-text-primary carousel-view-all">View All</a>
-            </div>
-            <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
             <!-- Slider main container -->
-            <div class="swiper">
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
+            <div id="carousel-{{ forloop.counter0 }}" class="swiper">
+                <div class="carousel-header">
+                    <a class="title category-name has-text-weight-normal "
+                       href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                    <a href="{{ category.get_absolute_url }}" class="carousel-view-all"><span>&#xFF0B</span><span class="ml-2">View All</span></a>
+                </div>
+                <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
                 <!-- If we need scrollbar -->
                 {% comment %} <div class="swiper-scrollbar"></div> {% endcomment %}
                 <!-- Additional required wrapper -->
@@ -73,15 +73,18 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <!-- If we need navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+                <!-- If we need pagination -->
+                <div class="pagination-wrapper">
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination mx-4"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             </div>
         </div>
     {% endfor %}
     {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
-{% endblock %}
+{% endblock content %}
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{% static 'js/front_page.js' %}"></script>
-{% endblock %}
+{% endblock scripts %}

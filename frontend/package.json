@@ -6,14 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "patch-package",
-    "css-build": "node-sass --omit-source-map-url sass/site_styles_with_bulma.scss ../backend/static/css/site_styles_with_bulma.css",
+    "css-build": "sass --no-source-map sass/site_styles_with_bulma.scss:../backend/static/css/site_styles_with_bulma.css sass/carousel_calcs.scss:../backend/static/css/carousel_calcs.css",
     "css-watch": "npm run css-build -- --watch",
     "start": "npm run css-watch"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "bulma": "^0.9.4",
-    "node-sass": "^8.0.0"
+    "sass": "^1.70.0"
   }
 }
