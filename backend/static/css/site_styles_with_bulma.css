@@ -8,6 +8,9 @@
   z-index: 100;
   height: 40px;
 }
+#header-bar > div {
+  position: relative;
+}
 
 #header-bar .navbar-item {
   padding: 0 0.75rem;

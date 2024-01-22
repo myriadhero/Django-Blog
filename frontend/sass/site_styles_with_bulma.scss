@@ -117,6 +117,9 @@ $footer-background-color: $lightpink;
   background: $yellow;
   z-index: 100;
   height: $header-bar-height;
+  & > div {
+    position: relative;
+  }
 }
 #header-bar .navbar-item {
   padding: 0 0.75rem;

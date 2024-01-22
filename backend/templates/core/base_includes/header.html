@@ -1,188 +1,196 @@
 {% load blog_tags %}
 {% load core_tags %}
 <div id="header-bar" class="is-uppercase sticky is-hidden-touch">
-    <div style="position:relative;">
-        <div class="container is-flex is-justify-content-space-between is-align-items-center">
-            <div class="icon-text navbar-item title-search">
-                <form action="{% url 'blog:post_search' %}"
-                      method="get"
-                      class="control has-icons-left title-search-form">
-                    <span class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="100"
-                             height="100"
-                             viewBox="0 0 100 100"
-                             version="1.1">
-                            <circle cx="50" cy="50" r="25" stroke="black" stroke-width="5" fill="none" />
-                            <rect x="70" y="70" width="15" height="5" fill="black" transform="rotate(45, 75, 75)" />
-                        </svg>
-                    </span>
-                    <input type="text"
-                           class="input title-search-input"
-                           placeholder="SEARCH"
-                           name="query">
-                </form>
-            </div>
-            <div class="is-flex is-flex-direction-row is-align-items-baseline">
-                {% get_social_media_links as sm_links %}
-                <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
-                {% if sm_links.twitter_url %}
-                    <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
-                        <i class="fa-brands fa-x-twitter"></i>
-                    </a>
-                {% endif %}
-                {% if sm_links.youtube_url %}
-                    <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
-                        <i class="fa-brands fa-youtube"></i>
-                    </a>
-                {% endif %}
-                <a class="navbar-item" href="{% url "blog:post_feed" %}" target="_blank">
-                    <i class="fa-solid fa-square-rss"></i>
-                </a>
-                {% get_subscription_options as sub_options %}
-                {% if sub_options.show_kofi_link_in_head_menu %}
-                    <a class="navbar-item"
-                       href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
-                       data-filter="ko-fi"
-                       target="_blank">
-                        <span class="icon-text is-align-items-baseline">
-                            {% comment %} {% load static %}
-                            <img src="{% static 'kofi/kofi_logo_s.png' %}"
-                                 class="icon"
-                                 alt="kofi icon"> {% endcomment %}
-                            <span class="icon"><i class="fa-solid fa-mug-hot"></i></span>
-                            <span>Ko-fi</span>
-                        </span>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-        <div id="header-bar-logo" class="is-transparent">{% include "core/base_includes/logo_or_text_title.html" %}</div>
+  <div>
+    <div class="container is-flex is-justify-content-space-between is-align-items-center">
+      <div class="icon-text navbar-item title-search">
+        <form action="{% url 'blog:post_search' %}"
+              method="get"
+              class="control has-icons-left title-search-form">
+          <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="100"
+                 height="100"
+                 viewBox="0 0 100 100"
+                 version="1.1">
+              <circle cx="50" cy="50" r="25" stroke="black" stroke-width="5" fill="none" />
+              <rect x="70" y="70" width="15" height="5" fill="black" transform="rotate(45, 75, 75)" />
+            </svg>
+          </span>
+          <input type="text"
+                 class="input title-search-input"
+                 placeholder="SEARCH"
+                 name="query">
+        </form>
+      </div>
+      <div class="is-flex is-flex-direction-row is-align-items-baseline">
+        {% get_social_media_links as sm_links %}
+        <a class="navbar-item" href="{% url 'about' %}" data-filter="about">About</a>
+        {% if sm_links.twitter_url %}
+          <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
+            <i class="fa-brands fa-x-twitter"></i>
+          </a>
+        {% endif %}
+        {% if sm_links.youtube_url %}
+          <a class="navbar-item" href="{{ sm_links.youtube_url }}" target="_blank">
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+        {% endif %}
+        <a class="navbar-item" href="{% url "blog:post_feed" %}" target="_blank">
+          <i class="fa-solid fa-square-rss"></i>
+        </a>
+        {% get_subscription_options as sub_options %}
+        {% if sub_options.show_kofi_link_in_head_menu %}
+          <a class="navbar-item"
+             href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
+             data-filter="ko-fi"
+             target="_blank">
+            <span class="icon-text is-align-items-baseline">
+              {% comment %} {% load static %}
+              <img src="{% static 'kofi/kofi_logo_s.png' %}"
+                   class="icon"
+                   alt="kofi icon"> {% endcomment %}
+              <span class="icon"><i class="fa-solid fa-mug-hot"></i></span>
+              <span>Ko-fi</span>
+            </span>
+          </a>
+        {% endif %}
+      </div>
     </div>
+    <div id="header-bar-logo" class="is-transparent">{% include "core/base_includes/logo_or_text_title.html" %}</div>
+  </div>
 </div>
 {% if site_identity.header_message %}
-    <div class="is-flex" id="site-warning-wrapper">
-        <div id="site-warning" class="has-background-dark has-text-white">
-            <button class="delete"
-                    style="float:right;
-                           margin-top:2px"
-                    onclick="this.parentElement.style.display='none';"></button>
-            <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
-        </div>
+  <div class="is-flex" id="site-warning-wrapper">
+    <div id="site-warning" class="has-background-dark has-text-white">
+      <button class="delete"
+              style="float:right;
+                     margin-top:2px"
+              onclick="this.parentElement.style.display='none';"></button>
+      <i class="fa-solid fa-circle-info"></i> {{ site_identity.header_message }}
     </div>
+  </div>
 {% endif %}
 <div id="desktop-title" class="is-hidden-touch has-text-centered p-4">
-    <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+  <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
 </div>
 <div id="navbar" class="has-background-white">
-    <nav class="navbar is-justify-content-center container"
-         role="navigation"
-         aria-label="main navigation">
-        <div class="navbar-brand is-align-items-center is-hidden-desktop">
-            <a class="navbar-item"
-               id="mobile-title"
-               href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
-            <div class="navbar-search">
-                <form action="{% url 'blog:post_search' %}"
-                      method="get"
-                      class="control has-icons-left title-search-form">
-                    <span class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             width="100"
-                             height="100"
-                             viewBox="0 0 100 100"
-                             version="1.1">
-                            <circle cx="50" cy="50" r="25" stroke="black" stroke-width="5" fill="none" />
-                            <rect x="70" y="70" width="15" height="5" fill="black" transform="rotate(45, 75, 75)" />
-                        </svg>
-                    </span>
-                    <input type="text"
-                           class="input title-search-input"
-                           placeholder="SEARCH"
-                           name="query">
-                </form>
+  <nav class="navbar is-justify-content-center container"
+       role="navigation"
+       aria-label="main navigation">
+    <div class="navbar-brand is-align-items-center is-hidden-desktop">
+      <a class="navbar-item"
+         id="mobile-title"
+         href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+      <div class="navbar-search">
+        <form action="{% url 'blog:post_search' %}"
+              method="get"
+              class="control has-icons-left title-search-form">
+          <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="100"
+                 height="100"
+                 viewBox="0 0 100 100"
+                 version="1.1">
+              <circle cx="50" cy="50" r="25" stroke="black" stroke-width="5" fill="none" />
+              <rect x="70" y="70" width="15" height="5" fill="black" transform="rotate(45, 75, 75)" />
+            </svg>
+          </span>
+          <input type="text"
+                 class="input title-search-input"
+                 placeholder="SEARCH"
+                 name="query">
+        </form>
+      </div>
+      <a role="button"
+         class="navbar-burger"
+         aria-label="menu"
+         aria-expanded="false"
+         data-target="navbarMainMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navbarMainMenu"
+         class="navbar-menu is-justify-content-space-between">
+      {% get_nav_items as all_nav_items %}
+      {% for nav_item in all_nav_items %}
+        {% if nav_item.is_dropdown %}
+          <div class="navbar-item has-dropdown is-hoverable mobile-collapsed">
+            <a class="navbar-link"
+               href="{{ nav_item.primary_category.get_absolute_url }}">{{ nav_item.primary_category.name }}</a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="{{ nav_item.get_absolute_url }}">All {{ nav_item.primary_category.name }}</a>
+              <hr class="navbar-divider">
+              {% for subitem in nav_item.sub_items.all %}
+                <a class="navbar-item" href="{{ subitem.get_absolute_url }}">{{ subitem.subcategory.name }}</a>
+              {% endfor %}
             </div>
-            <a role="button"
-               class="navbar-burger"
-               aria-label="menu"
-               aria-expanded="false"
-               data-target="navbarMainMenu">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-        <div id="navbarMainMenu"
-             class="navbar-menu is-justify-content-space-between">
-            {% get_nav_items as all_nav_items %}
-            {% for nav_item in all_nav_items %}
-                {% if nav_item.is_dropdown %}
-                    <div class="navbar-item has-dropdown is-hoverable mobile-collapsed">
-                        <a class="navbar-link"
-                           href="{{ nav_item.primary_category.get_absolute_url }}">{{ nav_item.primary_category.name }}</a>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" href="{{ nav_item.get_absolute_url }}">All {{ nav_item.primary_category.name }}</a>
-                            <hr class="navbar-divider">
-                            {% for subitem in nav_item.sub_items.all %}
-                                <a class="navbar-item" href="{{ subitem.get_absolute_url }}">{{ subitem.subcategory.name }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% else %}
-                    <a class="navbar-item"
-                       href="{{ nav_item.primary_category.get_absolute_url }}">{{ nav_item.primary_category.name }}</a>
-                {% endif %}
-            {% endfor %}
-            {% comment %} Mobile menu only {% endcomment %}
-            {% get_social_media_links as sm_links %}
-            <div class="navbar-item is-hidden-desktop has-background-warning">
-                <a class="navbar-item is-hidden-desktop"
-                   href="{% url 'about' %}"
-                   data-filter="about">About</a>
-                {% if sm_links.twitter_url %}
-                    <a class="navbar-item is-hidden-desktop"
-                       href="{{ sm_links.twitter_url }}"
-                       target="_blank">
-                        <span class="icon-text">
-                            <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
-                            <span class="is-hidden-desktop">{{ sm_links.twitter_name }}</span>
-                        </span>
-                    </a>
-                {% endif %}
-                {% if sm_links.youtube_url %}
-                    <a class="navbar-item is-hidden-desktop"
-                       href="{{ sm_links.youtube_url }}"
-                       target="_blank">
-                        <span class="icon-text">
-                            <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
-                            <span class="is-hidden-desktop">{{ sm_links.youtube_name }}</span>
-                        </span>
-                    </a>
-                {% endif %}
-                <a class="navbar-item is-hidden-desktop"
-                   href="{% url "blog:post_feed" %}"
-                   target="_blank">
-                    <span class="icon-text">
-                        <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
-                        <span class="is-hidden-desktop">Subscribe to RSS feed</span>
-                    </span>
-                </a>
-                {% get_subscription_options as sub_options %}
-                {% if sub_options.show_kofi_link_in_head_menu %}
-                    <a class="navbar-item is-hidden-desktop"
-                       href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
-                       data-filter="ko-fi"
-                       target="_blank">
-                        <span class="icon-text">
-                            {% load static %}
-                            <img src="{% static 'kofi/kofi_logo_s.png' %}"
-                                 class="icon"
-                                 alt="kofi icon">
-                            <span>Ko-fi</span>
-                        </span>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+          </div>
+        {% else %}
+          <a class="navbar-item"
+             href="{{ nav_item.primary_category.get_absolute_url }}">{{ nav_item.primary_category.name }}</a>
+        {% endif %}
+      {% endfor %}
+      {% comment %} Mobile menu only {% endcomment %}
+      {% get_social_media_links as sm_links %}
+      <div class="navbar-item is-hidden-desktop has-background-warning p-0">
+        <a class="navbar-item is-hidden-desktop"
+           href="{% url 'about' %}"
+           data-filter="about">About</a>
+        {% if sm_links.twitter_url %}
+          <a class="navbar-item is-hidden-desktop"
+             href="{{ sm_links.twitter_url }}"
+             target="_blank">
+            <span class="icon-text">
+              <span class="icon"><i class="fa-brands fa-x-twitter has-text-black"></i></span>
+              <span>{{ sm_links.twitter_name }}</span>
+            </span>
+          </a>
+        {% endif %}
+        {% if sm_links.youtube_url %}
+          <a class="navbar-item is-hidden-desktop"
+             href="{{ sm_links.youtube_url }}"
+             target="_blank">
+            <span class="icon-text">
+              <span class="icon"><i class="fa-brands fa-youtube has-text-danger"></i></span>
+              <span>{{ sm_links.youtube_name }}</span>
+            </span>
+          </a>
+        {% endif %}
+        <a class="navbar-item is-hidden-desktop"
+           href="{% url "blog:post_feed" %}"
+           target="_blank">
+          <span class="icon-text">
+            <span class="icon"><i class="fa-solid fa-square-rss"></i></span>
+            <span>Subscribe to RSS feed</span>
+          </span>
+        </a>
+        {% get_subscription_options as sub_options %}
+        {% if sub_options.show_kofi_link_in_head_menu %}
+          <a class="navbar-item is-hidden-desktop"
+             href="https://ko-fi.com/{{ sub_options.kofi_account_name }}"
+             data-filter="ko-fi"
+             target="_blank">
+            <span class="icon-text">
+              {% load static %}
+              <img src="{% static 'kofi/kofi_logo_s.png' %}"
+                   class="icon"
+                   alt="kofi icon">
+              <span>Ko-fi</span>
+            </span>
+          </a>
+        {% endif %}
+      </div>
+      <div class="navbar-item is-hidden-desktop">
+        <span class="icon-text is-flex-wrap-nowrap">
+          <span class="icon">ⓒ</span>
+          <span>{{ site_identity.title }} {% now "Y" %}
+            {% if site_identity.footer_copy_message %}- {{ site_identity.footer_copy_message }}{% endif %}
+          </span>
+        </span>
+      </div>
+    </div>
+  </nav>
 </div>
