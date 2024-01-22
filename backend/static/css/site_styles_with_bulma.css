@@ -11,9 +11,21 @@
 #header-bar > div {
   position: relative;
 }
-
-#header-bar .navbar-item {
+#header-bar .navbar-item.title-search {
   padding: 0 0.75rem;
+}
+#header-bar * {
+  max-height: 40px;
+}
+
+.title-search:has(input:focus) .icon svg path,
+.navbar-search:has(input:focus) .icon svg path {
+  stroke: #d6a496;
+}
+
+a.navbar-item:hover svg path,
+a.navbar-item:active svg path {
+  stroke: #ffffff;
 }
 
 #header-bar-logo {
@@ -28,14 +40,18 @@
   transition: opacity 0.2s ease-in-out;
   opacity: 1;
 }
-
 #header-bar-logo img {
   max-height: 32px;
   filter: grayscale(1) contrast(100) invert(1); /* TODO: bake this into the pic? */
 }
+#header-bar-logo:hover img {
+  filter: unset;
+}
 
 .is-transparent {
   opacity: 0 !important;
+  pointer-events: none;
+  cursor: default;
 }
 
 .carousel-header {

@@ -120,10 +120,30 @@ $footer-background-color: $lightpink;
   & > div {
     position: relative;
   }
+
+  & .navbar-item.title-search {
+    padding: 0 0.75rem;
+  }
+
+  & * {
+    max-height: $navbar-height;
+  }
 }
-#header-bar .navbar-item {
-  padding: 0 0.75rem;
+
+.title-search,
+.navbar-search {
+  &:has(input:focus) .icon svg path {
+    stroke: $accentcolour;
+  }
 }
+
+a.navbar-item:hover,
+a.navbar-item:active {
+  & svg path {
+    stroke: $white;
+  }
+}
+
 #header-bar-logo {
   position: absolute;
   top: 4px;
@@ -135,13 +155,20 @@ $footer-background-color: $lightpink;
   justify-content: center;
   transition: opacity 0.2s ease-in-out;
   opacity: 1;
+
+  & img {
+    max-height: 32px;
+    filter: grayscale(1) contrast(100) invert(1); /* TODO: bake this into the pic? */
+  }
+  &:hover img {
+    filter: unset;
+  }
 }
-#header-bar-logo img {
-  max-height: 32px;
-  filter: grayscale(1) contrast(100) invert(1); /* TODO: bake this into the pic? */
-}
+
 .is-transparent {
   opacity: 0 !important;
+  pointer-events: none;
+  cursor: default;
 }
 
 .carousel-header {
