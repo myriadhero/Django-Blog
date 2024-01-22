@@ -87,9 +87,9 @@
         {% if site_identity.footer %}{{ site_identity.footer|safe }}{% endif %}
       </div>
       <div>
-        <strong>
-          <i class="fa-solid fa-copyright"></i> {{ site_identity.title }} {% now "Y" %}.
-        </strong>
+        <span>ⓒ {{ site_identity.title }} {% now "Y" %}
+          {% if site_identity.footer_copy_message %}- {{ site_identity.footer_copy_message }}{% endif %}
+        </span>
       </div>
     </footer>
     {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
