@@ -342,6 +342,9 @@ a.navbar-item:active {
 
   #alpha-links {
     top: $header-bar-height + $navbar-height;
+    & > .level-item {
+      gap: 0.6rem;
+    }
   }
 }
 

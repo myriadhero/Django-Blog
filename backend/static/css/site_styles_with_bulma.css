@@ -207,6 +207,9 @@ a.navbar-item:active svg path {
   #alpha-links {
     top: 80px;
   }
+  #alpha-links > .level-item {
+    gap: 0.6rem;
+  }
 }
 /* widescreen */
 /* full hd */
