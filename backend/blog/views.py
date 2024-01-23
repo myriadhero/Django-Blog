@@ -43,7 +43,7 @@ class TagPostListView(PostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tag"] = get_object_or_404(
-            CategoryTag, slug=self.kwargs.get("tag_slug")
+            CategoryTag, slug=self.kwargs.get("tag_slug"),
         )
         context["meta"] = context["tag"].as_meta(self.request)
         return context
@@ -58,7 +58,7 @@ class SubcategoryPostListView(PostListView):
             qs = qs.filter(categories=category)
 
         subcategory = get_object_or_404(
-            Subcategory, slug=self.kwargs.get("subcategory_slug")
+            Subcategory, slug=self.kwargs.get("subcategory_slug"),
         )
 
         if (tag_slug := self.request.GET.get("tag")) and (
@@ -81,7 +81,7 @@ class SubcategoryPostListView(PostListView):
             context["selected_tag"] = tag
 
         subcat = get_object_or_404(
-            Subcategory, slug=self.kwargs.get("subcategory_slug")
+            Subcategory, slug=self.kwargs.get("subcategory_slug"),
         )
         context["subcategory"] = subcat
         context["meta"] = subcat.as_meta(self.request)
@@ -129,7 +129,9 @@ class CategoryDetailView(ListView):
         category = self.get_category()
         context["category"] = category
         context["meta"] = category.as_meta(self.request)
-        context["tags"] = category.get_tags_that_have_at_least_one_post()
+        context["tags"] = (category.categorytag_set.all()
+                           if category.is_tag_list
+                           else category.get_tags_that_have_at_least_one_post())
 
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:
@@ -168,7 +170,7 @@ class FrontPageView(ListView):
             to_attr="published_featured_posts",
         )
         categories = Category.on_front_page.prefetch_related(
-            prefetch_featured_posts
+            prefetch_featured_posts,
         ).all()
         return categories
 
@@ -223,7 +225,7 @@ class PostSearchListView(PostListView):
                 qs = qs.filter(publish__gt=after)
 
             qs = qs.order_by(
-                f"{is_ascending}{'publish' if order_by=='date' else 'rank'}"
+                f"{is_ascending}{'publish' if order_by=='date' else 'rank'}",
             )
 
         return qs
