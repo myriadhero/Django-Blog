@@ -19,9 +19,7 @@ django-meta = "*"
 psycopg = {extras = ["binary"], version = "*"}
 
 [dev-packages]
-black = "*"
 django-debug-toolbar = "*"
-isort = "*"
 ipython = "*"
 
 [requires]
