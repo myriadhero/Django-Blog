@@ -84,10 +84,10 @@ $background: $white-ter;
 $text: $black;
 $text-strong: $black;
 
-$link: $blue;
-$link-hover: $grey-darker;
-$link-focus: $grey-darker;
-$link-active: $grey-darker;
+$link: $accentcolour;
+$link-hover: $lightpink;
+$link-focus: $lightpink;
+$link-active: $lightpink;
 
 $navbar-item-hover-color: $white;
 $navbar-item-active-color: $white;
@@ -111,6 +111,8 @@ $footer-background-color: $lightpink;
 :root {
   --secondary-theme-color: #{$highlightcolour};
   --swiper-theme-color: #{$accentcolour} !important;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-inactive-color: #{$grey-light};
 }
 
 #header-bar {
@@ -183,6 +185,10 @@ a.navbar-item:active {
   & .category-name {
     font-size: 2rem;
     margin-bottom: 0px !important;
+
+    &:hover {
+      color: $link;
+    }
   }
 
   & .carousel-view-all {
@@ -190,8 +196,21 @@ a.navbar-item:active {
     color: $textcolour;
 
     &:hover span {
-      color: $link-hover;
+      color: $link;
     }
+  }
+}
+
+.swiper .pagination-wrapper {
+  & .swiper-button-next:not(.swiper-button-disabled):hover,
+  & .swiper-button-prev:not(.swiper-button-disabled):hover {
+    border-color: $link-hover;
+    &::after {
+      background: $link-hover;
+    }
+  }
+  & span.swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
+    background: $link-hover;
   }
 }
 
