@@ -60,8 +60,8 @@ class Category(ModelMeta, models.Model):
     )
 
     _metadata = {
-        "title": "get_title",
-        "description": "get_description",
+        "title": "get_seo_title",
+        "description": "get_seo_description",
         "keywords": "get_seo_keywords",
         "image": "get_preview_image_url",
         "og_type": "Website",
@@ -90,10 +90,10 @@ class Category(ModelMeta, models.Model):
             )
         return self.categorytag_set.filter(Exists(tag_relations))
 
-    def get_title(self):
-        return f"{get_site_identity().title} - {self.name}"
+    def get_seo_title(self):
+        return get_site_identity().get_title_and_tagline(page_name=self.name)
 
-    def get_description(self):
+    def get_seo_description(self):
         return (
             self.description
             or f"{'Tags from' if self.is_tag_list else 'Posts about'} {self.name}."
@@ -136,8 +136,8 @@ class Subcategory(ModelMeta, models.Model):
     )
 
     _metadata = {
-        "title": "get_title",
-        "description": "get_description",
+        "title": "get_seo_title",
+        "description": "get_seo_description",
         "keywords": "get_seo_keywords",
         "image": "get_preview_image_url",
         "og_type": "Website",
@@ -157,10 +157,10 @@ class Subcategory(ModelMeta, models.Model):
         )
         return self.categorytag_set.filter(Exists(tag_relations))
 
-    def get_title(self):
-        return f"{get_site_identity().title} - {self.name}"
+    def get_seo_title(self):
+        return get_site_identity().get_title_and_tagline(page_name=self.name)
 
-    def get_description(self):
+    def get_seo_description(self):
         return self.description or f"Posts about {self.name}."
 
     def get_seo_keywords(self):
@@ -217,8 +217,8 @@ class CategoryTag(ModelMeta, TagBase):
     )
 
     _metadata = {
-        "title": "get_title",
-        "description": "get_description",
+        "title": "get_seo_title",
+        "description": "get_seo_description",
         "keywords": "get_seo_keywords",
         "image": "get_preview_image_url",
         "og_type": "Website",
@@ -231,12 +231,12 @@ class CategoryTag(ModelMeta, TagBase):
     class Meta:
         verbose_name = gettext_lazy("Tag")
         verbose_name_plural = gettext_lazy("Tags")
-        ordering = [Collate("slug", "C")]
+        ordering = (Collate("slug", "C"),)
 
-    def get_title(self):
-        return f"{get_site_identity().title} - {self.name}"
+    def get_seo_title(self):
+        return get_site_identity().get_title_and_tagline(page_name=self.name)
 
-    def get_description(self):
+    def get_seo_description(self):
         return self.description or f"Posts by {self.name} tag."
 
     def get_seo_keywords(self):
@@ -276,7 +276,7 @@ class NavItem(models.Model):
 
 class DropdownNavItem(models.Model):
     parent_nav_item = models.ForeignKey(
-        NavItem, on_delete=models.CASCADE, related_name="sub_items"
+        NavItem, on_delete=models.CASCADE, related_name="sub_items",
     )
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
@@ -289,7 +289,7 @@ class DropdownNavItem(models.Model):
 
     def get_absolute_url(self):
         return self.subcategory.get_absolute_url(
-            category=self.parent_nav_item.primary_category
+            category=self.parent_nav_item.primary_category,
         )
 
 
@@ -334,10 +334,10 @@ class Post(ModelMeta, models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(
-        max_length=2, choices=Status.choices, default=Status.DRAFT
+        max_length=2, choices=Status.choices, default=Status.DRAFT,
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="blog_posts"
+        User, on_delete=models.CASCADE, related_name="blog_posts",
     )
     categories = models.ManyToManyField(Category)
     subcategories = models.ManyToManyField(Subcategory, blank=True)
@@ -346,8 +346,8 @@ class Post(ModelMeta, models.Model):
         help_text="Tags, comma separated",
     )
     _metadata = {
-        "title": "get_title",
-        "description": "get_description",
+        "title": "get_seo_title",
+        "description": "get_seo_description",
         "keywords": "get_seo_keywords",
         "image": "get_preview_image_url",
         "og_type": "Article",
@@ -376,10 +376,8 @@ class Post(ModelMeta, models.Model):
     )
 
     class Meta:
-        ordering = ["-publish"]
-        indexes = [
-            models.Index(fields=["-publish"]),
-        ]
+        ordering = ("-publish",)
+        indexes = (models.Index(fields=["-publish"]),)
 
     def save(self, *args, **kwargs):
         self.generate_unique_slug()
@@ -390,11 +388,11 @@ class Post(ModelMeta, models.Model):
     def get_similar_posts(self, post_num=5):
         post_tags_ids = self.tags.values_list("id", flat=True)
         similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(
-            id=self.id
+            id=self.id,
         )
 
         similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by(
-            "-same_tags"
+            "-same_tags",
         )[:post_num]
 
         return similar_posts
@@ -442,10 +440,10 @@ class Post(ModelMeta, models.Model):
 
         self.body = html.tostring(root, encoding="unicode")
 
-    def get_title(self):
-        return f"{get_site_identity().title} - {self.title}"
+    def get_seo_title(self):
+        return get_site_identity().get_title_and_tagline(page_name=self.title)
 
-    def get_description(self):
+    def get_seo_description(self):
         return self.description or self.title
 
     def get_seo_keywords(self):
@@ -472,11 +470,11 @@ class FeaturedPostPublishedManager(models.Manager):
 
 class FeaturedPost(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_posts"
+        Category, on_delete=models.CASCADE, related_name="featured_posts",
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     order = models.IntegerField(
-        default=0, help_text="Enter an integer value to define the display order."
+        default=0, help_text="Enter an integer value to define the display order.",
     )
 
     objects = models.Manager()
@@ -484,7 +482,7 @@ class FeaturedPost(models.Model):
 
     class Meta:
         unique_together = ("category", "post")
-        ordering = ["order", "-post__publish"]
+        ordering = ("order", "-post__publish")
 
     def __str__(self):
         return f"{self.category} - {self.post} (Order: {self.order}, Published: {self.post.publish.strftime('%a %d %b %Y, %I:%M%p')})"

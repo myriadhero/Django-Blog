@@ -1,12 +1,16 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
 {% load blog_tags %}
-{% block title %}{{ site_identity.title }} - Posts{% endblock %}
+{% block title %}
+  {% if tag %}Posts tagged with {{ tag }}{% endif %}
+  {% if category %}Posts for category {{ category }}{% endif %}
+  - {{ block.super }}
+{% endblock title %}
 {% block content %}
-    <div class="section">
-        <div class="block">
-            {% if tag %}Posts tagged with <span class="tag is-warning is-large">{{ tag }}</span>{% endif %}
-            {% if category %}Posts for category: <span class="tag is-primary is-large">{{ category }}</span>{% endif %}
-        </div>
-        {% include "blog/post/includes/post_list.html" %}
+  <div class="section">
+    <div class="block">
+      {% if tag %}Posts tagged with <span class="tag is-warning is-large">{{ tag }}</span>{% endif %}
+      {% if category %}Posts for category <span class="tag is-primary is-large">{{ category }}</span>{% endif %}
     </div>
-{% endblock %}
+    {% include "blog/post/includes/post_list.html" %}
+  </div>
+{% endblock content %}

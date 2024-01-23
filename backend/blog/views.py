@@ -1,4 +1,4 @@
-from core.models import SiteIdentity
+from core.models import get_site_identity
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
@@ -24,7 +24,7 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        meta = SiteIdentity.objects.get_instance().as_meta(self.request)
+        meta = get_site_identity().as_meta(self.request)
         meta.title = f"{meta.title} - All Posts"
         context["meta"] = meta
         return context
@@ -176,7 +176,7 @@ class FrontPageView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["meta"] = SiteIdentity.objects.get_instance().as_meta(self.request)
+        context["meta"] = get_site_identity().as_meta(self.request)
         return context
 
 
@@ -233,8 +233,8 @@ class PostSearchListView(PostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = self.form_class(self.request.GET)
-        site_identity = SiteIdentity.objects.get_instance()
+        site_identity = get_site_identity()
         meta = site_identity.as_meta(self.request)
-        meta.title = f"Search {site_identity.title}"
+        meta.schema_title = site_identity.get_title_and_tagline("Search")
         context["meta"] = meta
         return context

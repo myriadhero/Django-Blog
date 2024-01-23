@@ -1,30 +1,30 @@
 {% extends "core/base.html" %}
 {% load blog_tags %}
 {% block title %}
-    {{ site_identity.title }} - {{ post.title }}
+  {{ post.title }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
-    <div class="columns is-desktop">
-        <div class="column">
-            <div class="section">
-                {% include "blog/post/includes/post_title_header.html" %}
-                {% if post.header_image %}
-                    <figure class="block">
-                        <img src="{{ post.header_image.url }}"
-                             alt="{{ post.title }}"
-                             width="550px"
-                             height="auto"
-                             alt="{{ post.title }}"
-                             class="post-detail-header-image">
-                        <div class="is-size-6 mx-2">{{ post.prevew_image_credit }}</div>
-                    </figure>
-                {% endif %}
-                <div class="content">{{ post.body|safe }}</div>
-            </div>
-        </div>
-        <div class="column is-5-desktop">{% include "blog/post/includes/sidebar.html" %}</div>
+  <div class="columns is-desktop">
+    <div class="column">
+      <div class="section">
+        {% include "blog/post/includes/post_title_header.html" %}
+        {% if post.header_image %}
+          <figure class="block">
+            <img src="{{ post.header_image.url }}"
+                 alt="{{ post.title }}"
+                 width="550px"
+                 height="auto"
+                 alt="{{ post.title }}"
+                 class="post-detail-header-image">
+            <div class="is-size-6 mx-2">{{ post.prevew_image_credit }}</div>
+          </figure>
+        {% endif %}
+        <div class="content">{{ post.body|safe }}</div>
+      </div>
     </div>
+    <div class="column is-5-desktop">{% include "blog/post/includes/sidebar.html" %}</div>
+  </div>
 {% endblock content %}
 {% block scripts %}
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 {% endblock scripts %}

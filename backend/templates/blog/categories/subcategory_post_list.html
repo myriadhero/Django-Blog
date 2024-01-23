@@ -1,24 +1,24 @@
 {% extends "core/base.html" %}
 {% block title %}
-    {{ site_identity.title }} - {{ subcategory.name }}
+  {{ subcategory.name }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
-    <div class="section">
-        <h3 class="title is-3 is-uppercase is-flex is-flex-direction-row is-flex-wrap-wrap is-align-items-baseline">
-            {% if category %}
-                <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
-                <i class="fa-solid fa-chevron-right is-size-5 has-text-primary mx-2"></i>
-                <a href="{% url "blog:category_subcategory" category.slug subcategory.slug %}"
-                   class="title">{{ subcategory.name }}</a>
-            {% else %}
-                <a href="{{ subcategory.get_absolute_url }}" class="title">{{ subcategory.name }}</a>
-            {% endif %}
-        </h3>
-        {% include "blog/categories/includes/filter_by_tag.html" %}
-        {% include "blog/post/includes/post_list.html" %}
-    </div>
+  <div class="section">
+    <h3 class="title is-3 is-uppercase is-flex is-flex-direction-row is-flex-wrap-wrap is-align-items-baseline">
+      {% if category %}
+        <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
+        <i class="fa-solid fa-chevron-right is-size-5 has-text-primary mx-2"></i>
+        <a href="{% url "blog:category_subcategory" category.slug subcategory.slug %}"
+           class="title">{{ subcategory.name }}</a>
+      {% else %}
+        <a href="{{ subcategory.get_absolute_url }}" class="title">{{ subcategory.name }}</a>
+      {% endif %}
+    </h3>
+    {% include "blog/categories/includes/filter_by_tag.html" %}
+    {% include "blog/post/includes/post_list.html" %}
+  </div>
 {% endblock content %}
 {% block scripts %}
-    {% load static %}
-    <script src="{% static 'js/htmx_helpers.js' %}"></script>
+  {% load static %}
+  <script src="{% static 'js/htmx_helpers.js' %}"></script>
 {% endblock scripts %}
