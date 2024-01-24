@@ -12,9 +12,10 @@
 }
 #header-bar > div {
   position: relative;
+  padding-inline: 2.5rem;
 }
 #header-bar .navbar-item.title-search {
-  padding: 0 0.75rem;
+  padding: 0;
 }
 #header-bar * {
   max-height: 40px;
@@ -63,7 +64,6 @@ a.navbar-item:active svg path {
   align-items: baseline;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
-  margin-inline: 0.5rem;
 }
 .carousel-header .category-name {
   font-size: 2rem;
@@ -150,6 +150,14 @@ a.navbar-item:active svg path {
   color: #000000;
 }
 
+.navbar-menu > .navbar-item {
+  font-size: 20px;
+}
+
+.navbar-dropdown > .navbar-item {
+  font-size: 18px;
+}
+
 #mobile-title img {
   max-height: 3rem;
 }
@@ -189,6 +197,10 @@ a.navbar-item:active svg path {
   #navbar {
     top: 40px;
   }
+  #navbar > .navbar {
+    padding-left: 2.5rem;
+    padding-right: 2rem;
+  }
   #site-warning-wrapper {
     top: 40px;
     width: unset;
@@ -208,6 +220,12 @@ a.navbar-item:active svg path {
   .navbar-item.has-dropdown.is-hoverable:active > .navbar-dropdown > .navbar-item:hover {
     background: #fedd90;
   }
+  .navbar-menu > .navbar-item {
+    font-size: 0.875rem;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 0.8rem;
+  }
   #alpha-links {
     top: 80px;
   }
@@ -216,7 +234,23 @@ a.navbar-item:active svg path {
   }
 }
 /* widescreen */
+@media (min-width: 1216px) {
+  .navbar-menu > .navbar-item {
+    font-size: 1.1rem;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 1rem;
+  }
+}
 /* full hd */
+@media (min-width: 1408px) {
+  .navbar-menu > .navbar-item {
+    font-size: 20px;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 18px;
+  }
+}
 #desktop-title h1 {
   font-size: 5rem;
 }
@@ -228,23 +262,6 @@ img.site-title {
 
 h1.site-title {
   font-family: "Dawning of a New Day" !important;
-}
-
-.title,
-.navbar,
-.navbar-menu,
-.navbar-item,
-.subtitle {
-  font-family: "Overpass", sans-serif;
-}
-
-.navbar-menu > .navbar-item {
-  font-size: 20px;
-}
-
-.navbar-dropdown {
-  text-transform: none;
-  font-size: 18px !important;
 }
 
 .sticky {

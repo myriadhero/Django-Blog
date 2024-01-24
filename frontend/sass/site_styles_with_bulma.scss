@@ -124,10 +124,11 @@ $footer-background-color: $lightpink;
   height: $header-bar-height;
   & > div {
     position: relative;
+    padding-inline: 2.5rem;
   }
 
   & .navbar-item.title-search {
-    padding: 0 0.75rem;
+    padding: 0;
   }
 
   & * {
@@ -183,7 +184,7 @@ a.navbar-item:active {
   align-items: baseline;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
-  margin-inline: 0.5rem;
+  // margin-inline: 0.5rem;
 
   & .category-name {
     font-size: 2rem;
@@ -276,6 +277,14 @@ a.navbar-item:active {
   }
 }
 
+.navbar-menu > .navbar-item {
+  font-size: 20px;
+}
+
+.navbar-dropdown > .navbar-item {
+  font-size: 18px;
+}
+
 #mobile-title img {
   max-height: 3rem;
 }
@@ -318,6 +327,11 @@ a.navbar-item:active {
   }
   #navbar {
     top: $header-bar-height;
+
+    & > .navbar {
+      padding-left: 2.5rem;
+      padding-right: 2rem;
+    }
   }
 
   #site-warning-wrapper {
@@ -347,6 +361,14 @@ a.navbar-item:active {
     }
   }
 
+  .navbar-menu > .navbar-item {
+    font-size: 0.875rem;
+  }
+
+  .navbar-dropdown > .navbar-item {
+    font-size: 0.8rem;
+  }
+
   #alpha-links {
     top: $header-bar-height + $navbar-height;
     & > .level-item {
@@ -357,10 +379,22 @@ a.navbar-item:active {
 
 /* widescreen */
 @media (min-width: 1216px) {
+  .navbar-menu > .navbar-item {
+    font-size: 1.1rem;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 1rem;
+  }
 }
 
 /* full hd */
 @media (min-width: 1408px) {
+  .navbar-menu > .navbar-item {
+    font-size: 20px;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 18px;
+  }
 }
 
 #desktop-title h1 {
@@ -374,24 +408,6 @@ img.site-title {
 
 h1.site-title {
   font-family: "Dawning of a New Day" !important;
-}
-
-.title,
-.navbar,
-.navbar-menu,
-.navbar-item,
-.subtitle {
-  font-family: $font-family-overpass;
-}
-
-.navbar-menu > .navbar-item {
-  // text-transform: uppercase;
-  font-size: 20px;
-}
-
-.navbar-dropdown {
-  text-transform: none;
-  font-size: 18px !important;
 }
 
 .sticky {
