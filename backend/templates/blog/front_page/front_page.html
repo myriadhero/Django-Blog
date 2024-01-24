@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block title %}
-  {{ block.super }}
+  {{ block.super }} - {{ site_identity.tagline }}
 {% endblock title %}
 {% block head_links %}
   <link rel="stylesheet"

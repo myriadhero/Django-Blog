@@ -8,7 +8,6 @@ from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 
 
-# Create your models here.
 class SingletonManager(models.Manager):
     def get_instance(self):
         instance, created = self.get_or_create(pk=1)
@@ -109,8 +108,6 @@ class SiteIdentity(ModelMeta, models.Model):
         )
 
 
-
-
 def get_site_identity() -> SiteIdentity:
     return SiteIdentity.objects.get_instance()
 
@@ -154,8 +151,6 @@ class AboutPage(ModelMeta, models.Model):
 
     def get_seo_description(self):
         return get_site_identity().seo_description
-
-
 
 
 class SubscriptionOptions(models.Model):

@@ -3,6 +3,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
+from meta.views import MetadataMixin
 
 from .forms import AdvancedSearchForm
 from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
@@ -11,7 +12,42 @@ POSTS_PER_PAGE = 20
 RECOMMENDED_POSTS_NUM = 5
 
 
-# Create your views here.
+class ViewMetadataMixin(MetadataMixin):
+    seo_page_name = None
+    use_og = True
+    use_twitter = True
+    use_facebook = True
+    use_schemaorg = True
+    # url
+    # image
+    # image_object
+    # image_width
+    # image_height
+    object_type = "Website"
+    og_type =  "Website"
+    # site_name
+    # twitter_site
+    # twitter_creator
+    # twitter_type
+    # facebook_app_id
+    # locale
+
+    def get_meta_title(self, context=None):
+        return get_site_identity().get_title_and_tagline(page_name=self.seo_page_name)
+
+    def get_meta_description(self, context=None):
+        return get_site_identity().seo_description
+
+    def get_meta_keywords(self, context=None):
+        return get_site_identity().get_seo_keywords()
+
+    def get_meta_image(self, context=None):
+        return get_site_identity().get_logo_square_url()
+
+    def get_meta_site_name(self, context=None):
+        return get_site_identity().title
+
+
 class PostListView(ListView):
     queryset = (
         Post.published.select_related("author")
@@ -24,15 +60,16 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        meta = get_site_identity().as_meta(self.request)
-        meta.title = f"{meta.title} - All Posts"
-        context["meta"] = meta
         return context
 
     def get_template_names(self) -> list[str]:
         if self.request.headers.get("HX-Request"):
             return ["blog/post/includes/post_list.html"]
         return super().get_template_names()
+
+
+class AllPostsView(ViewMetadataMixin, PostListView):
+    seo_page_name = "All Posts"
 
 
 class TagPostListView(PostListView):
@@ -158,7 +195,7 @@ class PostDetailView(DetailView):
         return context
 
 
-class FrontPageView(ListView):
+class FrontPageView(ViewMetadataMixin, ListView):
     context_object_name = "categories"
     template_name = "blog/front_page/front_page.html"
 
@@ -176,13 +213,14 @@ class FrontPageView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["meta"] = get_site_identity().as_meta(self.request)
         return context
 
 
-class PostSearchListView(PostListView):
+class PostSearchListView(ViewMetadataMixin, PostListView):
     template_name = "blog/post/search.html"
     form_class = AdvancedSearchForm
+
+    seo_page_name = "Search"
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -233,8 +271,4 @@ class PostSearchListView(PostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = self.form_class(self.request.GET)
-        site_identity = get_site_identity()
-        meta = site_identity.as_meta(self.request)
-        meta.schema_title = site_identity.get_title_and_tagline("Search")
-        context["meta"] = meta
         return context
