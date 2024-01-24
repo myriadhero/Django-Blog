@@ -167,6 +167,10 @@ a.navbar-item:active svg path {
   background: white;
 }
 
+.letter-link {
+  padding: 1.2px;
+}
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header .category-name {
@@ -249,16 +253,6 @@ h1.site-title {
   z-index: 5;
 }
 
-.letter-link {
-  padding: 1.2px;
-}
-
-.letter-link:hover {
-  font-weight: bold;
-  padding-left: 3px;
-  padding-right: 3px;
-}
-
 .post-preview-image {
   border-radius: 3%;
   overflow: hidden;
@@ -271,6 +265,7 @@ h1.site-title {
 
 a.tag-expander {
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .text-pink-on-hover {
@@ -5805,8 +5800,8 @@ div.icon-text {
 
 .tag:not(body) {
   align-items: center;
-  background-color: #ffffff;
-  border-radius: 4px;
+  background-color: #f2d7d0;
+  border-radius: 10px;
   color: #000000;
   display: inline-flex;
   font-size: 0.75rem;
@@ -5931,10 +5926,10 @@ div.icon-text {
   width: 1px;
 }
 .tag:not(body).is-delete:hover, .tag:not(body).is-delete:focus {
-  background-color: #f2f2f2;
+  background-color: #ecc6bc;
 }
 .tag:not(body).is-delete:active {
-  background-color: #e6e6e6;
+  background-color: #e7b5a8;
 }
 .tag:not(body).is-rounded {
   border-radius: 9999px;
@@ -8303,26 +8298,29 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   border-width: 2px;
 }
 
-.navbar-burger {
+a.navbar-burger {
   margin-left: unset;
   margin-right: 0.5em;
 }
-.navbar-burger > span {
+a.navbar-burger > span {
   left: calc(50% - 12px);
   width: 24px;
   height: 2px;
 }
-.navbar-burger > span:nth-child(1) {
+a.navbar-burger > span:nth-child(1) {
   top: calc(50% - 9px);
 }
-.navbar-burger > span:nth-child(3) {
+a.navbar-burger > span:nth-child(3) {
   top: calc(50% + 7px);
 }
-.navbar-burger.is-active > span:nth-child(1) {
+a.navbar-burger.is-active > span:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
-.navbar-burger.is-active > span:nth-child(3) {
+a.navbar-burger.is-active > span:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
+}
+a.navbar-burger:hover {
+  color: #000000;
 }
 
 .navbar-search {

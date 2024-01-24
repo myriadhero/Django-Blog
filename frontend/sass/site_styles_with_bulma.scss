@@ -89,6 +89,9 @@ $link-hover: $lightpink;
 $link-focus: $lightpink;
 $link-active: $lightpink;
 
+$tag-radius: 10px;
+$tag-background-color: $lightpink;
+
 $navbar-item-hover-color: $white;
 $navbar-item-active-color: $white;
 $navbar-item-hover-background-color: $accentcolour;
@@ -292,6 +295,10 @@ a.navbar-item:active {
   background: white;
 }
 
+.letter-link {
+  padding: 1.2px;
+}
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header .category-name {
@@ -393,16 +400,6 @@ h1.site-title {
   z-index: 5;
 }
 
-.letter-link {
-  padding: 1.2px;
-}
-
-.letter-link:hover {
-  font-weight: bold;
-  padding-left: 3px;
-  padding-right: 3px;
-}
-
 .post-preview-image {
   border-radius: 3%;
   overflow: hidden;
@@ -415,6 +412,7 @@ h1.site-title {
 
 a.tag-expander {
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .text-pink-on-hover {
@@ -491,7 +489,7 @@ a.tag-expander {
   border-width: 2px;
 }
 
-.navbar-burger {
+a.navbar-burger {
   margin-left: unset;
   margin-right: 0.5em;
   & > span {
@@ -513,6 +511,10 @@ a.tag-expander {
     &:nth-child(3) {
       transform: translateY(-8px) rotate(-45deg);
     }
+  }
+
+  &:hover {
+    color: $black;
   }
 }
 
