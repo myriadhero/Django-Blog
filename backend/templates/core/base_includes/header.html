@@ -115,8 +115,9 @@
     </div>
   </div>
 {% endif %}
-<div id="desktop-title" class="is-hidden-touch has-text-centered p-4">
-  <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+<div id="desktop-title"
+     class="is-hidden-touch is-flex is-justify-content-center p-4">
+  <a href="{% url 'blog:front_page' %}" class="is-flex">{% include "core/base_includes/logo_or_text_title.html" %}</a>
 </div>
 <div id="navbar" class="has-background-white">
   <nav class="navbar is-justify-content-center container"
