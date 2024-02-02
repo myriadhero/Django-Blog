@@ -32,13 +32,13 @@
             <p class="title is-4">
               <a href="{{ tag.get_absolute_url }}" class="has-text-primary">{{ tag.name }}</a>
             </p>
-            <p class="subtitle is-6">
+            {% comment %} <p class="subtitle is-6">
               {% if tag.description %}
                 {{ tag.description }}
               {% else %}
                 🐱‍👤🤷‍♀️
               {% endif %}
-            </p>
+            </p> {% endcomment %}
           </div>
         </div>
       {% endfor %}

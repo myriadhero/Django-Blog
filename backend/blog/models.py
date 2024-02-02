@@ -237,7 +237,7 @@ class CategoryTag(ModelMeta, TagBase):
         return get_site_identity().get_title_and_tagline(page_name=self.name)
 
     def get_seo_description(self):
-        return self.description or f"Posts by {self.name} tag."
+        return self.description or f"Posts with {self.name} tag."
 
     def get_seo_keywords(self):
         return (
