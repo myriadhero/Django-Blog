@@ -1,18 +1,18 @@
 {% extends "core/base.html" %}
 {% load blog_tags %}
 {% block title %}
-    {{ site_identity.title }} - {{ category.name }}
+  {{ category.name }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
-    <div class="section">
-        <h3 class="title is-3 is-uppercase">
-            <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
-        </h3>
-        {% include "blog/categories/includes/filter_by_tag.html" %}
-        {% include "blog/post/includes/post_list.html" %}
-    </div>
+  <div class="section">
+    <h3 class="title is-3 is-uppercase">
+      <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
+    </h3>
+    {% include "blog/categories/includes/filter_by_tag.html" %}
+    {% include "blog/post/includes/post_list.html" %}
+  </div>
 {% endblock content %}
 {% block scripts %}
-    {% load static %}
-    <script src="{% static 'js/htmx_helpers.js' %}"></script>
+  {% load static %}
+  <script src="{% static 'js/htmx_helpers.js' %}"></script>
 {% endblock scripts %}

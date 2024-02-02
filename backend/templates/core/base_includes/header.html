@@ -1,8 +1,8 @@
 {% load blog_tags %}
 {% load core_tags %}
 <div id="header-bar" class="is-uppercase sticky is-hidden-touch">
-  <div>
-    <div class="container is-flex is-justify-content-space-between">
+  <div class="container">
+    <div class="is-flex is-justify-content-space-between">
       <div class="navbar-item title-search">
         <form action="{% url 'blog:post_search' %}"
               method="get"
@@ -30,7 +30,17 @@
         </a>
         {% if sm_links.twitter_url %}
           <a class="navbar-item" href="{{ sm_links.twitter_url }}" target="_blank">
-            <i class="fa-brands fa-x-twitter is-size-5"></i>
+            <span class="is-flex">
+              <svg width="20"
+                   height="20"
+                   viewBox="0 0 20 20"
+                   fill="none"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.1 8.2L16.6 1.7" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M2.70001 18.3L8.50001 11.3" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M18.5 18.3L5.9 1.7H1.5L14.1 18.3H18.5Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
           </a>
         {% endif %}
         {% if sm_links.youtube_url %}
@@ -105,8 +115,9 @@
     </div>
   </div>
 {% endif %}
-<div id="desktop-title" class="is-hidden-touch has-text-centered p-4">
-  <a href="{% url 'blog:front_page' %}">{% include "core/base_includes/logo_or_text_title.html" %}</a>
+<div id="desktop-title"
+     class="is-hidden-touch is-flex is-justify-content-center p-4">
+  <a href="{% url 'blog:front_page' %}" class="is-flex">{% include "core/base_includes/logo_or_text_title.html" %}</a>
 </div>
 <div id="navbar" class="has-background-white">
   <nav class="navbar is-justify-content-center container"
@@ -193,7 +204,17 @@
              href="{{ sm_links.twitter_url }}"
              target="_blank">
             <span class="icon-text">
-              <span class="icon"><i class="fa-brands fa-x-twitter"></i></span>
+              <span class="icon">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 20 20"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.1 8.2L16.6 1.7" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M2.70001 18.3L8.50001 11.3" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M18.5 18.3L5.9 1.7H1.5L14.1 18.3H18.5Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
               <span>{{ sm_links.twitter_name }}</span>
             </span>
           </a>

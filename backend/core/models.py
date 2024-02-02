@@ -8,7 +8,6 @@ from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 
 
-# Create your models here.
 class SingletonManager(models.Manager):
     def get_instance(self):
         instance, created = self.get_or_create(pk=1)
@@ -16,7 +15,12 @@ class SingletonManager(models.Manager):
 
 
 class SiteIdentity(ModelMeta, models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, help_text="Limit this to just the site name, eg 'SiteName'")
+    tagline = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text="This is appended to site title in the browser tab",
+    )
     seo_description = models.TextField(
         blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long",
     )
@@ -63,7 +67,7 @@ class SiteIdentity(ModelMeta, models.Model):
         options={"quality": 60},
     )
     _metadata = {
-        "title": "title",
+        "title": "get_title_and_tagline",
         "description": "seo_description",
         "keywords": "get_seo_keywords",
         "image": "get_logo_square_url",
@@ -86,6 +90,9 @@ class SiteIdentity(ModelMeta, models.Model):
     def delete(self, *args, **kwargs):
         pass
 
+    def get_title_and_tagline(self, page_name=None):
+        return f"{self.title}{' - ' + page_name if page_name else ''}{' - '+ self.tagline if self.tagline else ''}"
+
     def get_logo_square_url(self):
         return self.logo_square.url if self.logo_square else None
 
@@ -99,8 +106,6 @@ class SiteIdentity(ModelMeta, models.Model):
             if self.seo_keywords
             else None
         )
-
-
 
 
 def get_site_identity() -> SiteIdentity:
@@ -136,7 +141,7 @@ class AboutPage(ModelMeta, models.Model):
         pass
 
     def get_title(self):
-        return f"{get_site_identity().title} - {self.title}"
+        return get_site_identity().get_title_and_tagline(page_name=self.title)
 
     def get_logo_square_url(self):
         return get_site_identity().get_logo_square_url()
@@ -146,8 +151,6 @@ class AboutPage(ModelMeta, models.Model):
 
     def get_seo_description(self):
         return get_site_identity().seo_description
-
-
 
 
 class SubscriptionOptions(models.Model):

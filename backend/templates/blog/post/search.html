@@ -3,22 +3,22 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block title %}
-    {{ site_identity.title }} - Search
+  Search - {{ block.super }}
 {% endblock title %}
 {% block content %}
-    <div class="section">
-        <div class="block">
-            <div class="title is-4">Search</div>
-            {% crispy form %}
-        </div>
-        <div class="block">
-            <div class="title is-4">Results</div>
-            {% if posts %}
-                {% include "blog/post/includes/post_list.html" %}
-            {% else %}
-                <div>No results yet... 🕵️‍♀️</div>
-            {% endif %}
-        </div>
+  <div class="section">
+    <div class="block">
+      <div class="title is-4">Search</div>
+      {% crispy form %}
     </div>
-    <script src="{% static "js/search_page_helpers.js" %}"></script>
+    <div class="block">
+      <div class="title is-4">Results</div>
+      {% if posts %}
+        {% include "blog/post/includes/post_list.html" %}
+      {% else %}
+        <div>No results yet... 🕵️‍♀️</div>
+      {% endif %}
+    </div>
+  </div>
+  <script src="{% static "js/search_page_helpers.js" %}"></script>
 {% endblock content %}

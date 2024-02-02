@@ -1,90 +1,90 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block title %}
-    {{ site_identity.title }}
+  {{ block.super }} - {{ site_identity.tagline }}
 {% endblock title %}
 {% block head_links %}
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="{% static 'css/carousel_calcs.css' %}">
 {% endblock head_links %}
 {% block content %}
-    {% for category in categories %}
-        <div class="section">
-            <!-- Slider main container -->
-            <div id="carousel-{{ forloop.counter0 }}" class="swiper">
-                <div class="carousel-header">
-                    <a class="title category-name has-text-weight-normal "
-                       href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                    <a href="{{ category.get_absolute_url }}" class="carousel-view-all"><span>&#xFF0B</span><span class="ml-2">View All</span></a>
-                </div>
-                <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
-                <!-- If we need scrollbar -->
-                {% comment %} <div class="swiper-scrollbar"></div> {% endcomment %}
-                <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    {% for featured_post in category.published_featured_posts %}
-                        <div class="swiper-slide">
-                            <a href="{{ featured_post.post.get_absolute_url }}">
-                                <div class="card is-shadowless pb-6">
-                                    <div class="card-image">
-                                        <figure class="image is-3by4">
-                                            {% if featured_post.post.front_page_image %}
-                                                <img src="{{ featured_post.post.front_page_image.url }}"
-                                                     alt="{{ featured_post.post.title }}">
-                                            {% else %}
-                                                <img src="https://bulma.io/images/placeholders/1280x960.png"
-                                                     alt="Placeholder image">
-                                            {% endif %}
-                                        </figure>
-                                    </div>
-                                </div>
-                                <div class="block has-text-centered slide-annotation">
-                                    <p class="is-size-6 has-text-weight-medium text-pink-on-hover">{{ featured_post.post.title }}</p>
-                                </div>
-                            </a>
-                        </div>
-                        {% if forloop.last %}
-                            <div class="swiper-slide">
-                                <a href="{{ category.get_absolute_url }}">
-                                    <div class="card is-shadowless pb-6">
-                                        <div class="card-image">
-                                            <figure class="image is-3by4">
-                                                {% comment %} TODO: change this to category preview pic {% endcomment %}
-                                                {% if category.front_page_image %}
-                                                    <img src="{{ category.front_page_image.url }}" alt="{{ category.name }}">
-                                                {% else %}
-                                                    {% if site_identity.carousel_logo %}
-                                                        <img src="{{ site_identity.carousel_logo.url }}" alt="Placeholder image">
-                                                    {% else %}
-                                                        <img src="https://bulma.io/images/placeholders/1280x960.png"
-                                                             alt="Placeholder image">
-                                                    {% endif %}
-                                                {% endif %}
-                                            </figure>
-                                        </div>
-                                    </div>
-                                    <div class="block has-text-centered slide-annotation">
-                                        <p class="is-size-6 has-text-weight-medium text-pink-on-hover">More of {{ category.name }}</p>
-                                    </div>
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <!-- If we need pagination -->
-                <div class="pagination-wrapper">
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-pagination mx-4"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            </div>
+  {% for category in categories %}
+    <div class="section">
+      <!-- Slider main container -->
+      <div id="carousel-{{ forloop.counter0 }}" class="swiper">
+        <div class="carousel-header">
+          <a class="title category-name has-text-weight-normal "
+             href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+          <a href="{{ category.get_absolute_url }}" class="carousel-view-all"><span>&#xFF0B</span><span class="ml-1">View All</span></a>
         </div>
-    {% endfor %}
-    {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
+        <div class="py-1">{% comment %} spacer div {% endcomment %}</div>
+        <!-- If we need scrollbar -->
+        {% comment %} <div class="swiper-scrollbar"></div> {% endcomment %}
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          {% for featured_post in category.published_featured_posts %}
+            <div class="swiper-slide">
+              <a href="{{ featured_post.post.get_absolute_url }}">
+                <div class="card is-shadowless pb-4">
+                  <div class="card-image">
+                    <figure class="image is-3by4">
+                      {% if featured_post.post.front_page_image %}
+                        <img src="{{ featured_post.post.front_page_image.url }}"
+                             alt="{{ featured_post.post.title }}">
+                      {% else %}
+                        <img src="https://bulma.io/images/placeholders/1280x960.png"
+                             alt="Placeholder image">
+                      {% endif %}
+                    </figure>
+                  </div>
+                </div>
+                <div class="block has-text-centered slide-annotation">
+                  <p class="is-size-6 has-text-weight-medium text-pink-on-hover">{{ featured_post.post.title }}</p>
+                </div>
+              </a>
+            </div>
+            {% if forloop.last %}
+              <div class="swiper-slide">
+                <a href="{{ category.get_absolute_url }}">
+                  <div class="card is-shadowless pb-4">
+                    <div class="card-image">
+                      <figure class="image is-3by4">
+                        {% comment %} TODO: change this to category preview pic {% endcomment %}
+                        {% if category.front_page_image %}
+                          <img src="{{ category.front_page_image.url }}" alt="{{ category.name }}">
+                        {% else %}
+                          {% if site_identity.carousel_logo %}
+                            <img src="{{ site_identity.carousel_logo.url }}" alt="Placeholder image">
+                          {% else %}
+                            <img src="https://bulma.io/images/placeholders/1280x960.png"
+                                 alt="Placeholder image">
+                          {% endif %}
+                        {% endif %}
+                      </figure>
+                    </div>
+                  </div>
+                  <div class="block has-text-centered slide-annotation">
+                    <p class="is-size-6 has-text-weight-medium text-pink-on-hover">More of {{ category.name }}</p>
+                  </div>
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <!-- If we need pagination -->
+        <div class="pagination-wrapper">
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-pagination mx-4"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% comment %} {% include "blog/front_page/utils/font_picker.html" %} {% endcomment %}
 {% endblock content %}
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="{% static 'js/front_page.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="{% static 'js/front_page.js' %}"></script>
 {% endblock scripts %}

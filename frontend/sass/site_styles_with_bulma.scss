@@ -84,10 +84,13 @@ $background: $white-ter;
 $text: $black;
 $text-strong: $black;
 
-$link: $blue;
-$link-hover: $grey-darker;
-$link-focus: $grey-darker;
-$link-active: $grey-darker;
+$link: $accentcolour;
+$link-hover: $lightpink;
+$link-focus: $lightpink;
+$link-active: $lightpink;
+
+$tag-radius: 10px;
+$tag-background-color: $lightpink;
 
 $navbar-item-hover-color: $white;
 $navbar-item-active-color: $white;
@@ -111,6 +114,8 @@ $footer-background-color: $lightpink;
 :root {
   --secondary-theme-color: #{$highlightcolour};
   --swiper-theme-color: #{$accentcolour} !important;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-inactive-color: #{$grey-light};
 }
 
 #header-bar {
@@ -119,10 +124,11 @@ $footer-background-color: $lightpink;
   height: $header-bar-height;
   & > div {
     position: relative;
+    padding-inline: 2.5rem;
   }
 
   & .navbar-item.title-search {
-    padding: 0 0.75rem;
+    padding: 0;
   }
 
   & * {
@@ -178,11 +184,15 @@ a.navbar-item:active {
   align-items: baseline;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
-  margin-inline: 0.5rem;
+  // margin-inline: 0.5rem;
 
   & .category-name {
     font-size: 2rem;
     margin-bottom: 0px !important;
+
+    &:hover {
+      color: $link;
+    }
   }
 
   & .carousel-view-all {
@@ -190,8 +200,21 @@ a.navbar-item:active {
     color: $textcolour;
 
     &:hover span {
-      color: $link-hover;
+      color: $link;
     }
+  }
+}
+
+.swiper .pagination-wrapper {
+  & .swiper-button-next:not(.swiper-button-disabled):hover,
+  & .swiper-button-prev:not(.swiper-button-disabled):hover {
+    border-color: $link-hover;
+    &::after {
+      background: $link-hover;
+    }
+  }
+  & span.swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
+    background: $link-hover;
   }
 }
 
@@ -254,6 +277,14 @@ a.navbar-item:active {
   }
 }
 
+.navbar-menu > .navbar-item {
+  font-size: 20px;
+}
+
+.navbar-dropdown > .navbar-item {
+  font-size: 18px;
+}
+
 #mobile-title img {
   max-height: 3rem;
 }
@@ -271,6 +302,10 @@ a.navbar-item:active {
   top: $nav-brand-height-mobile;
   padding: 0.5rem;
   background: white;
+}
+
+.letter-link {
+  padding: 1.2px;
 }
 
 /* touch devices */
@@ -292,6 +327,11 @@ a.navbar-item:active {
   }
   #navbar {
     top: $header-bar-height;
+
+    & > .navbar {
+      padding-left: 2.5rem;
+      padding-right: 2rem;
+    }
   }
 
   #site-warning-wrapper {
@@ -321,17 +361,40 @@ a.navbar-item:active {
     }
   }
 
+  .navbar-menu > .navbar-item {
+    font-size: 0.875rem;
+  }
+
+  .navbar-dropdown > .navbar-item {
+    font-size: 0.8rem;
+  }
+
   #alpha-links {
     top: $header-bar-height + $navbar-height;
+    & > .level-item {
+      gap: 0.6rem;
+    }
   }
 }
 
 /* widescreen */
 @media (min-width: 1216px) {
+  .navbar-menu > .navbar-item {
+    font-size: 1.1rem;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 1rem;
+  }
 }
 
 /* full hd */
 @media (min-width: 1408px) {
+  .navbar-menu > .navbar-item {
+    font-size: 20px;
+  }
+  .navbar-dropdown > .navbar-item {
+    font-size: 18px;
+  }
 }
 
 #desktop-title h1 {
@@ -347,38 +410,10 @@ h1.site-title {
   font-family: "Dawning of a New Day" !important;
 }
 
-.title,
-.navbar,
-.navbar-menu,
-.navbar-item,
-.subtitle {
-  font-family: $font-family-overpass;
-}
-
-.navbar-menu > .navbar-item {
-  // text-transform: uppercase;
-  font-size: 20px;
-}
-
-.navbar-dropdown {
-  text-transform: none;
-  font-size: 18px !important;
-}
-
 .sticky {
   position: sticky;
   top: 0;
   z-index: 5;
-}
-
-.letter-link {
-  padding: 1.2px;
-}
-
-.letter-link:hover {
-  font-weight: bold;
-  padding-left: 3px;
-  padding-right: 3px;
 }
 
 .post-preview-image {
@@ -393,6 +428,7 @@ h1.site-title {
 
 a.tag-expander {
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .text-pink-on-hover {
@@ -469,7 +505,7 @@ a.tag-expander {
   border-width: 2px;
 }
 
-.navbar-burger {
+a.navbar-burger {
   margin-left: unset;
   margin-right: 0.5em;
   & > span {
@@ -491,6 +527,10 @@ a.tag-expander {
     &:nth-child(3) {
       transform: translateY(-8px) rotate(-45deg);
     }
+  }
+
+  &:hover {
+    color: $black;
   }
 }
 
