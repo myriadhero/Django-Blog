@@ -8372,3 +8372,10 @@ a.navbar-burger:hover {
   max-width: 100%;
   overflow: hidden;
 }
+
+a.title {
+  color: #000000;
+}
+a.title:hover, a.title:active {
+  color: #d6a496;
+}

@@ -566,3 +566,11 @@ a.navbar-burger {
   max-width: 100%;
   overflow: hidden;
 }
+
+a.title {
+  color: $black;
+  &:hover,
+  &:active {
+    color: $link;
+  }
+}

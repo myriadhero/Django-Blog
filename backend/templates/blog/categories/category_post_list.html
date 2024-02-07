@@ -5,9 +5,7 @@
 {% endblock title %}
 {% block content %}
   <div class="section">
-    <h3 class="title is-3 is-uppercase">
-      <a href="{{ category.get_absolute_url }}" class="title">{{ category.name }}</a>
-    </h3>
+    <h3 class="title has-text-weight-normal">{{ category.name }}</h3>
     {% include "blog/categories/includes/filter_by_tag.html" %}
     {% include "blog/post/includes/post_list.html" %}
   </div>
