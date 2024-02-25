@@ -3,7 +3,7 @@
   {{ category.name }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
-  <div class="section pt-0">
+  <div class="section pt-0" id="all-tags">
     {% regroup tags by slug.0 as alpha_tags %}
     <div id="alpha-links" class="level sticky">
       <div class="level-item">
@@ -14,34 +14,129 @@
       </div>
     </div>
     <h3 class="title has-text-weight-normal">{{ category.name }}</h3>
+    <span class="subtitle" id="search-filter">
+      <span class="control has-icons-right">
+        <input type="text" id="tag-quick-search" class="input" placeholder="Search">
+        <span class="icon is-small is-right">
+          <i class="fa-solid fa-xmark"></i>
+        </span>
+      </span>
+    </span>
     <p class="pb-5">{{ category.description }}</p>
+    <p class="not-found">Try searching for something else...</p>
     {% for letter, letter_tags in alpha_tags %}
-      <p class="title is-3 pl-5" id="starts-with-{{ letter|upper }}">{{ letter|upper }}</p>
-      {% for tag in letter_tags %}
-        <div class="columns is-mobile">
-          <div class="column is-narrow">
-            <div class="image is-96x96">
-              <img height="100"
-                   width="100"
-                   src=" {% if tag.thumbnail %} {{ tag.thumbnail.url }} {% else %} https://bulma.io/images/placeholders/96x96.png {% endif %}"
-                   alt="{{ tag.name }}"
-                   class="is-rounded">
+      <div class="by-letter">
+        <p class="title is-3 pl-5" id="starts-with-{{ letter|upper }}">{{ letter|upper }}</p>
+        {% for tag in letter_tags %}
+          <div class="columns is-mobile tag-wrapper">
+            <div class="column is-narrow">
+              <div class="image is-96x96">
+                <img height="100"
+                     width="100"
+                     src=" {% if tag.thumbnail %} {{ tag.thumbnail.url }} {% else %} https://bulma.io/images/placeholders/96x96.png {% endif %}"
+                     alt="{{ tag.name }}"
+                     class="is-rounded">
+              </div>
             </div>
-          </div>
-          <div class="column is-flex is-flex-direction-column is-justify-content-center">
-            <p class="title is-4">
-              <a href="{{ tag.get_absolute_url }}" class="has-text-primary">{{ tag.name }}</a>
-            </p>
-            {% comment %} <p class="subtitle is-6">
+            <div class="column is-flex is-flex-direction-column is-justify-content-center">
+              <p class="title is-4">
+                <a href="{{ tag.get_absolute_url }}" class="has-text-primary tag-name">{{ tag.name }}</a>
+              </p>
+              {% comment %} <p class="subtitle is-6">
               {% if tag.description %}
                 {{ tag.description }}
               {% else %}
                 🐱‍👤🤷‍♀️
               {% endif %}
-            </p> {% endcomment %}
+              </p> {% endcomment %}
+            </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     {% endfor %}
   </div>
 {% endblock content %}
+{% block scripts %}
+  <script>
+    const DELAY = 200;
+    const tagQuickSearch = document.getElementById('tag-quick-search');
+    const tagLinks = document.querySelectorAll('.tag-name');
+    const allTagsElem = document.getElementById('all-tags');
+    let timerId = null;
+
+    function filterTags(){
+      const query = tagQuickSearch.value.toLowerCase();
+
+      if (query == '') {
+        tagLinks.forEach((tagLink) => {
+          allTagsElem.classList.remove("searched");
+          tagLink.classList.remove("searched");
+        });
+        return;
+      }
+      
+      allTagsElem.classList.add("searched");
+
+      for (let tagLink of tagLinks) {
+        const tagName = tagLink.textContent.toLowerCase();
+        if (tagName.includes(query)) {
+          tagLink.classList.add("searched");
+        } else {
+          tagLink.classList.remove("searched");
+        }
+      }
+    }
+
+    function filterTagsWithTimeout() {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
+      timerId = setTimeout(
+        () => {
+          timerId = null;
+          filterTags();
+        },
+        DELAY
+      );
+    }
+
+    document.querySelector("#tag-quick-search + .icon").addEventListener("click", () => {
+      tagQuickSearch.value = '';
+      filterTags();
+    });
+    tagQuickSearch.addEventListener("input", filterTagsWithTimeout);
+  </script>
+  <style>
+    #all-tags.searched .by-letter:not(:has(.searched)) {
+      display: none;
+    }
+    #all-tags.searched .by-letter:has(.searched) .tag-wrapper:not(:has(.searched)){
+      display: none;
+    }
+
+    #all-tags .not-found {
+      display: none;
+    }
+
+    #all-tags.searched:not(:has(.searched)) .not-found {
+      display: block;
+    }
+
+    #tag-quick-search {
+      width: unset;
+      {% comment %} 
+      TODO: play around with different styles, currently this goes to 100% on page load
+      also the x icon should be hidden when the input is empty
+{% endcomment %}
+    }
+    #tag-quick-search + .icon {
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    #search-filter {
+      display: inline-flex;
+    }
+  </style>
+{% endblock scripts %}
