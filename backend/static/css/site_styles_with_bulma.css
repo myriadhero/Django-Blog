@@ -179,6 +179,11 @@ a.navbar-item:active svg path {
   padding: 1.2px;
 }
 
+@media screen and (max-width: 400px) {
+  #alpha-links .letter-link.subtitle {
+    font-size: medium;
+  }
+}
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header .category-name {
