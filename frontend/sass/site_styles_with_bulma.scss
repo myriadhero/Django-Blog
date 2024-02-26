@@ -22,7 +22,7 @@ $family-sans-serif: $font-family-inter;
 // $family-secondary:
 // $body-family:
 
-$yellow: #fedd90;
+$yellow: #e3c9a6;
 $darkpink: #d6a496;
 $lightpink: #f2d7d0;
 $lightgrey: #f0f0f0;
@@ -308,6 +308,12 @@ a.navbar-item:active {
   padding: 1.2px;
 }
 
+@media screen and (max-width: 400px) {
+  #alpha-links .letter-link.subtitle {
+    font-size: medium;
+  }
+}
+
 /* touch devices */
 @media (min-width: 769px) {
   .carousel-header .category-name {
@@ -565,4 +571,12 @@ a.navbar-burger {
   justify-content: start;
   max-width: 100%;
   overflow: hidden;
+}
+
+a.title {
+  color: $black;
+  &:hover,
+  &:active {
+    color: $link;
+  }
 }
