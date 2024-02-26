@@ -55,58 +55,7 @@
       </div>
     {% endfor %}
   </div>
-{% endblock content %}
-{% block scripts %}
-  <script>
-    const DELAY = 200;
-    const tagQuickSearch = document.getElementById('tag-quick-search');
-    const tagLinks = document.querySelectorAll('.tag-name');
-    const allTagsElem = document.getElementById('all-tags');
-    let timerId = null;
-
-    function filterTags(){
-      const query = tagQuickSearch.value.toLowerCase();
-
-      if (query == '') {
-        tagLinks.forEach((tagLink) => {
-          allTagsElem.classList.remove("searched");
-          tagLink.classList.remove("searched");
-        });
-        return;
-      }
-      
-      allTagsElem.classList.add("searched");
-
-      for (let tagLink of tagLinks) {
-        const tagName = tagLink.textContent.toLowerCase();
-        if (tagName.includes(query)) {
-          tagLink.classList.add("searched");
-        } else {
-          tagLink.classList.remove("searched");
-        }
-      }
-    }
-
-    function filterTagsWithTimeout() {
-      if (timerId) {
-        clearTimeout(timerId);
-      }
-
-      timerId = setTimeout(
-        () => {
-          timerId = null;
-          filterTags();
-        },
-        DELAY
-      );
-    }
-
-    document.querySelector("#tag-quick-search + .icon").addEventListener("click", () => {
-      tagQuickSearch.value = '';
-      filterTags();
-    });
-    tagQuickSearch.addEventListener("input", filterTagsWithTimeout);
-  </script>
+  {% comment %} search filter helpers to go with the script below {% endcomment %}
   <style>
     #all-tags.searched .by-letter:not(:has(.searched)) {
       display: none;
@@ -114,29 +63,30 @@
     #all-tags.searched .by-letter:has(.searched) .tag-wrapper:not(:has(.searched)){
       display: none;
     }
-
     #all-tags .not-found {
       display: none;
     }
-
     #all-tags.searched:not(:has(.searched)) .not-found {
       display: block;
     }
-
-    #tag-quick-search {
-      width: unset;
-      {% comment %} 
-      TODO: play around with different styles, currently this goes to 100% on page load
-      also the x icon should be hidden when the input is empty
-{% endcomment %}
+    #search-filter .control {
+      display: flex;
     }
     #tag-quick-search + .icon {
       pointer-events: all;
       cursor: pointer;
     }
-
-    #search-filter {
-      display: inline-flex;
+    #tag-quick-search:placeholder-shown + .icon {
+      display: none;
+    }
+    @media screen and (min-width: 768px){
+      #search-filter {
+        display: inline-flex;
+      }
     }
   </style>
+{% endblock content %}
+{% block scripts %}
+  {% load static %}
+  <script src="{% static "js/cat_tag_list_filter.js" %}"></script>
 {% endblock scripts %}
