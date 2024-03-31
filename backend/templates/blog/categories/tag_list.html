@@ -3,6 +3,7 @@
   {{ category.name }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
+  {% load static %}
   <div class="section pt-0" id="all-tags">
     {% regroup tags by slug.0 as alpha_tags %}
     <div id="alpha-links" class="level sticky">
@@ -26,16 +27,12 @@
     <p class="not-found">Try searching for something else...</p>
     {% for letter, letter_tags in alpha_tags %}
       <div class="by-letter">
-        <p class="title is-3 pl-5" id="starts-with-{{ letter|upper }}">{{ letter|upper }}</p>
+        <p class="title is-3 pl-5 pt-6" id="starts-with-{{ letter|upper }}">{{ letter|upper }}</p>
         {% for tag in letter_tags %}
           <div class="columns is-mobile tag-wrapper">
             <div class="column is-narrow">
               <div class="image is-96x96">
-                <img height="100"
-                     width="100"
-                     src=" {% if tag.thumbnail %} {{ tag.thumbnail.url }} {% else %} https://bulma.io/images/placeholders/96x96.png {% endif %}"
-                     alt="{{ tag.name }}"
-                     class="is-rounded">
+                <img height="100" width="100" src="{% if tag.thumbnail %}{{ tag.thumbnail.url }}{% else %}{% static "images/ph_person.svg" %}{% endif %}" alt="{{ tag.name }}" class="is-rounded">
               </div>
             </div>
             <div class="column is-flex is-flex-direction-column is-justify-content-center">
