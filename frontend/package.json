@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "css-build": "sass --no-source-map sass/site_styles_with_bulma.scss:../backend/static/css/site_styles_with_bulma.css sass/carousel_calcs.scss:../backend/static/css/carousel_calcs.css",
-    "css-watch": "npm run css-build -- --watch",
+    "build-bulma": "sass --load-path=node_modules sass/site_styles_with_bulma.scss ../backend/static/css/site_styles_with_bulma.css",
+    "build-carousel": "sass sass/carousel_calcs.scss ../backend/static/css/carousel_calcs.css",
+    "css-watch-bulma": "npm run build-bulma -- --watch",
+    "css-watch-carousel": "npm run build-carousel -- --watch",
     "start": "npm run css-watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bulma": "^0.9.4",
-    "sass": "^1.70.0"
+    "bulma": "^1.0.0",
+    "sass": "^1.72.0"
   }
 }
