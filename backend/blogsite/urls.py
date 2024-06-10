@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from blog.sitemaps import CategorySitemap, PostSitemap
 from ckeditor_uploader import views as ckeditor_views
 from core.views import AboutPageView, healthcheck_view
@@ -31,6 +32,7 @@ urlpatterns = [
     path(settings.ADMIN_PATH, admin.site.urls),
     path("", include("blog.urls", namespace="blog")),
     path("about/", AboutPageView.as_view(), name="about"),
+    path("feedback", include("feedback.urls", namespace="feedback")),
     path("healthcheck/", healthcheck_view, name="healthcheck"),
     path(
         "sitemap.xml",

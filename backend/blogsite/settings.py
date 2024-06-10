@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     # local
     "core.apps.CoreConfig",
     "blog.apps.BlogConfig",
+    "feedback.apps.FeedbackConfig",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
@@ -117,7 +119,7 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB_NAME"),
         "USER": os.environ.get("POSTGRES_DB_USER"),
         "PASSWORD": os.environ.get("POSTGRES_DB_PASSWORD"),
-    }
+    },
 }
 
 
@@ -249,7 +251,7 @@ CKEDITOR_CONFIGS = {
                 "filebrowser",
                 "autolink",
                 "autogrow",
-            ]
+            ],
         ),
         "filebrowserUploadUrl": "/ckeditor/upload/",
         "extraAllowedContent": "blockquote(twitter-tweet)[data-conversation]; p[lang,dir]; iframe[width,height,src,title,frameborder,allow,allowfullscreen]",

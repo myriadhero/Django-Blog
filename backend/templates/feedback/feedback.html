@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% load blog_tags %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Submit Feedback - {{ block.super }}
+{% endblock title %}
+{% block content %}
+    <div class="section">
+        <div class="block">
+            <div class="title is-4">Submit Feedback</div>
+            {{ form|crispy }}
+        </div>
+    </div>
+{% endblock content %}
