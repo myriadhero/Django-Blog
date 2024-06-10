@@ -17,6 +17,7 @@ gunicorn = "*"
 django-select2 = "*"
 django-meta = "*"
 psycopg = {extras = ["binary"], version = "*"}
+celery = {extras = ["redis"], version = "*"}
 
 [dev-packages]
 django-debug-toolbar = "*"

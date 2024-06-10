@@ -32,6 +32,7 @@ urlpatterns = [
     path("", include("blog.urls", namespace="blog")),
     path("about/", AboutPageView.as_view(), name="about"),
     path("healthcheck/", healthcheck_view, name="healthcheck"),
+    path("subscriptions/", include("subscriptions.urls", namespace="subscriptions")),
     path(
         "sitemap.xml",
         sitemap,

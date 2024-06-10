@@ -1,0 +1,15 @@
+<div id="email-sub-wrapper">
+    <form action="{% url "subscriptions:new_sub" %}"
+          method="post"
+          hx-post="{% url "subscriptions:new_sub" %}"
+          hx-target="#email-sub-wrapper"
+          hx-swap="OuterHTML">
+        {% csrf_token %}
+        {% if email_sub_form %}
+            {{ email_sub_form }}
+        {% else %}
+            <input type="email" name="email" id="sub_email">
+        {% endif %}
+        <button type="submit">Subscribe</button>
+    </form>
+</div>

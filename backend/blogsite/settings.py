@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     # local
     "core.apps.CoreConfig",
     "blog.apps.BlogConfig",
+    "subscriptions.apps.SubscriptionsConfig",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")

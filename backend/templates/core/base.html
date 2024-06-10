@@ -83,6 +83,7 @@
       </div>
     {% endif %}
     <footer class="footer has-text-centered">
+      {% include "subscriptions/email_form.html" %}
       <div class="content">
         {% if site_identity.footer %}{{ site_identity.footer|safe }}{% endif %}
       </div>
