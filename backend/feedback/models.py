@@ -22,4 +22,4 @@ class Feedback(models.Model):
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
-        fields = ("message", "name", "email")
+        fields = ("name", "email", "message")
