@@ -1,4 +1,5 @@
 .vscode/
+.venv
 *.pyc
 .DS_Store
 package-lock.json
