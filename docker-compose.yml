@@ -1,4 +1,3 @@
-version: '3'
 services:
   db-dev:
     image: postgres:15
