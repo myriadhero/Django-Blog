@@ -10,7 +10,7 @@ raw-data*.json
 /settings/*
 .env
 .env.*
-backend/media/CACHE/*
+backend/media/*
 readme.md
 .venv
 Dockerfile
