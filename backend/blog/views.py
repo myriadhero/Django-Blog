@@ -4,6 +4,7 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 from meta.views import MetadataMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import AdvancedSearchForm
 from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
@@ -24,7 +25,7 @@ class ViewMetadataMixin(MetadataMixin):
     # image_width
     # image_height
     object_type = "Website"
-    og_type =  "Website"
+    og_type = "Website"
     # site_name
     # twitter_site
     # twitter_creator
@@ -50,9 +51,7 @@ class ViewMetadataMixin(MetadataMixin):
 
 class PostListView(ListView):
     queryset = (
-        Post.published.select_related("author")
-        .prefetch_related("categories", "tags", "subcategories")
-        .distinct()
+        Post.published.select_related("author").prefetch_related("categories", "tags", "subcategories").distinct()
     )
     context_object_name = "posts"
     paginate_by = POSTS_PER_PAGE
@@ -80,7 +79,8 @@ class TagPostListView(PostListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tag"] = get_object_or_404(
-            CategoryTag, slug=self.kwargs.get("tag_slug"),
+            CategoryTag,
+            slug=self.kwargs.get("tag_slug"),
         )
         context["meta"] = context["tag"].as_meta(self.request)
         return context
@@ -95,12 +95,11 @@ class SubcategoryPostListView(PostListView):
             qs = qs.filter(categories=category)
 
         subcategory = get_object_or_404(
-            Subcategory, slug=self.kwargs.get("subcategory_slug"),
+            Subcategory,
+            slug=self.kwargs.get("subcategory_slug"),
         )
 
-        if (tag_slug := self.request.GET.get("tag")) and (
-            tag := CategoryTag.objects.filter(slug=tag_slug).first()
-        ):
+        if (tag_slug := self.request.GET.get("tag")) and (tag := CategoryTag.objects.filter(slug=tag_slug).first()):
             qs = qs.filter(tags=tag)
 
         return qs.filter(subcategories=subcategory)
@@ -112,13 +111,12 @@ class SubcategoryPostListView(PostListView):
             category = get_object_or_404(Category, slug=cat_slug)
             context["category"] = category
 
-        if (tag_slug := self.request.GET.get("tag")) and (
-            tag := CategoryTag.objects.filter(slug=tag_slug).first()
-        ):
+        if (tag_slug := self.request.GET.get("tag")) and (tag := CategoryTag.objects.filter(slug=tag_slug).first()):
             context["selected_tag"] = tag
 
         subcat = get_object_or_404(
-            Subcategory, slug=self.kwargs.get("subcategory_slug"),
+            Subcategory,
+            slug=self.kwargs.get("subcategory_slug"),
         )
         context["subcategory"] = subcat
         context["meta"] = subcat.as_meta(self.request)
@@ -142,9 +140,7 @@ class CategoryDetailView(ListView):
             return Post.objects.none()
 
         queryset = (
-            Post.published.filter(categories=category)
-            .select_related("author")
-            .prefetch_related("categories", "tags")
+            Post.published.filter(categories=category).select_related("author").prefetch_related("categories", "tags")
         )
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:
@@ -166,9 +162,9 @@ class CategoryDetailView(ListView):
         category = self.get_category()
         context["category"] = category
         context["meta"] = category.as_meta(self.request)
-        context["tags"] = (category.categorytag_set.all()
-                           if category.is_tag_list
-                           else category.get_tags_that_have_at_least_one_post())
+        context["tags"] = (
+            category.categorytag_set.all() if category.is_tag_list else category.get_tags_that_have_at_least_one_post()
+        )
 
         tag_slug = self.request.GET.get("tag", None)
         if tag_slug:
@@ -183,9 +179,11 @@ class CategoryDetailView(ListView):
 
 
 class PostDetailView(DetailView):
-    model = Post
     template_name = "blog/post/detail.html"
     context_object_name = "post"
+
+    def get_queryset(self):
+        return Post.published
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -194,6 +192,9 @@ class PostDetailView(DetailView):
         context["meta"] = post.as_meta(self.request)
         return context
 
+class PostPreviewView(LoginRequiredMixin, PostDetailView):
+    def get_queryset(self):
+        return Post.objects
 
 class FrontPageView(ViewMetadataMixin, ListView):
     context_object_name = "categories"
@@ -263,7 +264,7 @@ class PostSearchListView(ViewMetadataMixin, PostListView):
                 qs = qs.filter(publish__gt=after)
 
             qs = qs.order_by(
-                f"{is_ascending}{'publish' if order_by=='date' else 'rank'}",
+                f"{is_ascending}{'publish' if order_by == 'date' else 'rank'}",
             )
 
         return qs

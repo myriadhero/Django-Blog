@@ -70,10 +70,7 @@ class CategoryAdmin(admin.ModelAdmin):
         html_links = format_html_join(
             "\n",
             '<div><a href="{}">{}</a></div>',
-            (
-                (reverse("admin:blog_post_change", args=[post.pk]), post.title)
-                for post in posts
-            ),
+            ((reverse("admin:blog_post_change", args=[post.pk]), post.title) for post in posts),
         )
         html_see_all = format_html(
             '<div><a href="{}">Show all</a></div>',
@@ -100,15 +97,11 @@ class SubcategoryAdmin(admin.ModelAdmin):
         html_links = format_html_join(
             "\n",
             '<div><a href="{}">{}</a></div>',
-            (
-                (reverse("admin:blog_post_change", args=[post.pk]), post.title)
-                for post in posts
-            ),
+            ((reverse("admin:blog_post_change", args=[post.pk]), post.title) for post in posts),
         )
         html_see_all = format_html(
             '<div><a href="{}">Show all</a></div>',
-            reverse("admin:blog_post_changelist")
-            + f"?subcategories__id__exact={obj.pk}",
+            reverse("admin:blog_post_changelist") + f"?subcategories__id__exact={obj.pk}",
         )
         return format_html("{}<br>{}", html_links, html_see_all)
 
@@ -144,7 +137,7 @@ class TagsAutoMultiSelectWidget(s2forms.ModelSelect2TagWidget):
         values = set(super().value_from_datadict(data, files, name))
 
         pks = self.queryset.filter(
-            **{"pk__in": list(filter(lambda x: x.isdigit(), values))}
+            **{"pk__in": list(filter(lambda x: x.isdigit(), values))},
         ).values_list("pk", flat=True)
 
         pks = set(map(str, pks))
@@ -164,7 +157,7 @@ class PostAdminForm(forms.ModelForm):
         queryset=CategoryTag.objects.all(),
         required=False,
         widget=TagsAutoMultiSelectWidget(
-            attrs={"data-token-separators": [","], "data-tags": "true"}
+            attrs={"data-token-separators": [","], "data-tags": "true"},
         ),
     )
 
@@ -210,15 +203,14 @@ class PostAdmin(admin.ModelAdmin):
         return qs
 
     def get_categories(self, obj: Post):
-        return ", ".join(
-            cat.name for cat in chain(obj.categories.all(), obj.subcategories.all())
-        )
+        return ", ".join(cat.name for cat in chain(obj.categories.all(), obj.subcategories.all()))
 
     get_categories.short_description = "Categories"
 
     def view_on_site(self, obj: Post):
         if obj.status == Post.Status.PUBLISHED:
             return obj.get_absolute_url()
+        return reverse("blog:post_detail_preview", args=[obj.slug])
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -236,7 +228,7 @@ class TagsWithNoPostsFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == "":
             return queryset.annotate(
-                ntag=Count("blog_taggedwithcategorytags_tags")
+                ntag=Count("blog_taggedwithcategorytags_tags"),
             ).filter(ntag=0)
 
 
@@ -270,17 +262,11 @@ class CategoryTagAdmin(admin.ModelAdmin):
     ]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
-        qs = (
-            super()
-            .get_queryset(request)
-            .prefetch_related("categories", "subcategories")
-        )
+        qs = super().get_queryset(request).prefetch_related("categories", "subcategories")
         return qs
 
     def get_categories(self, obj: CategoryTag):
-        return ", ".join(
-            cat.name for cat in chain(obj.categories.all(), obj.subcategories.all())
-        )
+        return ", ".join(cat.name for cat in chain(obj.categories.all(), obj.subcategories.all()))
 
     get_categories.short_description = "Categories"
 
@@ -289,10 +275,7 @@ class CategoryTagAdmin(admin.ModelAdmin):
         html_links = format_html_join(
             "\n",
             '<div><a href="{}">{}</a></div>',
-            (
-                (reverse("admin:blog_post_change", args=[post.pk]), post.title)
-                for post in posts
-            ),
+            ((reverse("admin:blog_post_change", args=[post.pk]), post.title) for post in posts),
         )
         html_see_all = format_html(
             '<div><a href="{}">Show all</a></div>',
