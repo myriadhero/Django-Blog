@@ -145,8 +145,7 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
-    def test_draft_post_preview_view_anonymous(self):
-        """Test that a draft post's preview view redirects anonymous users to login."""
+    def test_draft_post_preview_view_anonymous_redirects(self):
         draft_post = Post.objects.create(
             title="Draft Post",
             slug="draft-post",
