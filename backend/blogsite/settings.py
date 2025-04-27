@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import os
+
+from os import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,17 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG").lower() in ("true", "1", "t")
+DEBUG = environ.get("DJANGO_DEBUG").lower() in ("true", "1", "t")
 
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
+ALLOWED_HOSTS = environ.get("DJANGO_ALLOWED_HOSTS").split(",") or [
     "localhost",
     "127.0.0.1",
 ]
@@ -56,8 +57,9 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django.contrib.postgres",
     # packages
-    "ckeditor",
-    "ckeditor_uploader",
+    # "ckeditor",
+    # "ckeditor_uploader",
+    "django_ckeditor_5",
     "fontawesomefree",
     "django_select2",
     "crispy_forms",
@@ -112,12 +114,12 @@ WSGI_APPLICATION = "blogsite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("POSTGRES_DB_HOST"),
-        "PORT": os.environ.get("POSTGRES_DB_PORT", 5432),
-        "NAME": os.environ.get("POSTGRES_DB_NAME"),
-        "USER": os.environ.get("POSTGRES_DB_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_DB_PASSWORD"),
-    }
+        "HOST": environ.get("POSTGRES_DB_HOST"),
+        "PORT": environ.get("POSTGRES_DB_PORT", 5432),
+        "NAME": environ.get("POSTGRES_DB_NAME"),
+        "USER": environ.get("POSTGRES_DB_USER"),
+        "PASSWORD": environ.get("POSTGRES_DB_PASSWORD"),
+    },
 }
 
 
@@ -144,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = os.environ.get("DJANGO_TIME_ZONE")
+TIME_ZONE = environ.get("DJANGO_TIME_ZONE")
 USE_I18N = False
 USE_TZ = True
 
@@ -159,7 +161,7 @@ STATICFILES_STORAGE = (
     else "django.contrib.staticfiles.storage.StaticFilesStorage"
 )
 STATIC_URL = "static/"
-STATIC_ROOT = os.environ.get("STATICFILES_DIR") or BASE_DIR / "staticfiles"
+STATIC_ROOT = environ.get("STATICFILES_DIR") or BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -172,94 +174,122 @@ TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_TAGS_FROM_STRING = "blog.utils.utils.comma_splitter"
 TAGGIT_STRING_FROM_TAGS = "blog.utils.utils.comma_joiner"
 
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = "staff"
 
-CKEDITOR_CONFIGS = {
+CKEDITOR_5_CONFIGS = {
     "default": {
-        "toolbar_Custom": [
-            {
-                "name": "document",
-                "items": [
-                    "Source",
-                ],
-            },
-            {"name": "editing", "items": ["Find", "Replace", "-", "SelectAll"]},
-            {
-                "name": "tools",
-                "items": [
-                    "Maximize",
-                    "ShowBlocks",
-                    "Preview",
-                ],
-            },
-            "/",  # put this to force next toolbar on new line
-            {"name": "styles", "items": ["Styles", "Format", "Font", "FontSize"]},
-            {
-                "name": "basicstyles",
-                "items": [
-                    "Bold",
-                    "Italic",
-                    "Underline",
-                    "Strike",
-                    "Subscript",
-                    "Superscript",
-                    "-",
-                    "RemoveFormat",
-                ],
-            },
-            "/",  # put this to force next toolbar on new line
-            {
-                "name": "paragraph",
-                "items": [
-                    "NumberedList",
-                    "BulletedList",
-                    "-",
-                    "Outdent",
-                    "Indent",
-                    "-",
-                    "Blockquote",
-                    "CreateDiv",
-                    "-",
-                    "JustifyLeft",
-                    "JustifyCenter",
-                    "JustifyRight",
-                    "JustifyBlock",
-                ],
-            },
-            {"name": "colors", "items": ["TextColor", "BGColor"]},
-            {"name": "links", "items": ["Link", "Unlink", "Anchor"]},
-            "/",  # put this to force next toolbar on new line
-            {
-                "name": "insert",
-                "items": [
-                    "Image",
-                    "Flash",
-                    "Table",
-                    "HorizontalRule",
-                    "Smiley",
-                    "SpecialChar",
-                ],
-            },
+        "blockToolbar": [
+            "paragraph",
+            "heading1",
+            "heading2",
+            "heading3",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
         ],
-        "toolbar": "Custom",
-        "tabSpaces": 4,
-        "extraPlugins": ",".join(
-            [
-                "uploadimage",  # the upload image feature
-                "image",
-                "filebrowser",
-                "autolink",
-                "autogrow",
-            ]
-        ),
-        "filebrowserUploadUrl": "/ckeditor/upload/",
-        "extraAllowedContent": "blockquote(twitter-tweet)[data-conversation]; p[lang,dir]; iframe[width,height,src,title,frameborder,allow,allowfullscreen]",
+        "toolbar": {
+            "items": [
+                "findandreplace",
+                "|",
+                "undo",
+                "redo",
+                "|",
+                "sourceEditing",
+                "|",
+                "insertImage",
+                "|",
+                "link",
+                "-",
+                "heading",
+                "bold",
+                "italic",
+                "underline",
+                "strikethrough",
+                "alignment",
+                "fontSize",
+                "fontFamily",
+                "fontColor",
+                "fontBackgroundColor",
+                "removeFormat",
+                "subscript",
+                "superscript",
+                "highlight",
+                "|",
+                "blockQuote",
+                "bulletedList",
+                "numberedList",
+                "todoList",
+                "outdent",
+                "indent",
+                "|",
+                "insertTable",
+                "specialcharacters",
+                "horizontalline",
+            ],
+            "shouldNotGroupWhenFull": True,
+        },
+        "image": {
+            "toolbar": [
+                "imageTextAlternative",
+                "|",
+                "imageStyle:alignLeft",
+                "imageStyle:alignRight",
+                "imageStyle:alignCenter",
+                "imageStyle:side",
+                "|",
+            ],
+            "styles": [
+                "full",
+                "side",
+                "alignLeft",
+                "alignRight",
+                "alignCenter",
+            ],
+        },
+        "table": {
+            "contentToolbar": ["tableColumn", "tableRow", "mergeTableCells", "tableProperties", "tableCellProperties"],
+        },
+        "heading": {
+            "options": [
+                {"model": "paragraph", "title": "Paragraph", "class": "ck-heading_paragraph"},
+                {"model": "heading1", "view": "h1", "title": "Heading 1", "class": "ck-heading_heading1"},
+                {"model": "heading2", "view": "h2", "title": "Heading 2", "class": "ck-heading_heading2"},
+                {"model": "heading3", "view": "h3", "title": "Heading 3", "class": "ck-heading_heading3"},
+            ],
+        },
+        "htmlSupport": {
+            "allow": [
+                {
+                    "name": "blockquote",
+                    "classes": ["twitter-tweet"],
+                    "attributes": ["data-conversation"],
+                },
+                {
+                    "name": "p",
+                    "attributes": ["lang", "dir"],
+                },
+                {
+                    "name": "iframe",
+                    "attributes": ["width", "height", "src", "title", "frameborder", "allow", "allowfullscreen"],
+                    "children": False,
+                },
+            ],
+        },
+    },
+    "list": {
+        "properties": {
+            "styles": "true",
+            "startIndex": "true",
+            "reversed": "true",
+        },
     },
 }
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_IMAGE_BACKEND = "pillow"
+
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.environ.get("MEDIAFILES_DIR", BASE_DIR / "media")
+MEDIA_ROOT = environ.get("MEDIAFILES_DIR", BASE_DIR / "media")
 
 META_USE_SITES = True
 META_USE_OG_PROPERTIES = True
@@ -272,9 +302,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 CRISPY_TEMPLATE_PACK = "bulma"
 
 # it is recommended to change django admin url path from the default admin/
-ADMIN_PATH = os.environ.get("DJANGO_ADMIN_PATH", "admin/")
+ADMIN_PATH = environ.get("DJANGO_ADMIN_PATH", "admin/")
 
-LOGS_DIR = os.environ.get("LOGS_DIR", BASE_DIR / "logs")
+LOGS_DIR = environ.get("LOGS_DIR", BASE_DIR / "logs")
 if not DEBUG:
     LOGGING = {
         "version": 1,
@@ -286,7 +316,7 @@ if not DEBUG:
             "file": {
                 "level": "INFO",
                 "class": "logging.handlers.RotatingFileHandler",
-                "filename": os.path.join(LOGS_DIR, "django.log"),
+                "filename": LOGS_DIR / "django.log",
                 "maxBytes": 1024 * 1024 * 5,  # 5MB
                 "backupCount": 5,  # 5 total files
                 # "formatter": "verbose",

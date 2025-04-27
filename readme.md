@@ -4,23 +4,22 @@ This started out as a blog concept, but is now slowly growing into an entertainm
 
 ## Running Django Server in Dev
 
-- Install [Python 3.11](https://www.python.org/downloads/)
-- Run `pip install pipenv`
 - Download this repository
-- Navigate to root and run: `pipenv sync --dev` _or_ `pipenv install --dev` (the latter may install updated packages that could differ from current prod)
+- Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- Navigate to root and run: `uv sync`
 - Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - Copy `example_settings/.env` file to root folder
 - Edit root `.env` file:
   - Change `DJANGO_SECRET_KEY` to your own phrase
   - Change `POSTGRES_DB_PASSWORD` 
   - Change other parameters if needed
-- To start dev DB docker container run: `pipenv run devdb`
+- To start dev DB docker container run: `docker compose -profile dev up`
 - In a separate prompt
   - When starting Django for the first time run: 
-    - `pipenv run migrate`
-    - `pipenv run createsuperuser`
-  - Start django server: `pipenv run django`
-- Go to http://localhost/admin and have a look around :)
+    - `uv run backend/manage.py migrate`
+    - `uv run backend/manage.py createsuperuser`
+  - Start django server: `uv run backend/manage.py runserver`
+- Go to http://localhost:8000/admin and have a look around :)
 - Use `ctrl-c` to kill server and DB container
 
 ### Project structure
@@ -107,7 +106,7 @@ ___
 ### Packages and programs used in this project:
 
 - [Python 🐍](https://www.python.org/downloads/)
-- [Pipenv](https://pipenv.pypa.io/en/latest/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [Psycopg 3](https://www.psycopg.org/psycopg3/docs/) and [PostgreSQL](https://www.postgresql.org/) (via docker)
 - [Gunicorn](https://gunicorn.org/)

@@ -29,7 +29,7 @@ class FrontPageTests(TestCase):
         self.assertTemplateUsed(self.response, "blog/front_page/front_page.html")
 
 
-class CategorySetUpMixin:
+class CommonSetUpMixin:
     def setUp(self):
         super().setUp()
         username = "doggobloggersson"
@@ -44,7 +44,8 @@ class CategorySetUpMixin:
 
         self.cat = Category.objects.create(name="DoggoCategory", slug="doggocat")
         self.subcat = Subcategory.objects.create(
-            name="DoggoSubcategory", slug="doggo-subcat"
+            name="DoggoSubcategory",
+            slug="doggo-subcat",
         )
         self.subcat.categories.add(self.cat)
         self.tag = CategoryTag.objects.create(name="DoggoTag", slug="doggo-cat-tag")
@@ -62,7 +63,7 @@ class CategorySetUpMixin:
         self.post.tags.add(self.tag)
 
 
-class CategoryTests(CategorySetUpMixin, TestCase):
+class CategoryTests(CommonSetUpMixin, TestCase):
     def test_category_templates_used(self):
         url = self.cat.get_absolute_url()
         response = self.client.get(url)
@@ -76,7 +77,7 @@ class CategoryTests(CategorySetUpMixin, TestCase):
         self.assertTemplateUsed(response, "blog/categories/tag_list.html")
 
 
-class SubategoryTests(CategorySetUpMixin, TestCase):
+class SubategoryTests(CommonSetUpMixin, TestCase):
     def test_category_templates_used(self):
         url = self.subcat.get_absolute_url()
         response = self.client.get(url)
@@ -90,7 +91,7 @@ class SubategoryTests(CategorySetUpMixin, TestCase):
         self.assertTemplateUsed(response, "blog/categories/subcategory_post_list.html")
 
 
-class TagTests(CategorySetUpMixin, TestCase):
+class TagTests(CommonSetUpMixin, TestCase):
     def test_template_used(self):
         url = self.tag.get_absolute_url()
         response = self.client.get(url)
@@ -98,7 +99,7 @@ class TagTests(CategorySetUpMixin, TestCase):
         self.assertTemplateUsed(response, "blog/post/list.html")
 
 
-class SearchTests(CategorySetUpMixin, TestCase):
+class SearchTests(CommonSetUpMixin, TestCase):
     def test_template_used(self):
         url = reverse("blog:post_search")
         response = self.client.get(url)
@@ -111,12 +112,51 @@ class SearchTests(CategorySetUpMixin, TestCase):
         self.assertTemplateUsed(response, "blog/post/search.html")
 
 
-class PostTests(CategorySetUpMixin, TestCase):
+class PostTests(CommonSetUpMixin, TestCase):
     def test_template_used(self):
         url = self.post.get_absolute_url()
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/detail.html")
+
+    def test_draft_post_detail_view_anonymous(self):
+        draft_post = Post.objects.create(
+            title="Draft Post",
+            slug="draft-post",
+            body="This is a draft",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        url = reverse("blog:post_detail", args=[draft_post.slug])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_draft_post_preview_view_logged_in(self):
+        draft_post = Post.objects.create(
+            title="Draft Post",
+            slug="draft-post",
+            body="This is a draft",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        self.client.login(username="doggobloggersson", password="doggopass123")
+        url = reverse("blog:post_detail_preview", args=[draft_post.slug])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post/detail.html")
+
+    def test_draft_post_preview_view_anonymous_redirects(self):
+        draft_post = Post.objects.create(
+            title="Draft Post",
+            slug="draft-post",
+            body="This is a draft",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        url = reverse("blog:post_detail_preview", args=[draft_post.slug])
+        response = self.client.get(url)
+        expected_redirect = f"/accounts/login/?next={url}"
+        self.assertRedirects(response, expected_redirect, fetch_redirect_response=False)
 
 
 class AboutPage(TestCase):
