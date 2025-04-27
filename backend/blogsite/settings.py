@@ -304,7 +304,8 @@ CRISPY_TEMPLATE_PACK = "bulma"
 # it is recommended to change django admin url path from the default admin/
 ADMIN_PATH = environ.get("DJANGO_ADMIN_PATH", "admin/")
 
-LOGS_DIR = environ.get("LOGS_DIR", BASE_DIR / "logs")
+LOGS_DIR = environ.get("LOGS_DIR")
+LOGS_DIR = Path(LOGS_DIR) if LOGS_DIR else BASE_DIR / "logs"
 if not DEBUG:
     LOGGING = {
         "version": 1,
