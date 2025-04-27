@@ -10,6 +10,7 @@ dependencies = [
     { name = "crispy-bulma" },
     { name = "django" },
     { name = "django-ckeditor" },
+    { name = "django-ckeditor-5" },
     { name = "django-crispy-forms" },
     { name = "django-imagekit" },
     { name = "django-meta" },
@@ -32,7 +33,8 @@ dev = [
 requires-dist = [
     { name = "crispy-bulma" },
     { name = "django" },
-    { name = "django-ckeditor" },
+    { name = "django-ckeditor", specifier = ">=6.7.2" },
+    { name = "django-ckeditor-5", specifier = ">=0.2.17" },
     { name = "django-crispy-forms" },
     { name = "django-imagekit" },
     { name = "django-meta" },
@@ -137,6 +139,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8e/ad/73c303e8e58b38ef4f3ed475334dca2cd4509b4bbdfb573f2d13745e3cd8/django_ckeditor-6.7.2.tar.gz", hash = "sha256:a66be4f0ca13924d756e4930260144b31df4164eae8b942ca610f4313df00d5f", size = 1726242, upload_time = "2024-12-05T09:37:53.982Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/16/ed/e48cc43a987facd99e7ad24cc466e2578b0cbdba345a01f068d55daa2a1a/django_ckeditor-6.7.2-py3-none-any.whl", hash = "sha256:2b3f147ce21eba861db481683e9a4639c11f0ad1f0d37c179003ef07f9eb65a4", size = 2455602, upload_time = "2024-12-05T09:37:51.188Z" },
+]
+
+[[package]]
+name = "django-ckeditor-5"
+version = "0.2.17"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/11/11/361508b0bb69f53c9bea0d5b18d1e8f5ac9efc8e3df0009ef0565458e0dd/django_ckeditor_5-0.2.17.tar.gz", hash = "sha256:ce1ab6e21010d6742618275e237d042b1b15645dda3258f7e960b57e93268caf", size = 2599298, upload_time = "2025-02-11T19:39:25.806Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/f0/49d44536350321209324daf9df8ec788d2f65bea890c15f4be289cedadc5/django_ckeditor_5-0.2.17-py3-none-any.whl", hash = "sha256:16d4113bad7a80a82046c461a6b5bd03592f5215dc1d10d85ee9481d9f6257b7", size = 2699183, upload_time = "2025-02-11T19:39:22.716Z" },
 ]
 
 [[package]]

@@ -1,4 +1,3 @@
-from ckeditor.fields import RichTextField
 from core.models import get_site_identity
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -10,6 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy
+from django_ckeditor_5.fields import CKEditor5Field
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from lxml import html
@@ -94,10 +94,7 @@ class Category(ModelMeta, models.Model):
         return get_site_identity().get_title_and_tagline(page_name=self.name)
 
     def get_seo_description(self):
-        return (
-            self.description
-            or f"{'Tags from' if self.is_tag_list else 'Posts about'} {self.name}."
-        )
+        return self.description or f"{'Tags from' if self.is_tag_list else 'Posts about'} {self.name}."
 
     def get_seo_keywords(self):
         return [self.name.lower()] + (get_site_identity().get_seo_keywords() or [])
@@ -177,10 +174,7 @@ class Subcategory(ModelMeta, models.Model):
         return self.name
 
     def get_absolute_url(self, **kwargs):
-        if not (
-            (category := kwargs.get("category"))
-            or (category_slug := kwargs.get("category_slug"))
-        ):
+        if not ((category := kwargs.get("category")) or (category_slug := kwargs.get("category_slug"))):
             return reverse("blog:subcategory", args=[self.slug])
 
         category = category or Category.objects.filter(slug=category_slug).first()
@@ -276,7 +270,9 @@ class NavItem(models.Model):
 
 class DropdownNavItem(models.Model):
     parent_nav_item = models.ForeignKey(
-        NavItem, on_delete=models.CASCADE, related_name="sub_items",
+        NavItem,
+        on_delete=models.CASCADE,
+        related_name="sub_items",
     )
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
@@ -329,15 +325,19 @@ class Post(ModelMeta, models.Model):
         blank=True,
         help_text="Consider adding a credit and a link to the source. 500 characters long.",
     )
-    body = RichTextField()
+    body = CKEditor5Field()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(
-        max_length=2, choices=Status.choices, default=Status.DRAFT,
+        max_length=2,
+        choices=Status.choices,
+        default=Status.DRAFT,
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="blog_posts",
+        User,
+        on_delete=models.CASCADE,
+        related_name="blog_posts",
     )
     categories = models.ManyToManyField(Category)
     subcategories = models.ManyToManyField(Subcategory, blank=True)
@@ -470,11 +470,14 @@ class FeaturedPostPublishedManager(models.Manager):
 
 class FeaturedPost(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="featured_posts",
+        Category,
+        on_delete=models.CASCADE,
+        related_name="featured_posts",
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     order = models.IntegerField(
-        default=0, help_text="Enter an integer value to define the display order.",
+        default=0,
+        help_text="Enter an integer value to define the display order.",
     )
 
     objects = models.Manager()

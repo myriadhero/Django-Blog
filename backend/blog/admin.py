@@ -1,12 +1,10 @@
 from itertools import chain
 from typing import Any
 
-from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.admin.utils import model_ngettext
 from django.core.validators import validate_slug
-from django.db import models
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
@@ -186,7 +184,6 @@ class PostAdmin(admin.ModelAdmin):
     ]
     search_fields = ["title", "body"]
     prepopulated_fields = {"slug": ("title",)}
-    formfield_overrides = {models.TextField: {"widget": CKEditorWidget}}
     autocomplete_fields = ["tags"]
     ordering = ["status", "-publish"]
 

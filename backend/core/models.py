@@ -1,8 +1,8 @@
-from ckeditor.fields import RichTextField
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy
+from django_ckeditor_5.fields import CKEditor5Field
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
@@ -22,7 +22,8 @@ class SiteIdentity(ModelMeta, models.Model):
         help_text="This is appended to site title in the browser tab",
     )
     seo_description = models.TextField(
-        blank=True, help_text="Used in SEO meta tags, should be 50-160 characters long",
+        blank=True,
+        help_text="Used in SEO meta tags, should be 50-160 characters long",
     )
     seo_keywords = models.CharField(
         max_length=250,
@@ -30,7 +31,9 @@ class SiteIdentity(ModelMeta, models.Model):
         help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
     )
     logo_title = models.ImageField(
-        upload_to="site_identity/", blank=True, help_text="Used for the main top logo",
+        upload_to="site_identity/",
+        blank=True,
+        help_text="Used for the main top logo",
     )
     logo_square = models.ImageField(
         upload_to="site_identity/",
@@ -47,8 +50,12 @@ class SiteIdentity(ModelMeta, models.Model):
         ],
         help_text="This logo is used as a placeholder pic for carousel cards. Can be jpg png svg gif, use .svg for best fit, do not upload untrusted files!",
     )
-    footer = RichTextField(blank=True, help_text="Goes above the copyright message")
-    footer_copy_message = models.CharField(max_length=250, blank=True, help_text="Goes next to copyright eg \"© SiteName Year - Message\"")
+    footer = CKEditor5Field(blank=True, help_text="Goes above the copyright message")
+    footer_copy_message = models.CharField(
+        max_length=250,
+        blank=True,
+        help_text='Goes next to copyright eg "© SiteName Year - Message"',
+    )
     header_message = models.TextField(
         blank=True,
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
@@ -91,18 +98,14 @@ class SiteIdentity(ModelMeta, models.Model):
         pass
 
     def get_title_and_tagline(self, page_name=None):
-        return f"{self.title}{' - ' + page_name if page_name else ''}{' - '+ self.tagline if self.tagline else ''}"
+        return f"{self.title}{' - ' + page_name if page_name else ''}{' - ' + self.tagline if self.tagline else ''}"
 
     def get_logo_square_url(self):
         return self.logo_square.url if self.logo_square else None
 
     def get_seo_keywords(self):
         return (
-            [
-                stripped_word
-                for word in self.seo_keywords.split(",")
-                if (stripped_word := word.strip())
-            ]
+            [stripped_word for word in self.seo_keywords.split(",") if (stripped_word := word.strip())]
             if self.seo_keywords
             else None
         )
@@ -114,7 +117,7 @@ def get_site_identity() -> SiteIdentity:
 
 class AboutPage(ModelMeta, models.Model):
     title = models.CharField(max_length=100)
-    content = RichTextField()
+    content = CKEditor5Field()
 
     objects = SingletonManager()
 
@@ -189,9 +192,7 @@ class SubscriptionOptions(models.Model):
 
     def clean(self):
         if (
-            self.show_kofi_form_in_footer
-            or self.show_kofi_overlay_button
-            or self.show_kofi_link_in_head_menu
+            self.show_kofi_form_in_footer or self.show_kofi_overlay_button or self.show_kofi_link_in_head_menu
         ) and not self.kofi_account_name:
             raise ValidationError(
                 "Kofi account name is required to turn on kofi widgets",
@@ -200,8 +201,6 @@ class SubscriptionOptions(models.Model):
 
 
 class SocialMedia(models.Model):
-
-
     youtube_url = models.URLField(blank=True)
     youtube_name = models.CharField(
         max_length=100,
@@ -216,6 +215,7 @@ class SocialMedia(models.Model):
     )
 
     objects = SingletonManager()
+
     class Meta:
         verbose_name_plural = gettext_lazy("Social Media")
 
@@ -252,10 +252,7 @@ class GoogleAdsense(models.Model):
         constraints = (
             models.CheckConstraint(
                 check=models.Q(enable_ads=False)
-                | (
-                    models.Q(client_id__isnull=False)
-                    & models.Q(client_id__startswith="ca-pub-")
-                ),
+                | (models.Q(client_id__isnull=False) & models.Q(client_id__startswith="ca-pub-")),
                 name="adsense_client_id_required_if_enable_ads",
                 violation_error_message="Client ID is required if ads are enabled and should start with 'ca-pub-'",
             ),
