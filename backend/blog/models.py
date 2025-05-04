@@ -345,6 +345,8 @@ class Post(ModelMeta, models.Model):
         through=TaggedWithCategoryTags,
         help_text="Tags, comma separated",
     )
+    show_post_nav = models.BooleanField(default=False, help_text="Toggles in-post nav that is linked to headings")
+
     _metadata = {
         "title": "get_seo_title",
         "description": "get_seo_description",
