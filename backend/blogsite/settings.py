@@ -233,6 +233,7 @@ CKEDITOR_5_CONFIGS = {
         "image": {
             "toolbar": [
                 "imageTextAlternative",
+                "toggleImageCaption",
                 "|",
                 "imageStyle:alignLeft",
                 "imageStyle:alignRight",

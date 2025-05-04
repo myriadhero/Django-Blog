@@ -19,7 +19,16 @@
             <div class="is-size-6 mx-2">{{ post.prevew_image_credit }}</div>
           </figure>
         {% endif %}
-        <div class="content">{{ post.body|safe }}</div>
+        <div class="content" id="post-content">
+          {% if post.show_post_nav %}
+            <div id="post-nav"
+                 class="has-background-white has-text-weight-medium"
+                 style="display:none">
+              <span class="has-text-primary">Jump to:</span>
+            </div>
+          {% endif %}
+          {{ post.body|safe }}
+        </div>
       </div>
     </div>
     <div class="column is-5-desktop">{% include "blog/post/includes/sidebar.html" %}</div>
@@ -27,4 +36,8 @@
 {% endblock content %}
 {% block scripts %}
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  {% if post.show_post_nav %}
+    {% load static %}
+    <script src="{% static "js/show_post_nav.js" %}" charset="utf-8"></script>
+  {% endif %}
 {% endblock scripts %}
