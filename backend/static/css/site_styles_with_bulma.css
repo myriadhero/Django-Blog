@@ -8432,12 +8432,18 @@ a.title:hover, a.title:active {
 
 #post-content figure {
   margin-inline: 1px !important;
+  background-color: #f7f7f7;
+  border-radius: 10px;
 }
 #post-content figcaption {
-  font-size: 0.9em;
+  font-size: x-small;
+  font-style: normal;
+  text-align: start;
+  padding-bottom: 5px;
+  padding-inline: 10px;
 }
 #post-content img {
-  border-radius: 10px;
+  border-radius: 10px 10px 5px 5px;
 }
 
 @media (max-width: 768px) {

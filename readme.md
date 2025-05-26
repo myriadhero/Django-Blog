@@ -40,39 +40,10 @@ Root folder contains docker, utils, and config files that build and run the serv
 
 I use VScode with various extensions:
 - Microsoft Python extensions that VScode should prompt you to install whenever opening a .py file
-- [Black Formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter) from Microsoft - python code formatter 👍
-- [isort](https://marketplace.visualstudio.com/items?itemName=ms-python.isort) from Microsoft - sorts the imports at the top of the .py files
+- [Ruff Formatter](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
 - [djLint](https://marketplace.visualstudio.com/items?itemName=monosans.djlint) from monosans - code formatter for Django HTML templates
 - [Django](https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django) snippets and syntax from Baptiste Darthenay
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) from Prettier
-
-Probably, for collab, I would recommend having all of the above installed.
-
-Black, isort, djLint, and Prettier are activated in VScode by going into Preferences, `Open User Settings (JSON)` and adding this to the config:
-```json
-"[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  },
-  "isort.args": ["--profile", "black"],
-  "[javascript][scss][css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[django-html][handlebars][hbs][mustache][jinja][jinja-html][nj][njk][nunjucks][twig]": {
-    "editor.defaultFormatter": "monosans.djlint"
-  },
-  "djlint.useVenv": false,
-  "djlint.pythonPath": "C:\\Users\\Kirill\\.local\\pipx\\venvs\\djlint\\Scripts\\python",
-  "emmet.includeLanguages": {
-    "django-html": "html"
-  },
-```
-
-Also chatgpt and github copilot are great 👍
 
 And also [iPython](https://ipython.org/) for python shell exploration stuff.
 
