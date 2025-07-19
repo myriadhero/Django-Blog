@@ -56,6 +56,7 @@ class SiteIdentity(ModelMeta, models.Model):
         blank=True,
         help_text='Goes next to copyright eg "© SiteName Year - Message"',
     )
+    show_terms_of_service = models.BooleanField(default=False)
     header_message = models.TextField(
         blank=True,
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
@@ -98,7 +99,9 @@ class SiteIdentity(ModelMeta, models.Model):
         pass
 
     def get_title_and_tagline(self, page_name=None):
-        return f"{self.title}{' - ' + page_name if page_name else ''}{' - ' + self.tagline if self.tagline else ''}"
+        return (
+            f"{self.title}{(' - ' + page_name) if page_name else ''}{(' - ' + self.tagline) if self.tagline else ''}"
+        )
 
     def get_logo_square_url(self):
         return self.logo_square.url if self.logo_square else None
@@ -157,7 +160,7 @@ class AboutPage(ModelMeta, models.Model):
 
 
 class TermsPage(ModelMeta, models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default="Terms of Service")
     content = CKEditor5Field()
 
     objects = SingletonManager()

@@ -2,11 +2,11 @@ from django.contrib import admin
 
 from .models import (
     AboutPage,
-    TermsPage,
     GoogleAdsense,
     SiteIdentity,
     SocialMedia,
     SubscriptionOptions,
+    TermsPage,
 )
 
 
@@ -39,9 +39,18 @@ class SiteIdentityAdmin(SingletonModelAdmin):
 class AboutPageAdmin(SingletonModelAdmin):
     pass
 
+
 @admin.register(TermsPage)
 class TermsPageAdmin(SingletonModelAdmin):
-    pass
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": ["title", "content"],
+                "description": "Note: To display the Terms of Service page on the site, it must be enabled in the Site Identity settings.",
+            },
+        ),
+    ]
 
 
 @admin.register(SubscriptionOptions)
