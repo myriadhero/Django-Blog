@@ -26,6 +26,7 @@ django_settings_module = "backend/blogsite.settings"
 [dependency-groups]
 dev = [
     "django-debug-toolbar",
+    "djlint>=1.36.4",
     "ipython",
 ]
 

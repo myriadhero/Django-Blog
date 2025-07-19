@@ -6,6 +6,7 @@ from .models import (
     SiteIdentity,
     SocialMedia,
     SubscriptionOptions,
+    TermsPage,
 )
 
 
@@ -37,6 +38,19 @@ class SiteIdentityAdmin(SingletonModelAdmin):
 @admin.register(AboutPage)
 class AboutPageAdmin(SingletonModelAdmin):
     pass
+
+
+@admin.register(TermsPage)
+class TermsPageAdmin(SingletonModelAdmin):
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": ["title", "content"],
+                "description": "Note: To display the Terms of Service page on the site, it must be enabled in the Site Identity settings.",
+            },
+        ),
+    ]
 
 
 @admin.register(SubscriptionOptions)

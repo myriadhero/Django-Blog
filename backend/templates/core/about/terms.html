@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block title %}
+  {{ terms.title|default:"Terms of Service" }} - {{ block.super }}
+{% endblock title %}
+{% block content %}
+  <div class="section">
+    <div class="block">
+      <h1 class="title is-2 has-text-centered">{{ terms.title|default:"Terms of Service" }}</h1>
+    </div>
+    <div class="content py-5">{{ terms.content|safe }}</div>
+  </div>
+{% endblock content %}
