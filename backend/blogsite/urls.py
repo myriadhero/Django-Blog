@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from blog.sitemaps import CategorySitemap, PostSitemap
-from core.views import AboutPageView, healthcheck_view
+from core.views import AboutPageView, TermsPageView, healthcheck_view
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -31,6 +31,7 @@ urlpatterns = [
     path(settings.ADMIN_PATH, admin.site.urls),
     path("", include("blog.urls", namespace="blog")),
     path("about/", AboutPageView.as_view(), name="about"),
+    path("terms-of-service/", TermsPageView.as_view(), name="terms"),
     path("healthcheck/", healthcheck_view, name="healthcheck"),
     path(
         "sitemap.xml",

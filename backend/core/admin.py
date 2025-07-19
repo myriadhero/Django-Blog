@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     AboutPage,
+    TermsPage,
     GoogleAdsense,
     SiteIdentity,
     SocialMedia,
@@ -36,6 +37,10 @@ class SiteIdentityAdmin(SingletonModelAdmin):
 
 @admin.register(AboutPage)
 class AboutPageAdmin(SingletonModelAdmin):
+    pass
+
+@admin.register(TermsPage)
+class TermsPageAdmin(SingletonModelAdmin):
     pass
 
 

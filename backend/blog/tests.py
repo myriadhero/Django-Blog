@@ -13,7 +13,6 @@ from .models import Category, CategoryTag, Post, Subcategory
 # post detail page
 # search page
 # pagination for all above (except front and detail)
-# about page
 # admin pages - queries?
 
 
@@ -159,13 +158,4 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertRedirects(response, expected_redirect, fetch_redirect_response=False)
 
 
-class AboutPage(TestCase):
-    def setUp(self) -> None:
-        url = "/about/"
-        self.response = self.client.get(url)
 
-    def test_url_exists_at_correct_location(self):
-        self.assertEqual(self.response.status_code, 200)
-
-    def test_correct_template_is_used(self):
-        self.assertTemplateUsed(self.response, "core/about/about.html")
