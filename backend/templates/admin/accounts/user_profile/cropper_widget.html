@@ -1,0 +1,23 @@
+<div id="cropper-{{ name }}"
+     class="cropper-widget"
+     style="display: {% if value and value.url %}flex{% else %}none{% endif %};
+            flex-direction: column;
+            gap: 10px">
+    <div class="cropper-include-image-input">
+        <label for="cropper-{{ name }}-include-image-input">
+            Include crop
+            <input type="checkbox"
+                   name="cropper-{{ name }}-include"
+                   id="cropper-{{ name }}-include-image-input">
+        </label>
+        <button type="button" class="cropper-widget-apply-button">Apply</button>
+    </div>
+    <div class="cropper-widget-preview">
+        <img src="{% if value and value.url %}{{ value.url }}{% endif %}"
+             alt="Cropper preview"
+             id="cropper-{{ name }}-preview"
+             {% if value %}width="{{ value.width }}" height="{{ value.height }}"{% endif %}
+             class="cropper-widget-preview-image">
+    </div>
+</div>
+{{ name|json_script:"cropper-data-name" }}

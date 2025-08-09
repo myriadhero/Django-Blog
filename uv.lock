@@ -12,6 +12,7 @@ dependencies = [
     { name = "django-ckeditor" },
     { name = "django-ckeditor-5" },
     { name = "django-crispy-forms" },
+    { name = "django-imagefield" },
     { name = "django-imagekit" },
     { name = "django-meta" },
     { name = "django-select2" },
@@ -37,6 +38,7 @@ requires-dist = [
     { name = "django-ckeditor", specifier = ">=6.7.2" },
     { name = "django-ckeditor-5", specifier = ">=0.2.17" },
     { name = "django-crispy-forms" },
+    { name = "django-imagefield", specifier = ">=0.22.0" },
     { name = "django-imagekit" },
     { name = "django-meta" },
     { name = "django-select2" },
@@ -205,6 +207,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5b/6b/41281bf3f9939713010f24f46a033a74cf90599f52f09aaa8b0b118692b7/django_debug_toolbar-5.1.0.tar.gz", hash = "sha256:8a3b9da4aeab8d384a366e20304bd939a451f0242523c5b7b402248ad474eed2", size = 294567, upload-time = "2025-03-20T16:17:08.496Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/62/ce/39831ce0a946979fdf19c32e6dcd1754a70e3280815aa7a377f61d5e021c/django_debug_toolbar-5.1.0-py3-none-any.whl", hash = "sha256:c0591e338ee9603bdfce5aebf8d18ca7341fdbb69595e2b0b34869be5857180e", size = 261531, upload-time = "2025-03-20T16:17:05.812Z" },
+]
+
+[[package]]
+name = "django-imagefield"
+version = "0.22.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/26/96/f69f4070fa1ff2be4ce76a6b55a835a382b768889939deb737dcd9195ce2/django_imagefield-0.22.0.tar.gz", hash = "sha256:53bce5e26a94e55ca52ce4b453a728aca8bc86346b29119f931c1cfa132a1df6", size = 17129, upload-time = "2025-01-22T08:12:06.419Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/49/106a5c3575907f8b63135c364fb1fb76d88ee5a440f69e5a314d7d2d5978/django_imagefield-0.22.0-py3-none-any.whl", hash = "sha256:24142493cf7c20dd1323d5ebc064cbe5030b1b8c28b4cfc8e5ca24368cf4fb9a", size = 20830, upload-time = "2025-01-22T08:12:11.363Z" },
 ]
 
 [[package]]

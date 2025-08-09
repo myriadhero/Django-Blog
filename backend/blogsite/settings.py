@@ -57,17 +57,17 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django.contrib.postgres",
     # packages
-    # "ckeditor",
-    # "ckeditor_uploader",
     "django_ckeditor_5",
     "fontawesomefree",
     "django_select2",
     "crispy_forms",
     "crispy_bulma",
     "meta",
+    "imagefield",
     # local
     "core.apps.CoreConfig",
     "blog.apps.BlogConfig",
+    "accounts.apps.AccountsConfig",
 ]
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")

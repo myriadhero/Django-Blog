@@ -1,5 +1,5 @@
 from core.models import get_site_identity
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinLengthValidator
 from django.db import models
@@ -16,6 +16,8 @@ from lxml import html
 from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 from taggit.models import GenericTaggedItemBase, TagBase
+
+User = get_user_model()
 
 
 class FrontPageCatsManager(models.Manager):
@@ -76,6 +78,12 @@ class Category(ModelMeta, models.Model):
         verbose_name = gettext_lazy("Category")
         verbose_name_plural = gettext_lazy("Categories")
 
+    def __str__(self) -> str:
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("blog:category", args=[self.slug])
+
     def get_tags_that_have_at_least_one_post(self):
         if self.is_tag_list:
             tag_relations = TaggedWithCategoryTags.objects.filter(
@@ -101,12 +109,6 @@ class Category(ModelMeta, models.Model):
 
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
-
-    def __str__(self) -> str:
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("blog:category", args=[self.slug])
 
 
 class Subcategory(ModelMeta, models.Model):
@@ -145,6 +147,20 @@ class Subcategory(ModelMeta, models.Model):
         verbose_name = gettext_lazy("Subcategory")
         verbose_name_plural = gettext_lazy("Subcategories")
 
+    def __str__(self) -> str:
+        return self.name
+
+    def get_absolute_url(self, **kwargs):
+        if not ((category := kwargs.get("category")) or (category_slug := kwargs.get("category_slug"))):
+            return reverse("blog:subcategory", args=[self.slug])
+
+        category = category or Category.objects.filter(slug=category_slug).first()
+
+        return reverse(
+            "blog:category_subcategory",
+            args=[category.slug, self.slug],
+        )
+
     def get_tags_that_have_at_least_one_post(self):
         post_content_type = ContentType.objects.get_for_model(Post)
         tag_relations = TaggedWithCategoryTags.objects.filter(
@@ -169,20 +185,6 @@ class Subcategory(ModelMeta, models.Model):
 
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
-
-    def __str__(self) -> str:
-        return self.name
-
-    def get_absolute_url(self, **kwargs):
-        if not ((category := kwargs.get("category")) or (category_slug := kwargs.get("category_slug"))):
-            return reverse("blog:subcategory", args=[self.slug])
-
-        category = category or Category.objects.filter(slug=category_slug).first()
-
-        return reverse(
-            "blog:category_subcategory",
-            args=[category.slug, self.slug],
-        )
 
 
 class NonEmptyTagsManager(models.Manager):
@@ -381,11 +383,17 @@ class Post(ModelMeta, models.Model):
         ordering = ("-publish",)
         indexes = (models.Index(fields=["-publish"]),)
 
+    def __str__(self) -> str:
+        return self.title
+
     def save(self, *args, **kwargs):
         self.generate_unique_slug()
         self.remove_scripts_from_body()
         self.check_youtube_iframe()
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("blog:post_detail", args=[self.slug])
 
     def get_similar_posts(self, post_num=5):
         post_tags_ids = self.tags.values_list("id", flat=True)
@@ -457,12 +465,6 @@ class Post(ModelMeta, models.Model):
 
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
-
-    def get_absolute_url(self):
-        return reverse("blog:post_detail", args=[self.slug])
-
-    def __str__(self) -> str:
-        return self.title
 
 
 class FeaturedPostPublishedManager(models.Manager):
