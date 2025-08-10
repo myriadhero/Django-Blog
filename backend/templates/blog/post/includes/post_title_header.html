@@ -9,10 +9,10 @@
     <div class="py-2">
         {% include "blog/post/includes/post_tags.html" with tpost=post %}
     </div>
-    <div class="author-card columns is-mobile">
+    <div class="author-card columns is-mobile py-2">
         <div class="column is-narrow">
-            <div class="image is-96x96">
-                <img src="{{ post.author.profile.avatar.thumb }}" alt="{{ post.author.first_name }} avatar" class="author-avatar" height="96" width="96">
+            <div class="image is-48x48">
+                <img src="{{ post.author.profile.avatar.thumb }}" alt="{{ post.author.first_name }} avatar" class="author-avatar is-rounded" height="48" width="48">
             </div>
         </div>
         <div class="column">

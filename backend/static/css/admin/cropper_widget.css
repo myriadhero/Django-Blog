@@ -1,10 +1,20 @@
-.cropper-include-image-input label {
-    display: inline-flex;
-    align-items: flex-end;
+.cropper-widget {
+    display: none;
+    flex-direction: column;
     gap: 10px;
 }
 
-.cropper-widget-apply-button {
+.cropper-widget-visible {
+    display: flex;
+}
+
+.cropper-include-image {
+    display: inline-flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.cropper-widget-button {
     padding: 5px 10px;
     background-color: #417690;
     color: #fff;
@@ -13,7 +23,7 @@
     cursor: pointer;
 }
 
-.cropper-widget-apply-button:hover {
+.cropper-widget-button:hover {
     background-color: #79aec8;
 }
 
@@ -26,23 +36,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .cropper-widget-rotate-slider input[type="range"] {
     flex-grow: 1;
-}
-
-.cropper-widget-rotate-slider button {
-    padding: 5px 10px;
-    background-color: #417690;
-    color: #fff;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-}
-
-.cropper-widget-rotate-slider button:hover {
-    background-color: #79aec8;
 }
 

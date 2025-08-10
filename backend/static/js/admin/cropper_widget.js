@@ -1,22 +1,38 @@
+function getMimeTypeFromFileExtension(src) {
+    const ext = src.split('.').pop();
+    switch (ext) {
+        case 'jpg':
+        case 'jpeg':
+            return 'image/jpeg';
+        case 'png':
+            return 'image/png';
+        default:
+            return 'image/png';
+    }
+}
+
 function cropperWidget(name, aspectRatio) {
+    const imageInput = document.getElementById(`id_${name}`);
     const cropperWidget = document.getElementById(`cropper-${name}`);
-    const previewElem = document.getElementById(`cropper-${name}-preview`);
-    const applyButton = document.querySelector(".cropper-widget-apply-button");
-    const rotateSliderWrapper = document.getElementById(`cropper-${name}-rotate-slider`);
+    const previewElem = cropperWidget.querySelector(`#cropper-${name}-preview`);
+    const applyButton = cropperWidget.querySelector(".cropper-widget-button-apply");
+    const resetCropButton = cropperWidget.querySelector(".cropper-widget-button-reset-crop");
+    const resetFileButton = cropperWidget.querySelector(".cropper-widget-button-reset-file");
+    const rotateSliderWrapper = cropperWidget.querySelector(`#cropper-${name}-rotate-slider`);
     const rotateSlider = rotateSliderWrapper.querySelector("input");
     const levelButton = rotateSliderWrapper.querySelector("button");
 
-    let cropped = false;
-    let cropper = previewElem.src ? new Cropper(previewElem, {
-        cropend: function () {
-            cropped = true;
-        },
-        zoom: function () {
-            cropped = true;
-        },
+    const originalSrc = previewElem.getAttribute('src');
+    const originalMimeType = originalSrc ? getMimeTypeFromFileExtension(originalSrc) : "image/png";
+    let currentMimeType = originalMimeType;
+
+    const cropperOptions = {
         aspectRatio: aspectRatio,
-        viewMode: 1
-    }) : null;
+        viewMode: 1,
+        minContainerWidth: 300,
+        minContainerHeight: 300
+    };
+    let cropper = previewElem.getAttribute('src') ? new Cropper(previewElem, cropperOptions) : null;
 
     let prevRotate = 0;
     rotateSlider.addEventListener("input", function (e) {
@@ -29,24 +45,21 @@ function cropperWidget(name, aspectRatio) {
         prevRotate = 0;
     });
 
-    const imageInput = document.getElementById(`id_${name}`);
-    const includeImageInput = document.getElementById(`cropper-${name}-include-image-input`);
-
     imageInput.addEventListener("change", function (e) {
+        // New image is selected
         const file = e.target.files[0];
         if (file) {
+            currentMimeType = getMimeTypeFromFileExtension(file.name);
+
             const reader = new FileReader();
             reader.onload = function (e) {
-                previewElem.src = e.target.result;
-                if (cropper) {
-                    cropper.destroy();
-                }
+                previewElem.setAttribute('src', e.target.result);
+                cropper?.destroy();
                 cropper = new Cropper(previewElem, {
+                    ...cropperOptions,
                     ready: function () {
-                        cropperWidget.style.display = "flex";
-                    },
-                    aspectRatio: aspectRatio,
-                    viewMode: 1
+                        cropperWidget.classList.add("cropper-widget-visible");
+                    }
                 });
             };
             reader.readAsDataURL(file);
@@ -54,9 +67,10 @@ function cropperWidget(name, aspectRatio) {
     });
 
     applyButton.addEventListener("click", async function () {
+        // Add image to upload input
+        if (!cropper) return;
+
         applyButton.disabled = true;
-        cropped = true;
-        includeImageInput.checked = true;
 
         const blob = await new Promise((resolve, reject) => {
             cropper.getCroppedCanvas().toBlob(
@@ -67,12 +81,12 @@ function cropperWidget(name, aspectRatio) {
                         reject(new Error("Failed to create blob from canvas"));
                     }
                 },
-                "image/png",
+                currentMimeType,
                 1
             );
         });
 
-        const file = new File([blob], `cropped-image-${name}.png`, { type: "image/png" });
+        const file = new File([blob], `cropped-image.${currentMimeType.split('/')[1]}`, { type: currentMimeType });
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         imageInput.files = dataTransfer.files;
@@ -80,11 +94,32 @@ function cropperWidget(name, aspectRatio) {
         applyButton.disabled = false;
     });
 
-    const form = imageInput.closest("form");
-    form.addEventListener("submit", function (e) {
-        if (!(cropped && includeImageInput.checked)) {
-            imageInput.value = null;
-            imageInput.files = [];
+    resetCropButton.addEventListener("click", function () {
+        cropper?.reset();
+        prevRotate = 0;
+        rotateSlider.value = 0;
+    });
+
+    resetFileButton.addEventListener("click", function () {
+        if (!cropper) return;
+
+        // Reset the image input and preview
+        // the original here is not the newly uploaded file
+        // but the first page load file
+        imageInput.value = null;
+        imageInput.files = (new DataTransfer()).files;
+        previewElem.setAttribute('src', originalSrc);
+        currentMimeType = originalMimeType;
+
+        cropper?.destroy();
+        cropper = previewElem.getAttribute('src') ? new Cropper(previewElem, cropperOptions) : null;
+        prevRotate = 0;
+        rotateSlider.value = 0;
+        if (originalSrc) {
+            cropperWidget.classList.add("cropper-widget-visible");
+        } else {
+            cropperWidget.classList.remove("cropper-widget-visible");
         }
     });
+    
 }

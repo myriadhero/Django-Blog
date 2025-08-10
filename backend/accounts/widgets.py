@@ -3,7 +3,9 @@ from django.template.loader import render_to_string
 
 
 class CroppingImageWidget(ClearableFileInput):
-    aspect_ratio = 1
+    def __init__(self, aspect_ratio=1, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aspect_ratio = aspect_ratio
 
     class Media:
         js = ("js/libraries/cropperv1/cropper.min.js", "js/admin/cropper_widget.js")

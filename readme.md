@@ -95,3 +95,5 @@ ___
 - [Swiper Carousel](https://swiperjs.com/)
 - [lxml](https://lxml.de/)
 - [Font Awesome](https://fontawesome.com/docs/web/use-with/python-django)
+- [Cropper.js v1](https://github.com/fengyuanchen/cropperjs/blob/v1/README.md)
+- [Django-imagefield](https://github.com/matthiask/django-imagefield/)
