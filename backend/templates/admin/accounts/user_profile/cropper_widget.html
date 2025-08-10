@@ -19,5 +19,12 @@
              {% if value %}width="{{ value.width }}" height="{{ value.height }}"{% endif %}
              class="cropper-widget-preview-image">
     </div>
+    <div id="cropper-{{ name }}-rotate-slider" class="cropper-widget-rotate-slider">
+        <span>🔄</span>
+        <input type="range" min="-180" max="180" value="0" step="1">
+        <button type="button">Reset</button>
+    </div>
 </div>
-{{ name|json_script:"cropper-data-name" }}
+<script>
+    cropperWidget("{{ name }}", {{ aspect_ratio }});
+</script>

@@ -1,8 +1,11 @@
-function cropperWidget() {
-    const name = JSON.parse(document.getElementById("cropper-data-name").textContent);
+function cropperWidget(name, aspectRatio) {
     const cropperWidget = document.getElementById(`cropper-${name}`);
     const previewElem = document.getElementById(`cropper-${name}-preview`);
     const applyButton = document.querySelector(".cropper-widget-apply-button");
+    const rotateSliderWrapper = document.getElementById(`cropper-${name}-rotate-slider`);
+    const rotateSlider = rotateSliderWrapper.querySelector("input");
+    const levelButton = rotateSliderWrapper.querySelector("button");
+
     let cropped = false;
     let cropper = previewElem.src ? new Cropper(previewElem, {
         cropend: function () {
@@ -10,8 +13,21 @@ function cropperWidget() {
         },
         zoom: function () {
             cropped = true;
-        }
+        },
+        aspectRatio: aspectRatio,
+        viewMode: 1
     }) : null;
+
+    let prevRotate = 0;
+    rotateSlider.addEventListener("input", function (e) {
+        cropper?.rotate(e.target.value - prevRotate);
+        prevRotate = e.target.value;
+    });
+    levelButton.addEventListener("click", function () {
+        rotateSlider.value = 0;
+        cropper?.rotate(-prevRotate);
+        prevRotate = 0;
+    });
 
     const imageInput = document.getElementById(`id_${name}`);
     const includeImageInput = document.getElementById(`cropper-${name}-include-image-input`);
@@ -29,6 +45,8 @@ function cropperWidget() {
                     ready: function () {
                         cropperWidget.style.display = "flex";
                     },
+                    aspectRatio: aspectRatio,
+                    viewMode: 1
                 });
             };
             reader.readAsDataURL(file);
@@ -70,5 +88,3 @@ function cropperWidget() {
         }
     });
 }
-
-window.addEventListener("DOMContentLoaded", cropperWidget);
