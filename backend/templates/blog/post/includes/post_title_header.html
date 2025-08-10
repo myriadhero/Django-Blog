@@ -16,8 +16,8 @@
             </div>
         </div>
         <div class="column">
-            <div class="author">Written by {{ post.author.first_name }}</div>
-            <div class="date">{{ post.publish|date:"DATE_FORMAT" }}</div>
+            <div class="author"><span>Written by </span><span class="has-text-weight-semibold"><a href="{% url 'about' %}">{{ post.author.first_name }}</a></span></div>
+            <div class="date is-size-7">{{ post.publish|date:"DATE_FORMAT" }}</div>
         </div>
     </div>
 </div>
