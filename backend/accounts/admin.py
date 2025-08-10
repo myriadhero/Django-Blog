@@ -20,6 +20,12 @@ class UserProfileInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
 
+    def get_inlines(self, request, obj=None):
+        inlines = super().get_inlines(request, obj)
+        if obj is None:
+            return [inl for inl in inlines if inl not in self.inlines]
+        return inlines
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
