@@ -1,20 +1,30 @@
+from core.widgets import CroppingImageWidget
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from imagefield.fields import ImageField
+from django.forms import ModelForm
 
 from .models import UserProfile
-from .widgets import CroppingImageWidget
 
 User = get_user_model()
+
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+        widgets = {"avatar": CroppingImageWidget}
+
+    def __init__(self, *args, **kwargs):
+        self.base_fields["avatar"].widget.aspect_ratio = 1
+        self.base_fields["avatar"].widget.is_curcular = True
+        super().__init__(*args, **kwargs)
 
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     can_delete = False
-    formfield_overrides = {
-        ImageField: {"widget": CroppingImageWidget},
-    }
+    form = UserProfileForm
 
 
 class UserAdmin(BaseUserAdmin):

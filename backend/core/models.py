@@ -3,6 +3,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy
 from django_ckeditor_5.fields import CKEditor5Field
+from imagefield.fields import ImageField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
@@ -35,10 +36,11 @@ class SiteIdentity(ModelMeta, models.Model):
         blank=True,
         help_text="Used for the main top logo",
     )
-    logo_square = models.ImageField(
+    logo_square = ImageField(
         upload_to="site_identity/",
         blank=True,
         help_text="Used for seo and other places where a square logo is needed",
+        auto_add_fields=True,
     )
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     # TODO: validate svg/images

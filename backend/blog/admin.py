@@ -1,6 +1,7 @@
 from itertools import chain
 from typing import Any
 
+from core.widgets import CroppingImageWidget
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.admin.utils import model_ngettext
@@ -162,6 +163,7 @@ class PostAdminForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ["tags"]
+        widgets = {"preview_image": CroppingImageWidget}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -233,6 +235,12 @@ class CategoryTagAdminForm(forms.ModelForm):
     class Meta:
         model = CategoryTag
         fields = "__all__"
+        widgets = {"preview_image": CroppingImageWidget}
+
+    def __init__(self, *args, **kwargs):
+        self.base_fields["preview_image"].widget.aspect_ratio = 1
+        self.base_fields["preview_image"].widget.is_curcular = True
+        super().__init__(*args, **kwargs)
 
     def clean_slug(self):
         slug = self.cleaned_data["slug"]

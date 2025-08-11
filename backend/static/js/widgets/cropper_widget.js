@@ -27,11 +27,13 @@ function cropperWidget(name, aspectRatio) {
     let currentMimeType = originalMimeType;
 
     const cropperOptions = {
-        aspectRatio: aspectRatio,
         viewMode: 1,
         minContainerWidth: 300,
         minContainerHeight: 300
     };
+    if (aspectRatio !== 0) {
+        cropperOptions.aspectRatio = aspectRatio;
+    }
     let cropper = previewElem.getAttribute('src') ? new Cropper(previewElem, cropperOptions) : null;
 
     let prevRotate = 0;

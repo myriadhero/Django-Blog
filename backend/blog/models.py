@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy
 from django_ckeditor_5.fields import CKEditor5Field
+from imagefield.fields import ImageField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from lxml import html
@@ -43,7 +44,7 @@ class Category(ModelMeta, models.Model):
         blank=True,
         help_text="250 characters long, will also be used in SEO description for the page",
     )
-    preview_image = models.ImageField(upload_to="category_previews/", blank=True)
+    preview_image = ImageField(upload_to="category_previews/", blank=True, auto_add_fields=True)
     show_on_front_page = models.BooleanField(default=False)
     order = models.IntegerField(
         default=0,
@@ -124,9 +125,10 @@ class Subcategory(ModelMeta, models.Model):
         blank=True,
         help_text="250 characters long, will also be used in SEO description for the page",
     )
-    preview_image = models.ImageField(upload_to="category_previews/", blank=True)
+    preview_image = ImageField(upload_to="category_previews/", blank=True, auto_add_fields=True)
     categories = models.ManyToManyField(Category, related_name="subcategories")
 
+    # TODO: change thumbnail to a spec within preview_image, check others, unless it needs to be separate
     thumbnail = ImageSpecField(
         source="preview_image",
         processors=[ResizeToFill(200, 200)],
@@ -201,7 +203,7 @@ class CategoryTag(ModelMeta, TagBase):
         blank=True,
         help_text="250 characters long, can also be used in SEO description for the page",
     )
-    preview_image = models.ImageField(upload_to="tag_previews/", blank=True)
+    preview_image = ImageField(upload_to="tag_previews/", blank=True, auto_add_fields=True)
     categories = models.ManyToManyField(Category, blank=True)
     subcategories = models.ManyToManyField(Subcategory, blank=True)
 
@@ -243,6 +245,7 @@ class CategoryTag(ModelMeta, TagBase):
             + (get_site_identity().get_seo_keywords() or [])
         )
 
+    # TODO: switch thumbnail usages including META and templates to ImageField spec
     def get_preview_image_url(self):
         return self.thumbnail.url if self.preview_image else None
 
@@ -321,7 +324,11 @@ class Post(ModelMeta, models.Model):
         blank=True,
         help_text="Used for SEO, typically 60-150 chars long but up to 250 is fine. Title is used if left blank.",
     )
-    preview_image = models.ImageField(upload_to="blog_previews/", blank=True)
+    preview_image = ImageField(upload_to="blog_previews", blank=True, auto_add_fields=True)
+    show_preview_image = models.BooleanField(
+        default=True,
+        help_text="Toggles the preview image on the post page only.",
+    )
     prevew_image_credit = models.CharField(
         max_length=500,
         blank=True,

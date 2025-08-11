@@ -1,0 +1,32 @@
+<div id="cropper-{{ name }}"
+     class="cropper-widget {% if value and value.url %}cropper-widget-visible{% endif %}">
+    <div class="cropper-include-image">
+        <button type="button"
+                class="cropper-widget-button cropper-widget-button-apply">Apply Crop</button>
+        <button type="button"
+                class="cropper-widget-button cropper-widget-button-reset-crop">Reset Crop</button>
+        <button type="button"
+                class="cropper-widget-button cropper-widget-button-reset-file">Reset File</button>
+    </div>
+    <div class="cropper-widget-preview">
+        <img src="{% if value and value.url %}{{ value.url }}{% endif %}"
+             alt="Cropper preview"
+             id="cropper-{{ name }}-preview"
+             class="cropper-widget-preview-image">
+    </div>
+    <div id="cropper-{{ name }}-rotate-slider"
+         class="cropper-widget-rotate-slider">
+        <span>🔄</span>
+        <input type="range" min="-180" max="180" value="0" step="1">
+        <button type="button"
+                class="cropper-widget-button cropper-widget-button-reset-rotation">Reset Rotation</button>
+    </div>
+</div>
+{% if is_curcular %}
+    <style>
+        .cropper-view-box {
+            border-radius: 50%;
+        }
+    </style>
+{% endif %}
+<script>cropperWidget("{{ name }}", {{ aspect_ratio }});</script>
