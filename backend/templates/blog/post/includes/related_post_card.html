@@ -1,0 +1,12 @@
+<div class="box">
+    <div class="columns is-mobile">
+        <div class="column">
+            <a href="{{ spost.get_absolute_url }}" class="title is-6">{{ spost.title }}</a>
+        </div>
+        <div class="column is-two-fifths">
+            <figure class="image is-3by4">
+                <img src="{{ spost.preview_image.side_thumb }}" alt="{{ spost.title }}" width="150" height="200">
+            </figure>
+        </div>
+    </div>
+</div>

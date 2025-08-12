@@ -333,6 +333,7 @@ class Post(ModelMeta, models.Model):
             "thumb": ("default", ("crop", (210, 210))),
             "header": ("default", ("crop", (1280, 720))),
             "front_page": ("default", ("crop", (600, 800))),
+            "side_thumb": ("default", ("crop", (150, 200))),
         },
     )
     show_preview_image = models.BooleanField(
@@ -402,8 +403,11 @@ class Post(ModelMeta, models.Model):
 
     def get_similar_posts(self, post_num=5):
         post_tags_ids = self.tags.values_list("id", flat=True)
-        similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(
-            id=self.id,
+        similar_posts = (
+            Post.published.filter(tags__in=post_tags_ids)
+            .exclude(id=self.id)
+            .exclude(preview_image__isnull=True)
+            .exclude(preview_image="")
         )
 
         similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by(

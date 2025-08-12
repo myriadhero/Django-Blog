@@ -34,7 +34,7 @@ dev = [
 requires-dist = [
     { name = "crispy-bulma" },
     { name = "django" },
-    { name = "django-ckeditor", specifier = ">=6.7.3" },
+    { name = "django-ckeditor", specifier = ">=6.7.2" },
     { name = "django-ckeditor-5", specifier = ">=0.2.17" },
     { name = "django-crispy-forms" },
     { name = "django-imagefield", specifier = ">=0.22.0" },

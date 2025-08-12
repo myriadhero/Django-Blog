@@ -8,7 +8,8 @@ from ..models import NavItem, Post
 from ..views import RECOMMENDED_POSTS_NUM
 
 TWEET_RE = re.compile(
-    r'<blockquote class=["\']twitter-tweet["\'].*?</blockquote>', re.DOTALL
+    r'<blockquote class=["\']twitter-tweet["\'].*?</blockquote>',
+    re.DOTALL,
 )
 
 
@@ -28,7 +29,7 @@ def show_latest_posts(count=RECOMMENDED_POSTS_NUM):
 
 @register.simple_tag
 def get_latest_posts(count=RECOMMENDED_POSTS_NUM):
-    return Post.published.all()[:count]
+    return Post.published.exclude(preview_image__isnull=True).exclude(preview_image="")[:count]
 
 
 # @register.simple_tag
@@ -38,11 +39,7 @@ def get_latest_posts(count=RECOMMENDED_POSTS_NUM):
 
 @register.simple_tag
 def get_nav_items():
-    return (
-        NavItem.objects.select_related("primary_category")
-        .prefetch_related("sub_items__subcategory")
-        .all()
-    )
+    return NavItem.objects.select_related("primary_category").prefetch_related("sub_items__subcategory").all()
 
 
 @register.simple_tag(takes_context=True)

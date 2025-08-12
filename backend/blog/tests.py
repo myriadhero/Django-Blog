@@ -177,9 +177,8 @@ class PostTests(CommonSetUpMixin, TestCase):
         post_with.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
         post_with.save()
         response = self.client.get(post_with.get_absolute_url())
-        self.assertContains(response, "post-preview")
-        self.assertContains(response, "is-3by4")
-        self.assertNotContains(response, "is-16by9")
+        self.assertContains(response, 'class="image is-3by4 post-preview"')
+        self.assertNotContains(response, 'class="block post-preview image is-16by9"')
 
         # Post with image and show=True, position=Top
         post_top = Post.objects.create(
@@ -194,9 +193,8 @@ class PostTests(CommonSetUpMixin, TestCase):
         post_top.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
         post_top.save()
         response = self.client.get(post_top.get_absolute_url())
-        self.assertContains(response, "post-preview")
-        self.assertContains(response, "is-16by9")
-        self.assertNotContains(response, "is-3by4")
+        self.assertContains(response, 'class="block post-preview image is-16by9"')
+        self.assertNotContains(response, 'class="image is-3by4 post-preview"')
 
         # Post with image but show=False
         post_no_show = Post.objects.create(
@@ -211,9 +209,8 @@ class PostTests(CommonSetUpMixin, TestCase):
         post_no_show.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
         post_no_show.save()
         response = self.client.get(post_no_show.get_absolute_url())
-        self.assertNotContains(response, "post-preview")
-        self.assertNotContains(response, "is-3by4")
-        self.assertNotContains(response, "is-16by9")
+        self.assertNotContains(response, "image is-3by4 post-preview")
+        self.assertNotContains(response, "block post-preview image is-16by9")
 
         # Post without image but show=True
         post_no_image = Post.objects.create(
@@ -226,6 +223,94 @@ class PostTests(CommonSetUpMixin, TestCase):
             preview_image_position=Post.PreviewPosition.LEFT,
         )
         response = self.client.get(post_no_image.get_absolute_url())
-        self.assertNotContains(response, "post-preview")
-        self.assertNotContains(response, "is-3by4")
-        self.assertNotContains(response, "is-16by9")
+        self.assertNotContains(response, "image is-3by4 post-preview")
+        self.assertNotContains(response, "block post-preview image is-16by9")
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_recommended_and_latest_posts_only_show_posts_with_images(self):
+        small_gif = b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x05\x04\x04\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
+
+        # Main post
+        main_post = Post.objects.create(
+            title="Main Post",
+            slug="main-post",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        main_post.tags.add(self.tag)
+
+        # Similar post with image
+        similar_with_image = Post.objects.create(
+            title="Similar with Image",
+            slug="similar-with-image",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        similar_with_image.tags.add(self.tag)
+        similar_with_image.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        similar_with_image.save()
+
+        similar_with_image_draft = Post.objects.create(
+            title="Similar with Image Draft",
+            slug="similar-with-image-draft",
+            body="body",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        similar_with_image_draft.tags.add(self.tag)
+        similar_with_image_draft.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        similar_with_image_draft.save()
+
+        # Similar post without image
+        similar_without_image = Post.objects.create(
+            title="Similar without Image",
+            slug="similar-without-image",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        similar_without_image.tags.add(self.tag)
+
+        # Latest post with image (not similar)
+        latest_with_image = Post.objects.create(
+            title="Latest with Image",
+            slug="latest-with-image",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        latest_with_image.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        latest_with_image.save()
+
+        latest_with_image_draft = Post.objects.create(
+            title="Latest with Image Draft",
+            slug="latest-with-image-draft",
+            body="body",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        latest_with_image_draft.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        latest_with_image_draft.save()
+
+        # Latest post without image (not similar)
+        latest_without_image = Post.objects.create(
+            title="Latest without Image",
+            slug="latest-without-image",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+
+        response = self.client.get(main_post.get_absolute_url())
+
+        # Check related posts (similar)
+        self.assertContains(response, similar_with_image.title)
+        self.assertNotContains(response, similar_without_image.title)
+        self.assertNotContains(response, similar_with_image_draft.title)
+
+        # Check latest posts
+        self.assertContains(response, latest_with_image.title)
+        self.assertNotContains(response, latest_without_image.title)
+        self.assertNotContains(response, latest_with_image_draft.title)

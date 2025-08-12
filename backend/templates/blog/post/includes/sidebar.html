@@ -1,21 +1,16 @@
 {% load blog_tags %}
 <div class="section sticky" id="related-posts">
+    {% comment %} Only posts with preview_image get fetched {% endcomment %}
     {% if similar_posts %}
         <h3 class="title is-4 block">Related Posts</h3>
         {% for spost in similar_posts %}
-            <div class="box">
-                <a href="{{ spost.get_absolute_url }}" class="title is-6">{{ spost.title }}</a>
-                <div>{% include "blog/post/includes/post_tags.html" with tpost=spost %}</div>
-            </div>
+            {% include "blog/post/includes/related_post_card.html" with spost=spost %}
         {% endfor %}
         <div class="pb-4"></div>
     {% endif %}
     <h3 class="title is-4 block">Latest Posts</h3>
     {% get_latest_posts as latest_posts %}
     {% for spost in latest_posts %}
-        <div class="box">
-            <a href="{{ spost.get_absolute_url }}" class="title is-6">{{ spost.title }}</a>
-            <div>{% include "blog/post/includes/post_tags.html" with tpost=spost %}</div>
-        </div>
+        {% include "blog/post/includes/related_post_card.html" with spost=spost %}
     {% endfor %}
 </div>

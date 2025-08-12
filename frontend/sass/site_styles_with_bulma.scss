@@ -481,6 +481,10 @@ a.tag-expander {
 
 #related-posts {
   z-index: 3;
+
+  & img {
+    border-radius: 5px;
+  }
 }
 
 .menu-border-bottom {

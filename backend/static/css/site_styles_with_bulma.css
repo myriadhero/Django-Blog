@@ -322,6 +322,9 @@ a.tag-expander {
 #related-posts {
   z-index: 3;
 }
+#related-posts img {
+  border-radius: 5px;
+}
 
 .menu-border-bottom {
   border-bottom: 1px #e3c9a6;
