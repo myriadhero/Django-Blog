@@ -1,23 +1,31 @@
 <div class="block">
     {% if is_list %}
-    <a href="{{ post.get_absolute_url }}">
-        <h2 class="title is-3 is-size-4-mobile">{{ post.title }}</h2>
-    </a>
+        <h2 class="title is-3 is-size-4-mobile">
+            <a href="{{ post.get_absolute_url }}" class="is-link-black">
+                {{ post.title }}
+            </h2>
+        </a>
     {% else %}
-    <h2 class="title is-3">{{ post.title }}</h2>
+        <h2 class="title is-3">{{ post.title }}</h2>
     {% endif %}
     <div class="subtitle columns is-mobile">
-        <div class="column is-narrow">
-            <div class="image is-48x48">
-                <img src="{{ post.author.profile.avatar.thumb }}" alt="{{ post.author.first_name }} avatar" class="author-avatar is-rounded" height="48" width="48">
+        {% if post.author.profile.avatar %}
+            <div class="column is-narrow">
+                <div class="image is-48x48">
+                    <img src="{{ post.author.profile.avatar.thumb }}"
+                         alt="{{ post.author.first_name }} avatar"
+                         class="author-avatar is-rounded"
+                         height="48"
+                         width="48">
+                </div>
             </div>
-        </div>
+        {% endif %}
         <div class="column">
-            <div class="author"><span>Written by </span><span class="has-text-weight-semibold"><a href="{% url 'about' %}">{{ post.author.first_name }}</a></span></div>
+            <div class="author">
+                <span class="pr-1">Written by</span><span class="has-text-weight-semibold"><a href="{% url 'about' %}">{{ post.author.first_name }}</a></span>
+            </div>
             <div class="date is-size-7">{{ post.publish|date:"DATE_FORMAT" }}</div>
         </div>
     </div>
-    <div class="py-2">
-        {% include "blog/post/includes/post_tags.html" with tpost=post %}
-    </div>
+    <div class="py-2">{% include "blog/post/includes/post_tags.html" with tpost=post %}</div>
 </div>

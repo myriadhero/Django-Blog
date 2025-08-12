@@ -8524,3 +8524,10 @@ figure.post-preview.image:hover figcaption.credit {
   border-radius: 100%;
   display: inline-block;
 }
+
+a.is-link-black {
+  color: #000000;
+}
+a.is-link-black:hover {
+  color: #d6a496;
+}
