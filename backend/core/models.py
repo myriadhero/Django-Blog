@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy
 from django_ckeditor_5.fields import CKEditor5Field
 from imagefield.fields import ImageField
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 
 
@@ -31,16 +29,19 @@ class SiteIdentity(ModelMeta, models.Model):
         blank=True,
         help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
     )
-    logo_title = models.ImageField(
+    logo_title = ImageField(
         upload_to="site_identity/",
         blank=True,
         help_text="Used for the main top logo",
+        auto_add_fields=True,
+        formats={"thumb": ("default", ("thumbnail", (400, 100)))},
     )
     logo_square = ImageField(
         upload_to="site_identity/",
         blank=True,
         help_text="Used for seo and other places where a square logo is needed",
         auto_add_fields=True,
+        formats={"thumb": ("default", ("crop", (200, 200)))},
     )
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     # TODO: validate svg/images
@@ -64,18 +65,6 @@ class SiteIdentity(ModelMeta, models.Model):
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
     )
 
-    thumbnail_title = ImageSpecField(
-        source="logo_title",
-        processors=[ResizeToFill(200, 100)],
-        format="png",
-        options={"quality": 60},
-    )
-    thumbnail_square = ImageSpecField(
-        source="logo_square",
-        processors=[ResizeToFill(200, 200)],
-        format="png",
-        options={"quality": 60},
-    )
     _metadata = {
         "title": "get_title_and_tagline",
         "description": "seo_description",

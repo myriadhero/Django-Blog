@@ -1,5 +1,8 @@
+import tempfile
+
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from .models import Category, CategoryTag, Post, Subcategory
@@ -13,7 +16,8 @@ from .models import Category, CategoryTag, Post, Subcategory
 # post detail page
 # search page
 # pagination for all above (except front and detail)
-# admin pages - queries?
+# admin pages
+# image fields
 
 
 class FrontPageTests(TestCase):
@@ -157,5 +161,71 @@ class PostTests(CommonSetUpMixin, TestCase):
         expected_redirect = f"/accounts/login/?next={url}"
         self.assertRedirects(response, expected_redirect, fetch_redirect_response=False)
 
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_preview_image_shown_based_on_conditions(self):
+        small_gif = b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x05\x04\x04\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
 
+        # Post with image and show=True (Left position, default)
+        post_with = Post.objects.create(
+            title="Post with image show true",
+            slug="post-with-image-show",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+            show_preview_image=True,
+        )
+        post_with.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        post_with.save()
+        response = self.client.get(post_with.get_absolute_url())
+        self.assertContains(response, "post-preview")
+        self.assertContains(response, "is-3by4")
+        self.assertNotContains(response, "is-16by9")
 
+        # Post with image and show=True, position=Top
+        post_top = Post.objects.create(
+            title="Post with image show true top",
+            slug="post-with-image-show-top",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+            show_preview_image=True,
+            preview_image_position=Post.PreviewPosition.TOP,
+        )
+        post_top.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        post_top.save()
+        response = self.client.get(post_top.get_absolute_url())
+        self.assertContains(response, "post-preview")
+        self.assertContains(response, "is-16by9")
+        self.assertNotContains(response, "is-3by4")
+
+        # Post with image but show=False
+        post_no_show = Post.objects.create(
+            title="Post with image show false",
+            slug="post-with-image-no-show",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+            show_preview_image=False,
+            preview_image_position=Post.PreviewPosition.TOP,
+        )
+        post_no_show.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        post_no_show.save()
+        response = self.client.get(post_no_show.get_absolute_url())
+        self.assertNotContains(response, "post-preview")
+        self.assertNotContains(response, "is-3by4")
+        self.assertNotContains(response, "is-16by9")
+
+        # Post without image but show=True
+        post_no_image = Post.objects.create(
+            title="Post no image show true",
+            slug="post-no-image-show",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+            show_preview_image=True,
+            preview_image_position=Post.PreviewPosition.LEFT,
+        )
+        response = self.client.get(post_no_image.get_absolute_url())
+        self.assertNotContains(response, "post-preview")
+        self.assertNotContains(response, "is-3by4")
+        self.assertNotContains(response, "is-16by9")

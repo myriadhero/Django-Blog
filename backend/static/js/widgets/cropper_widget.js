@@ -29,7 +29,8 @@ function cropperWidget(name, aspectRatio) {
     const cropperOptions = {
         viewMode: 1,
         minContainerWidth: 300,
-        minContainerHeight: 300
+        minContainerHeight: 300,
+        autoCropArea: 1,
     };
     if (aspectRatio !== 0) {
         cropperOptions.aspectRatio = aspectRatio;

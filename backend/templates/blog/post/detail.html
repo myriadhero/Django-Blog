@@ -3,27 +3,51 @@
 {% block title %}
   {{ post.title }} - {{ block.super }}
 {% endblock title %}
+{% block head_links %}
+{{ block.super }}
+{% endblock head_links %}
 {% block content %}
   <div class="columns is-desktop">
     <div class="column">
       <div class="section">
-        {% include "blog/post/includes/post_title_header.html" %}
-        {% if post.header_image and post.show_preview_image %}
-          <figure class="block">
-            <img src="{{ post.header_image.url }}"
-                 alt="{{ post.title }}"
-                 width="550px"
-                 height="auto"
-                 alt="{{ post.title }}"
-                 class="post-detail-header-image">
-            <div class="is-size-6 mx-2">{{ post.prevew_image_credit }}</div>
-          </figure>
+        {% if post.preview_image and post.show_preview_image %}
+          {% if post.preview_image_position == 'L' %}
+            <div class="columns is-vcentered">
+              <div class="column is-5">
+                <figure class="image is-3by4 post-preview">
+                  <img src="{{ post.preview_image.front_page }}"
+                       alt="{{ post.title }}"
+                       width="600"
+                       height="800">
+                  {% if post.prevew_image_credit %}
+                  <figcaption class="credit is-size-7">{{ post.prevew_image_credit }}</figcaption>
+                  {% endif %}
+                </figure>
+              </div>
+              <div class="column">
+                {% include "blog/post/includes/post_title_header.html" %}
+              </div>
+            </div>
+          {% else %}
+            <figure class="block post-preview image is-16by9">
+              <img src="{{ post.preview_image.header }}"
+                   alt="{{ post.title }}"
+                   width="1280"
+                   height="720">
+              {% if post.prevew_image_credit %}
+              <figcaption class="credit is-size-7">{{ post.prevew_image_credit }}</figcaption>
+              {% endif %}
+            </figure>
+            {% include "blog/post/includes/post_title_header.html" %}
+          {% endif %}
+        {% else %}
+          {% include "blog/post/includes/post_title_header.html" %}
         {% endif %}
         <div class="content" id="post-content">
           {% if post.show_post_nav %}
             <div id="post-nav"
-                 class="has-background-white has-text-weight-medium"
-                 style="display:none">
+                 class="has-background-white has-text-weight-medium is-hidden"
+                 >
               <span class="has-text-primary">Jump to:</span>
             </div>
           {% endif %}
@@ -31,7 +55,7 @@
         </div>
       </div>
     </div>
-    <div class="column is-5-desktop">{% include "blog/post/includes/sidebar.html" %}</div>
+    <div class="column is-4-desktop">{% include "blog/post/includes/sidebar.html" %}</div>
   </div>
 {% endblock content %}
 {% block scripts %}

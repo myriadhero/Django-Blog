@@ -45,7 +45,8 @@ a.navbar-item:active svg path {
 }
 #header-bar-logo img {
   max-height: 32px;
-  filter: grayscale(1) contrast(100) invert(1); /* TODO: bake this into the pic? */
+  filter: grayscale(1) contrast(100) invert(1);
+  /* TODO: bake this into the pic? */
 }
 #header-bar-logo:hover img {
   filter: unset;
@@ -8399,8 +8400,10 @@ a.title:hover, a.title:active {
   color: #000000;
   font-size: 0.9em;
   overflow-x: scroll;
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
 }
 #post-nav::-webkit-scrollbar {
   display: none;
@@ -8472,4 +8475,29 @@ a.title:hover, a.title:active {
   #post-nav {
     top: 88px;
   }
+}
+.twitter-tweet {
+  margin-inline: auto;
+}
+
+figure.post-preview.image {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+figure.post-preview.image figcaption.credit {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+figure.post-preview.image:hover figcaption.credit {
+  opacity: 1;
 }

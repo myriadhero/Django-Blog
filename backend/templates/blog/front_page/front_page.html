@@ -30,11 +30,11 @@
                 <div class="card is-shadowless pb-4">
                   <div class="card-image">
                     <figure class="image is-3by4">
-                      {% if featured_post.post.front_page_image %}
-                        <img src="{{ featured_post.post.front_page_image.url }}"
+                      {% if featured_post.post.preview_image %}
+                        <img loading="lazy" src="{{ featured_post.post.preview_image.front_page }}"
                              alt="{{ featured_post.post.title }}">
                       {% else %}
-                        <img src="https://bulma.io/images/placeholders/1280x960.png"
+                        <img src="{% static 'images/carousel_placeholder.jpg' %}"
                              alt="Placeholder image">
                       {% endif %}
                     </figure>
@@ -52,13 +52,13 @@
                     <div class="card-image">
                       <figure class="image is-3by4">
                         {% comment %} TODO: change this to category preview pic {% endcomment %}
-                        {% if category.front_page_image %}
-                          <img src="{{ category.front_page_image.url }}" alt="{{ category.name }}">
+                        {% if category.preview_image %}
+                          <img src="{{ category.preview_image.front_page }}" alt="{{ category.name }}">
                         {% else %}
                           {% if site_identity.carousel_logo %}
                             <img src="{{ site_identity.carousel_logo.url }}" alt="Placeholder image">
                           {% else %}
-                            <img src="https://bulma.io/images/placeholders/1280x960.png"
+                            <img src="{% static 'images/carousel_placeholder.jpg' %}"
                                  alt="Placeholder image">
                           {% endif %}
                         {% endif %}

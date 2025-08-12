@@ -32,7 +32,7 @@
           <div class="columns is-mobile tag-wrapper">
             <div class="column is-narrow">
               <div class="image is-96x96">
-                <img height="100" width="100" src="{% if tag.thumbnail %}{{ tag.thumbnail.url }}{% else %}{% static "images/ph_person.svg" %}{% endif %}" alt="{{ tag.name }}" class="is-rounded">
+                <img loading="lazy" height="100" width="100" src="{% if tag.preview_image %}{{ tag.preview_image.thumb }}{% else %}{% static "images/ph_person.svg" %}{% endif %}" alt="{{ tag.name }}" class="is-rounded">
               </div>
             </div>
             <div class="column is-flex is-flex-direction-column is-justify-content-center">

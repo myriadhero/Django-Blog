@@ -37,10 +37,11 @@ class SiteIdentityForm(ModelForm):
     class Meta:
         model = SiteIdentity
         fields = "__all__"
-        widgets = {"logo_square": CroppingImageWidget}
+        widgets = {"logo_square": CroppingImageWidget, "logo_title": CroppingImageWidget}
 
     def __init__(self, *args, **kwargs):
         self.base_fields["logo_square"].widget.aspect_ratio = 1
+        self.base_fields["logo_title"].widget.aspect_ratio = 4
         super().__init__(*args, **kwargs)
 
 

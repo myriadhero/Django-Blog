@@ -11,8 +11,6 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy
 from django_ckeditor_5.fields import CKEditor5Field
 from imagefield.fields import ImageField
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
 from lxml import html
 from meta.models import ModelMeta
 from taggit.managers import TaggableManager
@@ -44,7 +42,15 @@ class Category(ModelMeta, models.Model):
         blank=True,
         help_text="250 characters long, will also be used in SEO description for the page",
     )
-    preview_image = ImageField(upload_to="category_previews/", blank=True, auto_add_fields=True)
+    preview_image = ImageField(
+        upload_to="category_previews/",
+        blank=True,
+        auto_add_fields=True,
+        formats={
+            "thumb": ("default", ("crop", (200, 200))),
+            "front_page": ("default", ("crop", (600, 800))),
+        },
+    )
     show_on_front_page = models.BooleanField(default=False)
     order = models.IntegerField(
         default=0,
@@ -53,13 +59,6 @@ class Category(ModelMeta, models.Model):
     is_tag_list = models.BooleanField(
         default=False,
         help_text="If enabled, this category will show a list of tags first instead of posts+tag filters.",
-    )
-
-    thumbnail = ImageSpecField(
-        source="preview_image",
-        processors=[ResizeToFill(200, 200)],
-        format="jpeg",
-        options={"quality": 60},
     )
 
     _metadata = {
@@ -109,7 +108,7 @@ class Category(ModelMeta, models.Model):
         return [self.name.lower()] + (get_site_identity().get_seo_keywords() or [])
 
     def get_preview_image_url(self):
-        return self.thumbnail.url if self.preview_image else None
+        return self.preview_image.thumb if self.preview_image else None
 
 
 class Subcategory(ModelMeta, models.Model):
@@ -125,16 +124,15 @@ class Subcategory(ModelMeta, models.Model):
         blank=True,
         help_text="250 characters long, will also be used in SEO description for the page",
     )
-    preview_image = ImageField(upload_to="category_previews/", blank=True, auto_add_fields=True)
-    categories = models.ManyToManyField(Category, related_name="subcategories")
-
-    # TODO: change thumbnail to a spec within preview_image, check others, unless it needs to be separate
-    thumbnail = ImageSpecField(
-        source="preview_image",
-        processors=[ResizeToFill(200, 200)],
-        format="jpeg",
-        options={"quality": 60},
+    preview_image = ImageField(
+        upload_to="category_previews/",
+        blank=True,
+        auto_add_fields=True,
+        formats={
+            "thumb": ("default", ("crop", (200, 200))),
+        },
     )
+    categories = models.ManyToManyField(Category, related_name="subcategories")
 
     _metadata = {
         "title": "get_seo_title",
@@ -186,7 +184,7 @@ class Subcategory(ModelMeta, models.Model):
         )
 
     def get_preview_image_url(self):
-        return self.thumbnail.url if self.preview_image else None
+        return self.preview_image.thumb if self.preview_image else None
 
 
 class NonEmptyTagsManager(models.Manager):
@@ -203,16 +201,16 @@ class CategoryTag(ModelMeta, TagBase):
         blank=True,
         help_text="250 characters long, can also be used in SEO description for the page",
     )
-    preview_image = ImageField(upload_to="tag_previews/", blank=True, auto_add_fields=True)
+    preview_image = ImageField(
+        upload_to="tag_previews/",
+        blank=True,
+        auto_add_fields=True,
+        formats={
+            "thumb": ("default", ("crop", (200, 200))),
+        },
+    )
     categories = models.ManyToManyField(Category, blank=True)
     subcategories = models.ManyToManyField(Subcategory, blank=True)
-
-    thumbnail = ImageSpecField(
-        source="preview_image",
-        processors=[ResizeToFill(200, 200)],
-        format="jpeg",
-        options={"quality": 60},
-    )
 
     _metadata = {
         "title": "get_seo_title",
@@ -245,9 +243,8 @@ class CategoryTag(ModelMeta, TagBase):
             + (get_site_identity().get_seo_keywords() or [])
         )
 
-    # TODO: switch thumbnail usages including META and templates to ImageField spec
     def get_preview_image_url(self):
-        return self.thumbnail.url if self.preview_image else None
+        return self.preview_image.thumb if self.preview_image else None
 
     def get_absolute_url(self):
         return reverse("blog:posts_by_tag", args=[self.slug])
@@ -308,6 +305,10 @@ class PublishedManager(models.Manager):
 
 
 class Post(ModelMeta, models.Model):
+    class PreviewPosition(models.TextChoices):
+        LEFT = "L", "Left"
+        TOP = "T", "Top"
+
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
         PUBLISHED = "PB", "Published"
@@ -324,10 +325,25 @@ class Post(ModelMeta, models.Model):
         blank=True,
         help_text="Used for SEO, typically 60-150 chars long but up to 250 is fine. Title is used if left blank.",
     )
-    preview_image = ImageField(upload_to="blog_previews", blank=True, auto_add_fields=True)
+    preview_image = ImageField(
+        upload_to="blog_previews",
+        blank=True,
+        auto_add_fields=True,
+        formats={
+            "thumb": ("default", ("crop", (210, 210))),
+            "header": ("default", ("crop", (1280, 720))),
+            "front_page": ("default", ("crop", (600, 800))),
+        },
+    )
     show_preview_image = models.BooleanField(
         default=True,
         help_text="Toggles the preview image on the post page only.",
+    )
+    preview_image_position = models.CharField(
+        max_length=1,
+        choices=PreviewPosition.choices,
+        default=PreviewPosition.LEFT,
+        help_text="Used to determine the position of the preview image on the post page.",
     )
     prevew_image_credit = models.CharField(
         max_length=500,
@@ -367,24 +383,6 @@ class Post(ModelMeta, models.Model):
 
     objects = models.Manager()
     published = PublishedManager()
-
-    thumbnail = ImageSpecField(
-        source="preview_image",
-        processors=[ResizeToFill(210, 210)],
-        format="jpeg",
-        options={"quality": 60},
-    )
-    header_image = ImageSpecField(
-        source="preview_image",
-        format="jpeg",
-        options={"quality": 60},
-    )
-    front_page_image = ImageSpecField(
-        source="preview_image",
-        processors=[ResizeToFill(600, 800)],
-        format="jpeg",
-        options={"quality": 60},
-    )
 
     class Meta:
         ordering = ("-publish",)
@@ -471,7 +469,7 @@ class Post(ModelMeta, models.Model):
         )
 
     def get_preview_image_url(self):
-        return self.thumbnail.url if self.preview_image else None
+        return self.preview_image.thumb if self.preview_image else None
 
 
 class FeaturedPostPublishedManager(models.Manager):

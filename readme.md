@@ -67,6 +67,7 @@ Everything else (like redirect to https) is handled elsewhere and is locked down
 - Run `docker compose --profile prod up -d` to build and run containers
 - Run `docker compose --profile prod exec web python manage.py migrate --noinput`
 - Run `docker compose --profile prod exec web python manage.py collectstatic --noinput`
+- Run (optional) `docker compose --profile prod exec web python manage.py process_imagefields --no-parallel --all`
 - Run `docker compose --profile prod exec web python manage.py createsuperuser --noinput --username <yourUsername> --password <yourPass>`
 
 It should be good to go!💃
