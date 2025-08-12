@@ -111,7 +111,8 @@ def get_site_identity() -> SiteIdentity:
 
 
 class AboutPage(ModelMeta, models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default="About")
+    show_title_in_page = models.BooleanField(default=True)
     content = CKEditor5Field()
 
     objects = SingletonManager()

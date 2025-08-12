@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse as HTTPResponse
 from django.test import TestCase
 
-from .models import PrivacyPage, SiteIdentity, TermsPage
+from .models import AboutPage, PrivacyPage, SiteIdentity, TermsPage
 
 # about page
 # terms page
@@ -11,16 +11,30 @@ from .models import PrivacyPage, SiteIdentity, TermsPage
 # site identity
 
 
-class AboutPage(TestCase):
+class AboutPageTests(TestCase):
     def setUp(self) -> None:
-        url = "/about/"
-        self.response = self.client.get(url)
+        self.url = "/about/"
+        self.about = AboutPage.objects.get_instance()
+        self.about.title = "Unique title to test for"
+        self.about.save()
+        self.response = self.client.get(self.url)
 
     def test_url_exists_at_correct_location(self):
         self.assertEqual(self.response.status_code, 200)
 
     def test_correct_template_is_used(self):
         self.assertTemplateUsed(self.response, "core/about/about.html")
+
+    def test_title_not_shown_when_disabled(self):
+        self.response = self.client.get(self.url)
+        self.assertContains(self.response, f'<h1 class="title is-1 has-text-centered">{self.about.title}</h1>')
+
+        self.about.show_title_in_page = False
+        self.about.save()
+        self.response = self.client.get(self.url)
+        self.assertNotContains(self.response, f'<h1 class="title is-1 has-text-centered">{self.about.title}</h1>')
+        # still contains title in page meta
+        self.assertContains(self.response, self.about.title)
 
 
 class TermsPageTests(TestCase):
