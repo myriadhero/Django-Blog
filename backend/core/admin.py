@@ -6,6 +6,7 @@ from core.widgets import CroppingImageWidget
 from .models import (
     AboutPage,
     GoogleAdsense,
+    PrivacyPage,
     SiteIdentity,
     SocialMedia,
     SubscriptionOptions,
@@ -63,6 +64,19 @@ class TermsPageAdmin(SingletonModelAdmin):
             {
                 "fields": ["title", "content"],
                 "description": "Note: To display the Terms of Service page on the site, it must be enabled in the Site Identity settings.",
+            },
+        ),
+    ]
+
+
+@admin.register(PrivacyPage)
+class PrivacyPageAdmin(SingletonModelAdmin):
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": ["title", "content"],
+                "description": "Note: To display the Privacy Policy page on the site, it must be enabled in the Site Identity settings.",
             },
         ),
     ]

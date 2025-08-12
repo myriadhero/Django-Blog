@@ -2,7 +2,7 @@ from django.http import Http404, HttpResponse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from .models import AboutPage, TermsPage, get_site_identity
+from .models import AboutPage, PrivacyPage, TermsPage, get_site_identity
 
 
 # Create your views here.
@@ -31,6 +31,23 @@ class TermsPageView(TemplateView):
         terms = TermsPage.objects.get_instance()
         context["terms"] = terms
         context["meta"] = terms.as_meta(self.request)
+        return context
+
+
+class PrivacyPageView(TemplateView):
+    template_name = "core/about/privacy.html"
+
+    def get(self, request, *args, **kwargs):
+        site_identity = get_site_identity()
+        if not (site_identity.show_privacy_policy or request.user.is_staff):
+            raise Http404("Privacy Policy not enabled")
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        privacy = PrivacyPage.objects.get_instance()
+        context["privacy"] = privacy
+        context["meta"] = privacy.as_meta(self.request)
         return context
 
 

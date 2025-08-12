@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+{% block title %}
+  {{ privacy.title|default:"Privacy Policy" }} - {{ block.super }}
+{% endblock title %}
+{% block content %}
+  <div class="section">
+    <div class="block">
+      <h1 class="title is-2 has-text-centered">{{ privacy.title|default:"Privacy Policy" }}</h1>
+    </div>
+    <div class="content py-5">{{ privacy.content|safe }}</div>
+  </div>
+{% endblock content %}
+

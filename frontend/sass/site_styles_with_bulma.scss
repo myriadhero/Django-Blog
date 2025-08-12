@@ -745,3 +745,26 @@ figure.post-preview.image {
     opacity: 1;
   }
 }
+
+.terms-and-privacy-container {
+  display: inline-flex;
+  gap: 10px;
+
+  & a {
+    color: $black;
+
+    &:hover {
+      color: $warning-dark;
+    }
+  }
+
+  & .terms:not(:last-child)::after {
+    content: "";
+    margin-left: 10px;
+    margin-bottom: 4px;
+    background-color: $text;
+    padding: 2px;
+    border-radius: 100%;
+    display: inline-block;
+  }
+}

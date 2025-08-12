@@ -8504,3 +8504,23 @@ figure.post-preview.image figcaption.credit {
 figure.post-preview.image:hover figcaption.credit {
   opacity: 1;
 }
+
+.terms-and-privacy-container {
+  display: inline-flex;
+  gap: 10px;
+}
+.terms-and-privacy-container a {
+  color: #000000;
+}
+.terms-and-privacy-container a:hover {
+  color: rgb(112.5051282051, 79.6384615385, 35.3948717949);
+}
+.terms-and-privacy-container .terms:not(:last-child)::after {
+  content: "";
+  margin-left: 10px;
+  margin-bottom: 4px;
+  background-color: #000000;
+  padding: 2px;
+  border-radius: 100%;
+  display: inline-block;
+}

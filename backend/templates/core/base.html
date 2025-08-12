@@ -91,12 +91,16 @@
           {% if site_identity.footer_copy_message %}- {{ site_identity.footer_copy_message }}{% endif %}
         </span>
       </div>
-      {% if site_identity.show_terms_of_service %}
-        {% get_terms_page as terms %}
-        <div class="py-2">
-          <a href="{% url "terms" %}"><span class="has-text-primary-dark">{{ terms.title|default:"Terms of Service" }}</span></a>
-        </div>
-      {% endif %}
+      <div class="py-2 terms-and-privacy-container">
+        {% if site_identity.show_terms_of_service %}
+          {% get_terms_page as terms %}
+          <a href="{% url "terms" %}" class="terms is-underlined">{{ terms.title|default:"Terms of Service" }}</a>
+        {% endif %}
+        {% if site_identity.show_privacy_policy %}
+          {% get_privacy_page as privacy %}
+          <a href="{% url "privacy" %}" class="is-underlined">{{ privacy.title|default:"Privacy Policy" }}</a>
+        {% endif %}
+      </div>
     </footer>
     {% comment %}
     {% if debug %}
