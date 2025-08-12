@@ -75,7 +75,7 @@ It should be good to go!💃
 ___
 
 
-### Packages and programs used in this project:
+### Packages used in this project:
 
 - [Python 🐍](https://www.python.org/downloads/)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -83,10 +83,8 @@ ___
 - [Psycopg 3](https://www.psycopg.org/psycopg3/docs/) and [PostgreSQL](https://www.postgresql.org/) (via docker)
 - [Gunicorn](https://gunicorn.org/)
 - [Django](https://www.djangoproject.com/)
-- [Django-ckeditor](https://django-ckeditor.readthedocs.io/en/latest/)
 - [Django-taggit](https://django-taggit.readthedocs.io/en/latest/)
 - [Django Debug Toolbar](https://github.com/jazzband/django-debug-toolbar)
-- [Django-imagekit](https://django-imagekit.readthedocs.io/en/latest/) and [Pillow](https://pypi.org/project/Pillow/)
 - [Django-Select2](https://django-select2.readthedocs.io/en/latest/)
 - [Django-Meta](https://github.com/nephila/django-meta)
 - [Crispy Forms](https://django-crispy-forms.readthedocs.io/en/latest/)
@@ -98,3 +96,4 @@ ___
 - [Font Awesome](https://fontawesome.com/docs/web/use-with/python-django)
 - [Cropper.js v1](https://github.com/fengyuanchen/cropperjs/blob/v1/README.md)
 - [Django-imagefield](https://github.com/matthiask/django-imagefield/)
+- [Django-ckeditor-5](https://github.com/hvlads/django-ckeditor-5)

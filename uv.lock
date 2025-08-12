@@ -13,7 +13,6 @@ dependencies = [
     { name = "django-ckeditor-5" },
     { name = "django-crispy-forms" },
     { name = "django-imagefield" },
-    { name = "django-imagekit" },
     { name = "django-meta" },
     { name = "django-select2" },
     { name = "django-taggit" },
@@ -35,11 +34,10 @@ dev = [
 requires-dist = [
     { name = "crispy-bulma" },
     { name = "django" },
-    { name = "django-ckeditor", specifier = ">=6.7.2" },
+    { name = "django-ckeditor", specifier = ">=6.7.3" },
     { name = "django-ckeditor-5", specifier = ">=0.2.17" },
     { name = "django-crispy-forms" },
     { name = "django-imagefield", specifier = ">=0.22.0" },
-    { name = "django-imagekit" },
     { name = "django-meta" },
     { name = "django-select2" },
     { name = "django-taggit" },
@@ -160,15 +158,15 @@ wheels = [
 
 [[package]]
 name = "django-ckeditor"
-version = "6.7.2"
+version = "6.7.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-js-asset" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8e/ad/73c303e8e58b38ef4f3ed475334dca2cd4509b4bbdfb573f2d13745e3cd8/django_ckeditor-6.7.2.tar.gz", hash = "sha256:a66be4f0ca13924d756e4930260144b31df4164eae8b942ca610f4313df00d5f", size = 1726242, upload-time = "2024-12-05T09:37:53.982Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/6e/7923d3932bcdc6df7deea3d0cc31552144444130e5a2bef669e88c4e8141/django_ckeditor-6.7.3.tar.gz", hash = "sha256:889fd80ee7d368e3c5b828c8dabf8907d56bcad6bf5881f3898416df4f2adfe7", size = 1726851, upload-time = "2025-06-06T10:16:35.748Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/16/ed/e48cc43a987facd99e7ad24cc466e2578b0cbdba345a01f068d55daa2a1a/django_ckeditor-6.7.2-py3-none-any.whl", hash = "sha256:2b3f147ce21eba861db481683e9a4639c11f0ad1f0d37c179003ef07f9eb65a4", size = 2455602, upload-time = "2024-12-05T09:37:51.188Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/03/b2095f13b571ab78b2a3f55d30e2b3f126b3f4f350391037c37c418f7c2f/django_ckeditor-6.7.3-py3-none-any.whl", hash = "sha256:09771c9b8fb33b84bd2767dfc891a24b7fbdb0120910a7ec65b763a4ae6807bb", size = 2455696, upload-time = "2025-06-06T10:16:40.05Z" },
 ]
 
 [[package]]
@@ -219,19 +217,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/26/96/f69f4070fa1ff2be4ce76a6b55a835a382b768889939deb737dcd9195ce2/django_imagefield-0.22.0.tar.gz", hash = "sha256:53bce5e26a94e55ca52ce4b453a728aca8bc86346b29119f931c1cfa132a1df6", size = 17129, upload-time = "2025-01-22T08:12:06.419Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/35/49/106a5c3575907f8b63135c364fb1fb76d88ee5a440f69e5a314d7d2d5978/django_imagefield-0.22.0-py3-none-any.whl", hash = "sha256:24142493cf7c20dd1323d5ebc064cbe5030b1b8c28b4cfc8e5ca24368cf4fb9a", size = 20830, upload-time = "2025-01-22T08:12:11.363Z" },
-]
-
-[[package]]
-name = "django-imagekit"
-version = "5.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django-appconf" },
-    { name = "pilkit" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/61/cd/02611fc0cda31b17fec62c3235234ccf9920a4137de2b677e603749b968e/django-imagekit-5.0.0.tar.gz", hash = "sha256:aae9f74a8e9b6ceb5d15f7d8e266302901e76d9f532c78bd5135cb0fa206a6b0", size = 60041, upload-time = "2023-09-28T00:30:40.062Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/0e/a2a2044e7dab7c7aced92574b7428d65edc370024b94a72d5f00293076fe/django_imagekit-5.0.0-py3-none-any.whl", hash = "sha256:a8e77ed6549751026a51f961bb2cd5fda739be691496da8eecbe68ffb966c261", size = 39240, upload-time = "2023-09-28T01:00:43.931Z" },
 ]
 
 [[package]]
@@ -483,18 +468,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/c3/059298687310d527a58bb01f3b1965787ee3b40dce76752eda8b44e9a2c5/pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523", size = 63772, upload-time = "2023-11-25T06:56:14.81Z" },
-]
-
-[[package]]
-name = "pilkit"
-version = "3.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pillow" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/a5/bbe12d2c9dc06e29224c45a2cd7aa0ce923648588b6a15aadfee150bbd0c/pilkit-3.0.tar.gz", hash = "sha256:f6719e8cc0482e5447f5cb94f18b949d8e604ea9673a9b019c74d41b779e4eab", size = 402342, upload-time = "2023-09-27T22:47:18.638Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/de/ec/877b84b82cbcba6203e39d068cecfdbcfb61de69260cb851ea11be9b67f3/pilkit-3.0-py3-none-any.whl", hash = "sha256:fe1707b0411a1d0cbf9ad3986779fa5a346cec4582a188740924aa39f504d117", size = 20073, upload-time = "2023-09-27T22:47:16.285Z" },
 ]
 
 [[package]]

@@ -5,7 +5,6 @@ requires-python = "~=3.13"
 dependencies = [
     "django",
     "django-taggit",
-    "django-imagekit",
     "pillow",
     "lxml",
     "fontawesomefree",
