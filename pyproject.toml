@@ -5,7 +5,6 @@ requires-python = "~=3.13"
 dependencies = [
     "django",
     "django-taggit",
-    "django-imagekit",
     "pillow",
     "lxml",
     "fontawesomefree",
@@ -17,6 +16,7 @@ dependencies = [
     "psycopg[binary]",
     "django-ckeditor-5>=0.2.17",
     "django-ckeditor>=6.7.2",
+    "django-imagefield>=0.22.0",
 ]
 
 [tool.django-stubs]
@@ -44,3 +44,4 @@ url = "https://pypi.org/simple"
 extend-exclude = ["migrations"]
 extend-select = ["A", "B", "C4", "C90", "COM", "DJ", "I", "LOG", "N", "PTH", "RUF", "SIM", "W"]
 line-length = 119
+ignore = ["RUF012"]

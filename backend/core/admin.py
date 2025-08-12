@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.forms import ModelForm
+
+from core.widgets import CroppingImageWidget
 
 from .models import (
     AboutPage,
     GoogleAdsense,
+    PrivacyPage,
     SiteIdentity,
     SocialMedia,
     SubscriptionOptions,
@@ -30,9 +34,21 @@ class SingletonModelAdmin(admin.ModelAdmin):
         return False
 
 
+class SiteIdentityForm(ModelForm):
+    class Meta:
+        model = SiteIdentity
+        fields = "__all__"
+        widgets = {"logo_square": CroppingImageWidget, "logo_title": CroppingImageWidget}
+
+    def __init__(self, *args, **kwargs):
+        self.base_fields["logo_square"].widget.aspect_ratio = 1
+        self.base_fields["logo_title"].widget.aspect_ratio = 4
+        super().__init__(*args, **kwargs)
+
+
 @admin.register(SiteIdentity)
 class SiteIdentityAdmin(SingletonModelAdmin):
-    pass
+    form = SiteIdentityForm
 
 
 @admin.register(AboutPage)
@@ -48,6 +64,19 @@ class TermsPageAdmin(SingletonModelAdmin):
             {
                 "fields": ["title", "content"],
                 "description": "Note: To display the Terms of Service page on the site, it must be enabled in the Site Identity settings.",
+            },
+        ),
+    ]
+
+
+@admin.register(PrivacyPage)
+class PrivacyPageAdmin(SingletonModelAdmin):
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": ["title", "content"],
+                "description": "Note: To display the Privacy Policy page on the site, it must be enabled in the Site Identity settings.",
             },
         ),
     ]

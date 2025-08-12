@@ -4,9 +4,11 @@
 {% endblock title %}
 {% block content %}
   <div class="section">
-    <div class="block">
-      <h1 class="title is-1 has-text-centered">{{ about.title }}</h1>
-    </div>
+    {% if about.show_title_in_page %}
+      <div class="block">
+        <h1 class="title is-1 has-text-centered">{{ about.title }}</h1>
+      </div>
+    {% endif %}
     <div class="content py-5">{{ about.content|safe }}</div>
   </div>
 {% endblock content %}

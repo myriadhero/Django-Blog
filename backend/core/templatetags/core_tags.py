@@ -1,6 +1,13 @@
 from django import template
 
-from core.models import GoogleAdsense, SiteIdentity, SocialMedia, SubscriptionOptions, TermsPage
+from core.models import (
+    GoogleAdsense,
+    PrivacyPage,
+    SiteIdentity,
+    SocialMedia,
+    SubscriptionOptions,
+    TermsPage,
+)
 
 register = template.Library()
 
@@ -33,3 +40,8 @@ def get_adsense_settings():
 @register.simple_tag()
 def get_terms_page():
     return TermsPage.objects.get_instance()
+
+
+@register.simple_tag()
+def get_privacy_page():
+    return PrivacyPage.objects.get_instance()

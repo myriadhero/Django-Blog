@@ -3,8 +3,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.translation import gettext_lazy
 from django_ckeditor_5.fields import CKEditor5Field
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagefield.fields import ImageField
 from meta.models import ModelMeta
 
 
@@ -30,15 +29,19 @@ class SiteIdentity(ModelMeta, models.Model):
         blank=True,
         help_text="List of words in SEO meta tags, eg 'blog, django, python' without quotes, comma separated",
     )
-    logo_title = models.ImageField(
+    logo_title = ImageField(
         upload_to="site_identity/",
         blank=True,
         help_text="Used for the main top logo",
+        auto_add_fields=True,
+        formats={"thumb": ("default", ("thumbnail", (400, 100)))},
     )
-    logo_square = models.ImageField(
+    logo_square = ImageField(
         upload_to="site_identity/",
         blank=True,
         help_text="Used for seo and other places where a square logo is needed",
+        auto_add_fields=True,
+        formats={"thumb": ("default", ("crop", (200, 200)))},
     )
     favicon = models.ImageField(upload_to="site_identity/", blank=True)
     # TODO: validate svg/images
@@ -57,23 +60,12 @@ class SiteIdentity(ModelMeta, models.Model):
         help_text='Goes next to copyright eg "© SiteName Year - Message"',
     )
     show_terms_of_service = models.BooleanField(default=False)
+    show_privacy_policy = models.BooleanField(default=False)
     header_message = models.TextField(
         blank=True,
         help_text="Adds a message to the top of the site on all pages. Change to blank to remove the message.",
     )
 
-    thumbnail_title = ImageSpecField(
-        source="logo_title",
-        processors=[ResizeToFill(200, 100)],
-        format="png",
-        options={"quality": 60},
-    )
-    thumbnail_square = ImageSpecField(
-        source="logo_square",
-        processors=[ResizeToFill(200, 200)],
-        format="png",
-        options={"quality": 60},
-    )
     _metadata = {
         "title": "get_title_and_tagline",
         "description": "seo_description",
@@ -119,7 +111,8 @@ def get_site_identity() -> SiteIdentity:
 
 
 class AboutPage(ModelMeta, models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default="About")
+    show_title_in_page = models.BooleanField(default=True)
     content = CKEditor5Field()
 
     objects = SingletonManager()
@@ -183,6 +176,47 @@ class TermsPage(ModelMeta, models.Model):
     def save(self, *args, **kwargs):
         self.pk = 1
         super(TermsPage, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def get_title(self):
+        return get_site_identity().get_title_and_tagline(page_name=self.title)
+
+    def get_logo_square_url(self):
+        return get_site_identity().get_logo_square_url()
+
+    def get_seo_keywords(self):
+        return get_site_identity().get_seo_keywords()
+
+    def get_seo_description(self):
+        return get_site_identity().seo_description
+
+
+class PrivacyPage(ModelMeta, models.Model):
+    title = models.CharField(max_length=100, default="Privacy Policy")
+    content = CKEditor5Field()
+
+    objects = SingletonManager()
+
+    _metadata = {
+        "title": "get_title",
+        "description": "get_seo_description",
+        "keywords": "get_seo_keywords",
+        "image": "get_logo_square_url",
+        "og_type": "Website",
+        "object_type": "Website",
+    }
+
+    class Meta:
+        verbose_name_plural = gettext_lazy("Privacy Policy")
+
+    def __str__(self):
+        return f"Privacy Policy - {self.title}"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(PrivacyPage, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         pass

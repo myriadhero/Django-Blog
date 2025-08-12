@@ -66,7 +66,7 @@
       navBar.appendChild(navLink);
       navLinks.push(navLink);
     });
-    navBar.style.display = null;
+    navBar.classList.remove("is-invisible");
 
     // Check if there's a hash in the URL and scroll to the section
     if (window.location.hash) {
