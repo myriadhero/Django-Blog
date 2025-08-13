@@ -8436,9 +8436,6 @@ a.title:hover, a.title:active {
   display: inline-block;
 }
 
-#post-content {
-  overflow: hidden;
-}
 #post-content figure {
   margin-inline: 1px !important;
   background-color: #f7f7f7;
@@ -8468,6 +8465,9 @@ a.title:hover, a.title:active {
 }
 #post-content figure img:not(:last-child) {
   border-end-end-radius: 5px;
+}
+#post-content.info-pages {
+  overflow: hidden;
 }
 
 @media (max-width: 576px) {
