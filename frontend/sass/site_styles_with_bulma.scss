@@ -667,22 +667,56 @@ a.title {
 }
 
 #post-content {
+  overflow: hidden;
+
   & figure {
     margin-inline: 1px !important;
     background-color: #f7f7f7;
     border-radius: 10px;
-  }
 
-  & figcaption {
-    font-size: x-small;
-    font-style: normal;
-    text-align: start;
-    padding-bottom: 5px;
-    padding-inline: 10px;
-  }
+    &.image-style-side,
+    &.image-style-align-right,
+    &.image-style-align-left {
+      float: right;
+      margin-block: 5px !important;
+    }
 
-  & img {
-    border-radius: 10px 10px 5px 5px;
+    &.image-style-side,
+    &.image-style-align-right {
+      margin-left: 30px !important;
+    }
+
+    &.image-style-align-left {
+      float: left;
+      margin-right: 30px !important;
+    }
+
+    & figcaption {
+      font-size: x-small;
+      font-style: normal;
+      text-align: start;
+      padding-bottom: 5px;
+      padding-inline: 10px;
+    }
+
+    & img {
+      border-radius: 10px;
+      display: block;
+
+      &:not(:last-child) {
+        border-end-end-radius: 5px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  #post-content figure {
+    &.image-style-side,
+    &.image-style-align-right,
+    &.image-style-align-left {
+      width: 100% !important;
+    }
   }
 }
 
