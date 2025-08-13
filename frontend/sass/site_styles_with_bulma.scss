@@ -667,8 +667,6 @@ a.title {
 }
 
 #post-content {
-  overflow: hidden;
-
   & figure {
     margin-inline: 1px !important;
     background-color: #f7f7f7;
@@ -707,6 +705,10 @@ a.title {
         border-end-end-radius: 5px;
       }
     }
+  }
+
+  &.info-pages {
+    overflow: hidden;
   }
 }
 
