@@ -667,7 +667,7 @@ a.title {
 }
 
 #post-content {
-  overflow: auto;
+  overflow: hidden;
 
   & figure {
     margin-inline: 1px !important;
@@ -677,7 +677,6 @@ a.title {
     &.image-style-side,
     &.image-style-align-right,
     &.image-style-align-left {
-      max-width: 50%;
       float: right;
       margin-block: 5px !important;
     }
@@ -705,8 +704,18 @@ a.title {
       display: block;
 
       &:not(:last-child) {
-        border-bottom-radius: 5px;
+        border-end-end-radius: 5px;
       }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  #post-content figure {
+    &.image-style-side,
+    &.image-style-align-right,
+    &.image-style-align-left {
+      width: 100% !important;
     }
   }
 }

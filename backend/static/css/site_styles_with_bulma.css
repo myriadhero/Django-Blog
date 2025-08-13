@@ -8437,7 +8437,7 @@ a.title:hover, a.title:active {
 }
 
 #post-content {
-  overflow: auto;
+  overflow: hidden;
 }
 #post-content figure {
   margin-inline: 1px !important;
@@ -8445,7 +8445,6 @@ a.title:hover, a.title:active {
   border-radius: 10px;
 }
 #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
-  max-width: 50%;
   float: right;
   margin-block: 5px !important;
 }
@@ -8468,9 +8467,14 @@ a.title:hover, a.title:active {
   display: block;
 }
 #post-content figure img:not(:last-child) {
-  border-bottom-radius: 5px;
+  border-end-end-radius: 5px;
 }
 
+@media (max-width: 576px) {
+  #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
+    width: 100% !important;
+  }
+}
 @media (max-width: 768px) {
   body > div:nth-child(1) > div.container > div.columns.is-desktop {
     margin-inline: 0px;
