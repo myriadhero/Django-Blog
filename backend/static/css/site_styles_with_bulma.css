@@ -8436,20 +8436,39 @@ a.title:hover, a.title:active {
   display: inline-block;
 }
 
+#post-content {
+  overflow: auto;
+}
 #post-content figure {
   margin-inline: 1px !important;
   background-color: #f7f7f7;
   border-radius: 10px;
 }
-#post-content figcaption {
+#post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
+  max-width: 50%;
+  float: right;
+  margin-block: 5px !important;
+}
+#post-content figure.image-style-side, #post-content figure.image-style-align-right {
+  margin-left: 30px !important;
+}
+#post-content figure.image-style-align-left {
+  float: left;
+  margin-right: 30px !important;
+}
+#post-content figure figcaption {
   font-size: x-small;
   font-style: normal;
   text-align: start;
   padding-bottom: 5px;
   padding-inline: 10px;
 }
-#post-content img {
-  border-radius: 10px 10px 5px 5px;
+#post-content figure img {
+  border-radius: 10px;
+  display: block;
+}
+#post-content figure img:not(:last-child) {
+  border-bottom-radius: 5px;
 }
 
 @media (max-width: 768px) {
