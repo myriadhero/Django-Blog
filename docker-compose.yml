@@ -46,7 +46,7 @@ services:
           "wget",
           "--spider",
           "-q",
-          "http://localhost:8000/healthcheck/"
+          "http://web:8000/healthcheck/"
         ]
       interval: 5m
       start_period: 2m
