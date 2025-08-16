@@ -314,3 +314,48 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertContains(response, latest_with_image.title)
         self.assertNotContains(response, latest_without_image.title)
         self.assertNotContains(response, latest_with_image_draft.title)
+
+    def test_post_tags_are_sorted_by_slug(self):
+        post = Post.objects.create(
+            title="Post",
+            slug="post",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+
+        tag4 = CategoryTag.objects.create(name="Tag 4", slug="tag-4")
+        tag3 = CategoryTag.objects.create(name="Tag 3", slug="tag-3")
+        tag2 = CategoryTag.objects.create(name="Tag 2", slug="tag-2-1")
+        tag1 = CategoryTag.objects.create(name="Tag 1", slug="tag-1")
+        tag5 = CategoryTag.objects.create(name="Tag 5", slug="tag-5")
+        tag6 = CategoryTag.objects.create(name="Tag 6", slug="tag-6")
+        tag7 = CategoryTag.objects.create(name="Tag 7", slug="ctag-7")
+        tag8 = CategoryTag.objects.create(name="Tag 8", slug="dtag-8")
+        tag9 = CategoryTag.objects.create(name="Tag 9", slug="btag-9")
+        tag10 = CategoryTag.objects.create(name="Tag 10", slug="atag-10")
+
+        post.tags.add(*[tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9, tag10])
+        post.tags.add(self.tag)
+        post.save()
+
+        self.assertEqual(
+            [(t.id, t.slug) for t in post.tags.all()],
+            [
+                (tag10.id, "atag-10"),
+                (tag9.id, "btag-9"),
+                (tag7.id, "ctag-7"),
+                (self.tag.id, "doggo-cat-tag"),
+                (tag8.id, "dtag-8"),
+                (tag1.id, "tag-1"),
+                (tag2.id, "tag-2-1"),
+                (tag3.id, "tag-3"),
+                (tag4.id, "tag-4"),
+                (tag5.id, "tag-5"),
+                (tag6.id, "tag-6"),
+            ],
+        )
+        self.assertEqual(
+            [*post.tags.order_by("name").all()],
+            [self.tag, tag1, tag10, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9],
+        )
