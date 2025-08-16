@@ -146,6 +146,7 @@ class Subcategory(ModelMeta, models.Model):
     class Meta:
         verbose_name = gettext_lazy("Subcategory")
         verbose_name_plural = gettext_lazy("Subcategories")
+        ordering = ("slug",)
 
     def __str__(self) -> str:
         return self.name
@@ -370,6 +371,7 @@ class Post(ModelMeta, models.Model):
     tags = TaggableManager(
         through=TaggedWithCategoryTags,
         help_text="Tags, comma separated",
+        ordering=("slug",),
     )
     show_post_nav = models.BooleanField(default=False, help_text="Toggles in-post nav that is linked to headings")
 
