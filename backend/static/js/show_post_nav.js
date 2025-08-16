@@ -1,7 +1,8 @@
+"use strict";
 (function () {
-  const stickiesOffset = 160;
-  const headingScrollThreshold = 255;
-  const scrollDebounceMs = 50;
+  const STICKIES_OFFSET = 160;
+  const HEADING_SCROLL_THRESHOLD = 255;
+  const SCROLL_DEBOUNCE_MS = 50;
 
   function createIdFromText(text) {
     let newId = text
@@ -11,12 +12,8 @@
       .replace(/\s+/g, "-") // Replace spaces with hyphens
       .replace(/-+/g, "-"); // Replace multiple hyphens with single
 
-    if (!newId) {
-      newId = `section-${index + 1}`;
-    }
-
     let fill = 0;
-    let tempId = newId;
+    let tempId = newId || "section";
     while (document.getElementById(tempId)) {
       fill += 1;
       tempId = `${newId}-${fill}`;
@@ -26,46 +23,60 @@
 
   function scrollToTargetElem(targetElem) {
     const targetPosition =
-      targetElem.getBoundingClientRect().top + window.scrollY - stickiesOffset;
+      targetElem.getBoundingClientRect().top + window.scrollY - STICKIES_OFFSET;
     window.scrollTo({ top: targetPosition, behavior: "smooth" });
   }
 
+  function scrollEvtListener(e) {
+    e.preventDefault();
+    const targetSection = document.getElementById(e.target.href.split("#")[1]);
+    history.replaceState(null, "", e.target.href);
+    scrollToTargetElem(targetSection);
+  }
+
+  function convertToLinkHeading(headingElem) {
+    const link = document.createElement("a");
+    if (!headingElem.id) {
+      headingElem.id = createIdFromText(headingElem.textContent);
+    }
+    link.href = `#${headingElem.id}`;
+    link.classList.add("is-link-black");
+    link.textContent = headingElem.textContent;
+    headingElem.innerHTML = "";
+    headingElem.appendChild(link);
+    link.addEventListener("click", scrollEvtListener);
+  }
+
   function createNavBar() {
-    // get every H1
-    // make a little nav bar that links directly to those items
-    // nav bar should by default be collapsed
     const postContent = document.getElementById("post-content");
     const navBar = document.getElementById("post-nav");
 
-    // Find all H1 headings
-    const headings = postContent.querySelectorAll("h1");
+    const allHeadings = postContent.querySelectorAll("h1, h2, h3, h4");
+    const h1headings = postContent.querySelectorAll("h1");
     const navLinks = [];
-    let lastScrolledLinkId = null;
+
+    allHeadings.forEach((heading) => {
+      convertToLinkHeading(heading);
+    });
+
+    if (h1headings.length === 0) {
+      navBar.style.display = "none";
+      return;
+    }
 
     // Create navigation links for each H1 heading
-    headings.forEach((heading, index) => {
-      // Create an ID based on the heading's text content
-      const headingId = createIdFromText(heading.textContent, index);
-      heading.id = headingId;
-
-      // Create a nav link
+    h1headings.forEach((heading) => {
       const navLink = document.createElement("a");
       navLink.textContent = heading.textContent;
-      navLink.href = `#${headingId}`;
-      navLink.dataset.targetId = headingId;
+      navLink.href = `#${heading.id}`;
+      navLink.dataset.targetId = heading.id;
 
-      // Add click event to scroll smoothly
-      navLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        const targetSection = document.getElementById(headingId);
-        history.replaceState(null, "", `#${headingId}`);
-        scrollToTargetElem(targetSection);
-      });
+      navLink.addEventListener("click", scrollEvtListener);
 
-      // Append the link to the nav bar
       navBar.appendChild(navLink);
       navLinks.push(navLink);
     });
+
     navBar.classList.remove("is-invisible");
 
     // Check if there's a hash in the URL and scroll to the section
@@ -77,19 +88,23 @@
       }
     }
 
-    let debounce = null;
+    let lastScrolledLinkId = null;
+    let debouncedEvt = null;
     // Function to update the active nav link based on scroll position
     function updateActiveNavLink() {
-      if (debounce != null) {
+      if (debouncedEvt != null) {
         return;
       }
-      debounce = setTimeout((event) => {
-        if (headings[0].getBoundingClientRect().top < headingScrollThreshold) {
+      debouncedEvt = setTimeout((event) => {
+        let currentSectionId = null;
+        if (
+          h1headings[0].getBoundingClientRect().top < HEADING_SCROLL_THRESHOLD
+        ) {
           // Find the closest heading to the top of the viewport
-          for (const heading of headings) {
+          for (const heading of h1headings) {
             const rect = heading.getBoundingClientRect();
             // If the heading's top is in or above the viewport, it's the active section
-            if (rect.top <= headingScrollThreshold) {
+            if (rect.top <= HEADING_SCROLL_THRESHOLD) {
               currentSectionId = heading.id;
             }
             // If we've passed the last heading, keep the last one active
@@ -98,8 +113,7 @@
             }
           }
         } else {
-          currentSectionId = null;
-          lastScrolledLinkId = null;
+          // If we are above all headings, scroll the navbar to start
           navBar.children[0].scrollIntoView({
             inline: "center",
             behavior: "smooth",
@@ -113,7 +127,7 @@
             link.classList.add("active");
 
             if (
-              lastScrolledLinkId !== link.dataset.targetId &&
+              lastScrolledLinkId !== currentSectionId &&
               link.getBoundingClientRect().top > 0
             ) {
               link.scrollIntoView({
@@ -121,14 +135,14 @@
                 behavior: "smooth",
                 block: "nearest",
               });
-              lastScrolledLinkId = link.dataset.targetId;
+              lastScrolledLinkId = currentSectionId;
             }
           } else {
             link.classList.remove("active");
           }
         });
-        debounce = null;
-      }, scrollDebounceMs);
+        debouncedEvt = null;
+      }, SCROLL_DEBOUNCE_MS);
     }
 
     // Update active nav link on scroll
