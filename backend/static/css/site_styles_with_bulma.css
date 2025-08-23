@@ -8443,7 +8443,6 @@ a.title:hover, a.title:active {
 }
 #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
   float: right;
-  margin-block: 5px !important;
 }
 #post-content figure.image-style-side, #post-content figure.image-style-align-right {
   margin-left: 30px !important;
@@ -8473,6 +8472,14 @@ a.title:hover, a.title:active {
 @media (max-width: 576px) {
   #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
     width: 100% !important;
+    margin-top: 0;
+    float: unset;
+    margin-inline: 1px !important;
+  }
+}
+@media (min-width: 577px) {
+  #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
+    margin-block: 5px;
   }
 }
 @media (max-width: 768px) {
@@ -8553,4 +8560,8 @@ a.is-link-black {
 }
 a.is-link-black:hover {
   color: #d6a496;
+}
+
+.content h1:not(:first-child) {
+  margin-top: 1.5em;
 }

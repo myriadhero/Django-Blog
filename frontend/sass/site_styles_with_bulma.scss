@@ -107,6 +107,8 @@ $navbar-padding-vertical: 0;
 $nav-brand-height-mobile: 64px;
 $header-bar-height: 40px;
 
+$post-heading-not-last-top-margin: 1.5em;
+
 $input-arrow: $accentcolour;
 
 $footer-background-color: $lightpink;
@@ -676,7 +678,6 @@ a.title {
     &.image-style-align-right,
     &.image-style-align-left {
       float: right;
-      margin-block: 5px !important;
     }
 
     &.image-style-side,
@@ -718,6 +719,19 @@ a.title {
     &.image-style-align-right,
     &.image-style-align-left {
       width: 100% !important;
+      margin-top: 0;
+      float: unset;
+      margin-inline: 1px !important;
+    }
+  }
+}
+
+@media (min-width: 577px) {
+  #post-content figure {
+    &.image-style-side,
+    &.image-style-align-right,
+    &.image-style-align-left {
+      margin-block: 5px;
     }
   }
 }
@@ -810,4 +824,8 @@ a.is-link-black {
   &:hover {
     color: $primary;
   }
+}
+
+.content h1:not(:first-child) {
+  margin-top: $post-heading-not-last-top-margin;
 }
