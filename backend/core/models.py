@@ -279,14 +279,20 @@ class SubscriptionOptions(models.Model):
 
 
 class SocialMedia(models.Model):
-    youtube_url = models.URLField(blank=True)
+    youtube_url = models.URLField(blank=True, help_text="Leave empty to disable")
     youtube_name = models.CharField(
         max_length=100,
         blank=True,
         help_text="Shown in the mobile menu",
     )
-    twitter_url = models.URLField(blank=True)
+    twitter_url = models.URLField(blank=True, help_text="Leave empty to disable")
     twitter_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Shown in the mobile menu",
+    )
+    instagram_url = models.URLField(blank=True, help_text="Leave empty to disable")
+    instagram_name = models.CharField(
         max_length=100,
         blank=True,
         help_text="Shown in the mobile menu",
@@ -329,7 +335,7 @@ class GoogleAdsense(models.Model):
         verbose_name_plural = gettext_lazy("Google Adsense")
         constraints = (
             models.CheckConstraint(
-                check=models.Q(enable_ads=False)
+                condition=models.Q(enable_ads=False)
                 | (models.Q(client_id__isnull=False) & models.Q(client_id__startswith="ca-pub-")),
                 name="adsense_client_id_required_if_enable_ads",
                 violation_error_message="Client ID is required if ads are enabled and should start with 'ca-pub-'",
