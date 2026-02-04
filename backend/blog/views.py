@@ -4,7 +4,7 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 from meta.views import MetadataMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
+from core.mixins import LoginRequired404Mixin
 
 from .forms import AdvancedSearchForm
 from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
@@ -192,7 +192,7 @@ class PostDetailView(DetailView):
         context["meta"] = post.as_meta(self.request)
         return context
 
-class PostPreviewView(LoginRequiredMixin, PostDetailView):
+class PostPreviewView(LoginRequired404Mixin, PostDetailView):
     def get_queryset(self):
         return Post.objects
 
@@ -218,7 +218,7 @@ class FrontPageView(ViewMetadataMixin, ListView):
         return context
 
 
-class FrontPagePreviewView(LoginRequiredMixin, FrontPageView):
+class FrontPagePreviewView(LoginRequired404Mixin, FrontPageView):
     def get_featured_posts_queryset(self):
         return FeaturedPost.objects.select_related("post")
 

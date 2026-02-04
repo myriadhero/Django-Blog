@@ -79,7 +79,7 @@ class FrontPagePreviewTests(TestCase):
     def test_preview_requires_login(self):
         url = reverse("blog:front_page_preview")
         response = self.client.get(url)
-        self.assertRedirects(response, f"/accounts/login/?next={url}", fetch_redirect_response=False)
+        self.assertEqual(response.status_code, 404)
 
     def test_preview_shows_draft_featured_posts_for_logged_in_users(self):
         self.client.login(username="preview-user", password="preview-password")
@@ -209,7 +209,7 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
-    def test_draft_post_preview_view_anonymous_redirects(self):
+    def test_draft_post_preview_view_anonymous_gets_404(self):
         draft_post = Post.objects.create(
             title="Draft Post",
             slug="draft-post",
@@ -219,8 +219,7 @@ class PostTests(CommonSetUpMixin, TestCase):
         )
         url = reverse("blog:post_detail_preview", args=[draft_post.slug])
         response = self.client.get(url)
-        expected_redirect = f"/accounts/login/?next={url}"
-        self.assertRedirects(response, expected_redirect, fetch_redirect_response=False)
+        self.assertEqual(response.status_code, 404)
 
     @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
     def test_preview_image_shown_based_on_conditions(self):
