@@ -200,21 +200,27 @@ class FrontPageView(ViewMetadataMixin, ListView):
     context_object_name = "categories"
     template_name = "blog/front_page/front_page.html"
 
+    def get_featured_posts_queryset(self):
+        return FeaturedPost.published.select_related("post")
+
     def get_queryset(self):
-        featured_posts_with_posts = FeaturedPost.published.select_related("post").all()
         prefetch_featured_posts = Prefetch(
             "featured_posts",
-            queryset=featured_posts_with_posts,
-            to_attr="published_featured_posts",
+            queryset=self.get_featured_posts_queryset(),
+            to_attr="front_page_featured_posts",
         )
-        categories = Category.on_front_page.prefetch_related(
+        return Category.on_front_page.prefetch_related(
             prefetch_featured_posts,
         ).all()
-        return categories
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class FrontPagePreviewView(LoginRequiredMixin, FrontPageView):
+    def get_featured_posts_queryset(self):
+        return FeaturedPost.objects.select_related("post")
 
 
 class PostSearchListView(ViewMetadataMixin, PostListView):
