@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from django.http import HttpResponse as HTTPResponse
 from django.test import TestCase
+from django.urls import reverse
 
-from .models import AboutPage, PrivacyPage, SiteIdentity, TermsPage
+from .models import AboutPage, PrivacyPage, SiteIdentity, SocialMedia, TermsPage
 
 # about page
 # terms page
@@ -123,3 +124,50 @@ class PrivacyPageTests(TestCase):
         self.privacy.save()
         response: HTTPResponse = self.client.get(self.url)
         self.assertContains(response, "Privacy Policy")
+
+
+class SocialMediaHeaderTests(TestCase):
+    def setUp(self) -> None:
+        self.url = reverse("blog:front_page")
+        self.social_media = SocialMedia.objects.get_instance()
+        self.twitter_url = "https://x.com/example_profile"
+        self.instagram_url = "https://instagram.com/example_profile"
+        self.youtube_url = "https://www.youtube.com/@example_profile"
+        self.twitter_icon_template = "core/icons/sm_x_icon.html"
+        self.instagram_icon_template = "core/icons/sm_instagram_icon.html"
+        self.youtube_icon_template = "core/icons/sm_youtube_icon.html"
+
+    def test_icons_not_shown_when_urls_are_empty(self):
+        self.social_media.twitter_url = ""
+        self.social_media.instagram_url = ""
+        self.social_media.youtube_url = ""
+        self.social_media.save()
+
+        response: HTTPResponse = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.twitter_url)
+        self.assertNotContains(response, self.instagram_url)
+        self.assertNotContains(response, self.youtube_url)
+        self.assertTemplateNotUsed(response, self.twitter_icon_template)
+        self.assertTemplateNotUsed(response, self.instagram_icon_template)
+        self.assertTemplateNotUsed(response, self.youtube_icon_template)
+
+    def test_icons_shown_when_urls_are_set(self):
+        self.social_media.twitter_url = self.twitter_url
+        self.social_media.twitter_name = "Example X"
+        self.social_media.instagram_url = self.instagram_url
+        self.social_media.instagram_name = "Example IG"
+        self.social_media.youtube_url = self.youtube_url
+        self.social_media.youtube_name = "Example YT"
+        self.social_media.save()
+
+        response: HTTPResponse = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.twitter_url, count=2)
+        self.assertContains(response, self.instagram_url, count=2)
+        self.assertContains(response, self.youtube_url, count=2)
+        self.assertTemplateUsed(response, self.twitter_icon_template, count=2)
+        self.assertTemplateUsed(response, self.instagram_icon_template, count=2)
+        self.assertTemplateUsed(response, self.youtube_icon_template, count=2)

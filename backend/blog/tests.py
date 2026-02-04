@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from .models import Category, CategoryTag, Post, Subcategory
+from .models import Category, CategoryTag, FeaturedPost, Post, Subcategory
 
 # Create your tests here.
 # front page
@@ -30,6 +30,67 @@ class FrontPageTests(TestCase):
 
     def test_correct_template_is_used(self):
         self.assertTemplateUsed(self.response, "blog/front_page/front_page.html")
+
+
+class FrontPagePreviewTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.user = User.objects.create_user(
+            username="preview-user",
+            email="preview@example.com",
+            password="preview-password",
+        )
+
+        self.category = Category.objects.create(
+            name="Front Page Category",
+            slug="front-page-category",
+            show_on_front_page=True,
+        )
+
+        self.published_post = Post.objects.create(
+            title="Published featured post",
+            slug="published-featured-post",
+            body="published",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        self.published_post.categories.add(self.category)
+
+        self.draft_post = Post.objects.create(
+            title="Draft featured post",
+            slug="draft-featured-post",
+            body="draft",
+            status=Post.Status.DRAFT,
+            author=self.user,
+        )
+        self.draft_post.categories.add(self.category)
+
+        FeaturedPost.objects.create(
+            category=self.category,
+            post=self.published_post,
+            order=1,
+        )
+        FeaturedPost.objects.create(
+            category=self.category,
+            post=self.draft_post,
+            order=2,
+        )
+
+    def test_preview_requires_login(self):
+        url = reverse("blog:front_page_preview")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_preview_shows_draft_featured_posts_for_logged_in_users(self):
+        self.client.login(username="preview-user", password="preview-password")
+        preview_response = self.client.get(reverse("blog:front_page_preview"))
+        self.assertEqual(preview_response.status_code, 200)
+        self.assertContains(preview_response, self.published_post.title)
+        self.assertContains(preview_response, self.draft_post.title)
+
+        public_response = self.client.get(reverse("blog:front_page"))
+        self.assertContains(public_response, self.published_post.title)
+        self.assertNotContains(public_response, self.draft_post.title)
 
 
 class CommonSetUpMixin:
@@ -148,7 +209,7 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post/detail.html")
 
-    def test_draft_post_preview_view_anonymous_redirects(self):
+    def test_draft_post_preview_view_anonymous_gets_404(self):
         draft_post = Post.objects.create(
             title="Draft Post",
             slug="draft-post",
@@ -158,8 +219,7 @@ class PostTests(CommonSetUpMixin, TestCase):
         )
         url = reverse("blog:post_detail_preview", args=[draft_post.slug])
         response = self.client.get(url)
-        expected_redirect = f"/accounts/login/?next={url}"
-        self.assertRedirects(response, expected_redirect, fetch_redirect_response=False)
+        self.assertEqual(response.status_code, 404)
 
     @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
     def test_preview_image_shown_based_on_conditions(self):

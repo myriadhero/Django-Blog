@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="googleadsense",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("enable_ads", False),
                     models.Q(
                         ("client_id__isnull", False),

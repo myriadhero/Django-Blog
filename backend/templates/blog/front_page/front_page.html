@@ -24,7 +24,7 @@
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
           <!-- Slides -->
-          {% for featured_post in category.published_featured_posts %}
+          {% for featured_post in category.front_page_featured_posts %}
             <div class="swiper-slide">
               <a href="{{ featured_post.post.get_absolute_url }}">
                 <div class="card is-shadowless pb-4">

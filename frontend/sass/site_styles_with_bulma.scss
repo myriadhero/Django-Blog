@@ -148,8 +148,11 @@ $footer-background-color: $lightpink;
 
 a.navbar-item:hover,
 a.navbar-item:active {
-  & svg path {
-    stroke: $white;
+  & svg {
+    path,
+    circle {
+      stroke: $white;
+    }
   }
 }
 

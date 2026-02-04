@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+  {{ block.super }} - Page Not Found
+{% endblock title %}
+
+{% block content %}
+  <section class="section">
+    <div class="has-text-centered">
+      <p class="title is-3">404</p>
+      <p class="subtitle is-5">Page not found.</p>
+      <a class="button is-light mt-4" href="{% url 'blog:front_page' %}">Back to home</a>
+    </div>
+  </section>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+  {{ block.super }} - Server Error
+{% endblock title %}
+
+{% block content %}
+  <section class="section">
+    <div class="has-text-centered">
+      <p class="title is-3">5XX</p>
+      <p class="subtitle is-5">Something went wrong on our side. Please try again later.</p>
+      <a class="button is-light mt-4" href="{% url 'blog:front_page' %}">Back to home</a>
+    </div>
+  </section>
+{% endblock content %}
