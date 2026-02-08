@@ -8470,6 +8470,9 @@ a.title:hover, a.title:active {
 #post-content.info-pages {
   overflow: hidden;
 }
+#post-content a:not(:is(h1, h2, h3, h4, h5, h6) a) {
+  font-weight: bold;
+}
 
 @media (max-width: 576px) {
   #post-content figure.image-style-side, #post-content figure.image-style-align-right, #post-content figure.image-style-align-left {
