@@ -393,7 +393,7 @@ class Post(ModelMeta, models.Model):
         indexes = (models.Index(fields=["-publish"]),)
 
     def __str__(self) -> str:
-        return self.short_title or self.title
+        return self.get_short_title()
 
     def save(self, *args, **kwargs):
         self.generate_unique_slug()
@@ -468,7 +468,7 @@ class Post(ModelMeta, models.Model):
         return get_site_identity().get_title_and_tagline(page_name=self.get_short_title())
 
     def get_seo_description(self):
-        return self.description or self.title
+        return self.get_short_title()
 
     def get_seo_keywords(self):
         return (
