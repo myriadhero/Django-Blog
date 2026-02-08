@@ -714,6 +714,10 @@ a.title {
   &.info-pages {
     overflow: hidden;
   }
+
+  & a:not(:is(h1, h2, h3, h4, h5, h6) a){
+    font-weight: bold;
+  }
 }
 
 @media (max-width: 576px) {

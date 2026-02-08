@@ -315,6 +315,7 @@ class Post(ModelMeta, models.Model):
         PUBLISHED = "PB", "Published"
 
     title = models.CharField(max_length=250)
+    short_title = models.CharField(max_length=250, blank=True, help_text="Used in front page carousel, browser tab title, previews. Full title will be used if left empty.")
     slug = models.SlugField(
         max_length=250,
         unique=True,
@@ -392,7 +393,7 @@ class Post(ModelMeta, models.Model):
         indexes = (models.Index(fields=["-publish"]),)
 
     def __str__(self) -> str:
-        return self.title
+        return self.get_short_title()
 
     def save(self, *args, **kwargs):
         self.generate_unique_slug()
@@ -418,8 +419,7 @@ class Post(ModelMeta, models.Model):
 
         return similar_posts
 
-    def generate_unique_slug(self):
-        # TODO: decide whether this should return a slug or set it
+    def generate_unique_slug(self) -> str:
         base_slug = self.slug or slugify(self.title)
 
         if not Post.objects.filter(slug=base_slug).exclude(pk=self.pk).exists():
@@ -461,11 +461,14 @@ class Post(ModelMeta, models.Model):
 
         self.body = html.tostring(root, encoding="unicode")
 
+    def get_short_title(self):
+        return self.short_title or self.title
+
     def get_seo_title(self):
-        return get_site_identity().get_title_and_tagline(page_name=self.title)
+        return get_site_identity().get_title_and_tagline(page_name=self.get_short_title())
 
     def get_seo_description(self):
-        return self.description or self.title
+        return self.get_short_title()
 
     def get_seo_keywords(self):
         return (

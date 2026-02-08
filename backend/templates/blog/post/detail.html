@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load blog_tags %}
 {% block title %}
-  {{ post.title }} - {{ block.super }}
+  {{ post.get_short_title }} - {{ block.super }}
 {% endblock title %}
 {% block head_links %}
 {{ block.super }}

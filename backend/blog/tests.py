@@ -1,5 +1,6 @@
 import tempfile
 
+from core.models import get_site_identity
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
@@ -91,6 +92,32 @@ class FrontPagePreviewTests(TestCase):
         public_response = self.client.get(reverse("blog:front_page"))
         self.assertContains(public_response, self.published_post.title)
         self.assertNotContains(public_response, self.draft_post.title)
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_front_page_featured_post_uses_short_title_but_image_alt_uses_full_title(self):
+        small_gif = b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x05\x04\x04\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
+
+        self.published_post.title = "Published Featured Full Title"
+        self.published_post.short_title = "Published Short Title"
+        self.published_post.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        self.published_post.save()
+
+        response = self.client.get(reverse("blog:front_page"))
+        self.assertContains(response, "Published Short Title")
+        self.assertContains(response, 'alt="Published Featured Full Title"')
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_front_page_featured_post_falls_back_to_full_title_when_short_title_empty(self):
+        small_gif = b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x05\x04\x04\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
+
+        self.published_post.title = "Published Featured Full Title"
+        self.published_post.short_title = ""
+        self.published_post.preview_image = SimpleUploadedFile("small.gif", small_gif, "image/gif")
+        self.published_post.save()
+
+        response = self.client.get(reverse("blog:front_page"))
+        self.assertContains(response, "Published Featured Full Title")
+        self.assertNotContains(response, "Published Short Title")
 
 
 class CommonSetUpMixin:
@@ -418,4 +445,91 @@ class PostTests(CommonSetUpMixin, TestCase):
         self.assertEqual(
             [*post.tags.order_by("name").all()],
             [self.tag, tag1, tag10, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9],
+        )
+
+    def test_short_title_is_used_for_seo_title_with_title_fallback(self):
+        site_identity = get_site_identity()
+        site_identity.title = "Doggo Blog"
+        site_identity.tagline = ""
+        site_identity.save()
+
+        post_with_short_title = Post.objects.create(
+            title="Long Doggo Post Title",
+            short_title="Short Doggo Title",
+            slug="doggo-post-with-short-title",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        post_without_short_title = Post.objects.create(
+            title="Doggo Post Without Short Title",
+            short_title="",
+            slug="doggo-post-without-short-title",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+
+        self.assertEqual(post_with_short_title.get_short_title(), "Short Doggo Title")
+        self.assertEqual(post_with_short_title.get_seo_title(), "Doggo Blog - Short Doggo Title")
+        self.assertEqual(post_without_short_title.get_short_title(), "Doggo Post Without Short Title")
+        self.assertEqual(post_without_short_title.get_seo_title(), "Doggo Blog - Doggo Post Without Short Title")
+
+        response_with_short = self.client.get(post_with_short_title.get_absolute_url())
+        self.assertRegex(
+            response_with_short.content.decode(),
+            r'<meta[^>]*title[^>]*content="[^.]*Short Doggo Title">',
+        )
+        self.assertRegex(
+            response_with_short.content.decode(),
+            r'<meta[^>]*description[^>]*content="[^>]*Long Doggo Post Title">',
+        )
+        self.assertNotRegex(
+            response_with_short.content.decode(),
+            r'<meta[^>]*title[^>]*content="[^>]*Long Doggo Post Title">',
+        )
+
+        response_without_short = self.client.get(post_without_short_title.get_absolute_url())
+        self.assertRegex(
+            response_without_short.content.decode(),
+            r'<meta[^>]*content="[^.]*Doggo Post Without Short Title">',
+        )
+
+    def test_short_title_is_used_for_page_title_with_title_fallback(self):
+        site_identity = get_site_identity()
+        site_identity.title = "Doggo Blog"
+        site_identity.tagline = ""
+        site_identity.save()
+
+        post_with_short_title = Post.objects.create(
+            title="Long Doggo Post Title",
+            short_title="Short Doggo Title",
+            slug="doggo-post-with-short-title-page",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+        post_without_short_title = Post.objects.create(
+            title="Doggo Post Without Short Title",
+            short_title="",
+            slug="doggo-post-without-short-title-page",
+            body="body",
+            status=Post.Status.PUBLISHED,
+            author=self.user,
+        )
+
+        response_with_short = self.client.get(post_with_short_title.get_absolute_url())
+        self.assertRegex(
+            response_with_short.content.decode(),
+            r"<title>\s*Short Doggo Title - \s*Doggo Blog\s*<\/title>",
+        )
+        self.assertNotRegex(
+            response_with_short.content.decode(),
+            r"<title>\s*Long Doggo Post Title - \s*Doggo Blog\s*<\/title>",
+        )
+
+        response_without_short = self.client.get(post_without_short_title.get_absolute_url())
+        self.assertRegex(
+            response_without_short.content.decode(),
+            r"<title>\s*Doggo Post Without Short Title - \s*Doggo Blog\s*<\/title>",
         )
